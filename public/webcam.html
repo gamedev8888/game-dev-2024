@@ -13,6 +13,16 @@
         canvas {
             display: none;
         }
+        /* Style for the QR link */
+        #qr-link {
+            margin-top: 20px;
+            display: inline-block;
+            padding: 10px;
+            color: white;
+            background-color: blue;
+            text-decoration: none;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -24,6 +34,9 @@
     <a id="download" style="display:none;">Download</a>
     
     <canvas id="canvas"></canvas>
+
+    <!-- QR code link -->
+    <a id="qr-link" href="https://qr.link/ZVJD4m" target="_blank">Open QR Code</a>
 
     <script>
         const video = document.getElementById('video');
