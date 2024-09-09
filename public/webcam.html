@@ -1,20 +1,67 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Webcam Page</title>
+    <title>Webcam Capture</title>
     <style>
-        #video {
+        video {
             width: 100%;
-            height: auto;
+            max-width: 600px;
+            border: 1px solid black;
+        }
+        canvas {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <h1>Webcam Stream</h1>
+    <h1>Webcam Capture</h1>
     <video id="video" autoplay></video>
-    <button id="startButton">Start Webcam</button>
+    <br>
+    <input type="text" id="filename" placeholder="Enter file name (without extension)">
+    <button id="capture">Capture Photo</button>
+    <a id="download" style="display:none;">Download</a>
+    
+    <canvas id="canvas"></canvas>
 
-    <script src="script.js"></script>
+    <script>
+        const video = document.getElementById('video');
+        const captureButton = document.getElementById('capture');
+        const filenameInput = document.getElementById('filename');
+        const downloadLink = document.getElementById('download');
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+
+        // Access the webcam
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                video.srcObject = stream;
+            })
+            .catch(err => {
+                console.error("Error accessing webcam: ", err);
+            });
+
+        captureButton.addEventListener('click', () => {
+            // Set canvas dimensions same as video
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            // Draw the current frame from video to canvas
+            context.drawImage(video, 0, 0);
+
+            // Create a link to download the image
+            const filename = filenameInput.value || 'captured_image';
+            const link = document.createElement('a');
+            link.download = `${filename}.jpg`;
+            link.href = canvas.toDataURL('image/jpeg');
+
+            // Update download link and display it
+            downloadLink.href = link.href;
+            downloadLink.download = link.download;
+            downloadLink.textContent = 'Download Photo';
+            downloadLink.style.display = 'block';
+        });
+    </script>
 </body>
 </html>
