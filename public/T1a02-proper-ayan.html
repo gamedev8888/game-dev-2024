@@ -5,17 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>T1a02-proper-ayan.html</title>
     <style>
-        body {
-            background-color: #ff0000; /* Red background */
-            color: #ffffff; /* White text for better contrast */
-            font-family: Arial, sans-serif; /* Font for the page */
+        :root {
+            --bg-color: #ff0000; /* Red background */
+            --text-color: #ffffff; /* White text */
         }
-        h1 {
-            text-align: center; /* Center align the heading */
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            text-align: center; /* Center align all text */
+        }
+        button {
+            font-size: 20px;
+            padding: 10px 20px;
+            color: var(--text-color);
+            background-color: #000000; /* Black button */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #333; /* Darker button on hover */
         }
     </style>
 </head>
 <body>
     <h1>T1a02-proper-ayan.html</h1>
+    <p>Welcome to my webpage! This document serves as a template for future projects.</p>
+    
+    <h2>Cookie Clicker</h2>
+    <p>You have <span id="cookieCount">0</span> cookies.</p>
+    <button id="cookieButton">Click me to earn a cookie!</button>
+
+    <script>
+        // Initialize cookie count
+        let cookieCount = 0;
+
+        // Get elements from the DOM
+        const cookieCountDisplay = document.getElementById('cookieCount');
+        const cookieButton = document.getElementById('cookieButton');
+
+        // Function to handle cookie clicks
+        cookieButton.onclick = function() {
+            cookieCount++; // Increment cookie count
+            cookieCountDisplay.textContent = cookieCount; // Update the display
+        };
+    </script>
 </body>
 </html>
