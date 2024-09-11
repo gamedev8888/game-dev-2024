@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <h1 align=center>T1a03-table-list-ayan.html</h1>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T1a03-table-list-ayan</title>
     <style>
         table {
             width: 50%;
             border-collapse: collapse;
+            margin: 20px auto; /* Centers the table */
         }
         th, td {
             border: 1px solid black;
@@ -14,6 +17,14 @@
         }
         th {
             background-color: #f2f2f2;
+        }
+        h1 {
+            text-align: center;
+        }
+        .list-container {
+            width: 50%;
+            margin: 20px auto; /* Centers the lists */
+            text-align: left; /* Aligns text to the left for better readability */
         }
     </style>
 </head>
@@ -26,13 +37,30 @@
         </tr>
         <tr>
             <td>Row A, Cell B</td>
-            <td>Row C, Cell D</td>
+            <td>Row A, Cell D</td> <!-- Adjusted cell name for clarity -->
         </tr>
         <tr>
-            <td>Row 2, Cell 2</td>
+            <td>Row 2, Cell 1</td> <!-- Adjusted cell name for clarity -->
             <td>Row 2, Cell 2</td>
         </tr>
     </table>
+
+    <div class="list-container">
+        <h2>Ordered List Example</h2>
+        <ol>
+            <li>Item One</li>
+            <li>Item Two</li>
+            <li>Item Three</li>
+            <li>Item Four</li>
+        </ol>
+
+        <h2>Unordered List Example</h2>
+        <ul>
+            <li>Item A</li>
+            <li>Item B</li>
+            <li>Item C</li>
+            <li>Item D</li>
+        </ul>
+    </div>
 </body>
 </html>
-
