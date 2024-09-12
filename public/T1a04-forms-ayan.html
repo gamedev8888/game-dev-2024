@@ -17,27 +17,44 @@
             margin: auto;
             margin-top: 50px;
         }
+        input[type="submit"] {
+            cursor: pointer;
+            background-color: blue;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+        }
+        input[type="submit"]:hover {
+            background-color: darkblue;
+        }
+        .feedback {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 1.2em;
+            color: green; /* Color of the feedback text */
+        }
     </style>
 </head>
 <body>
-    <h1 align=center>Welcome to My Simple Form!</h1>
-    
-    <form action="#" method="post">
+    <h1 align="center">Welcome to My Simple Form!</h1>
+
+    <form id="myForm">
         <label for="name">What is your name?</label><br>
-        <input type="text" id="name" name="name" required><br><br>
-        
+        <input type="text" id="name" name="name" required placeholder="Enter your name"><br><br>
+
         <label for="age">How old are you?</label><br>
-        <input type="number" id="age" name="age" required><br><br>
-        
+        <input type="number" id="age" name="age" min="1" max="120" required placeholder="Enter your age"><br><br>
+
         <label for="favoriteColor">What is your favorite color?</label><br>
-        <input type="text" id="favoriteColor" name="favoriteColor"><br><br>
-        
+        <input type="text" id="favoriteColor" name="favoriteColor" placeholder="e.g., Blue, Red"><br><br>
+
         <label>Do you prefer cats or dogs?</label><br>
-        <input type="radio" id="cats" name="pets" value="cats">
+        <input type="radio" id="cats" name="pets" value="cats" required>
         <label for="cats">Cats</label><br>
         <input type="radio" id="dogs" name="pets" value="dogs">
         <label for="dogs">Dogs</label><br><br>
-        
+
         <label for="game">What is your favorite game?</label><br>
         <select id="game" name="game">
             <option value="soccer">Soccer</option>
@@ -45,8 +62,22 @@
             <option value="videoGames">Video Games</option>
             <option value="hideAndSeek">Hide and Seek</option>
         </select><br><br>
-        
+
         <input type="submit" value="Submit!">
     </form>
+
+    <div id="feedback" class="feedback" style="display:none;">Thank you for your submission!</div>
+
+    <script>
+        document.getElementById('myForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Display feedback message
+            document.getElementById('feedback').style.display = 'block';
+
+            // Optionally, you can reset the form after submission
+            this.reset();
+        });
+    </script>
 </body>
 </html>
