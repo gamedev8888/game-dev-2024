@@ -14,29 +14,54 @@
         }
 
         body {
-            background-color: black; /* Setting background color to black */
-            color: white; /* Optional: setting text color to white for better contrast */
+            background: linear-gradient(135deg, #000000, #434343); /* Gradient background */
+            font-family: 'Arial', sans-serif; /* Modern font */
+            color: white; /* Text color */
+            text-align: center; /* Center align text */
+           /* Add some spacing */
+            padding: 20px 10px;
         }
 
         h1 {
-            text-align: center; /* Center align the heading */
+            font-size: 2.5em; /* Larger heading */
+            margin: 20px 0; /* Spacing */
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Shadow for h1 */
+        }
+
+        .link {
+            color: #FFD700; /* Gold color for the link */
+            text-decoration: none; /* Remove underline */
+            font-weight: bold; 
+            transition: color 0.3s; /* Transition effect */
+        }
+
+        .link:hover {
+            color: #FF4500; /* Color change on hover */
         }
 
         .highlight {
             color: red;
-            background-color: yellow;
+            background-color: rgba(255, 255, 0, 0.5); /* Semi-transparent yellow background */
+            border-radius: 5px; /* Rounded corners */
         }
 
         .bordered {
-            border-style: groove;
-            border-width: 2px;
-            border-color: white; /* Changed to white for contrast against the black background */
-            padding: 5px; /* Adding some padding for better appearance */
-            color: white; /* Text color inside bordered element */
+            border: 2px groove white; /* Border styling */
+            padding: 10px; /* Increased padding */
+            color: white; /* Text color */
+            border-radius: 10px; /* Rounded border corners */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Shadow for bordered text */
+            transition: transform 0.3s; /* Animation for hover */
         }
 
-        .link {
-            color: yellow; /* Styling for the link */
+        .bordered:hover {
+            transform: scale(1.05); /* Scale effect on hover */
+        }
+
+        /* Added styling for paragraph */
+        p {
+            margin: 20px 0; /* Space between paragraphs */
+            font-size: 1.2em; /* Larger font size */
         }
     </style>
 </head>
@@ -45,10 +70,10 @@
 
     <a href="https://www.w3schools.com/css/css_border.asp" class="link">w3schools css</a><br><br>
 
-    This is <b>bold</b> True?<br>
-    This is <b class="highlight">cool</b> Yes!<br>
+    <p>This is <b>bold</b> True?</p>
+    <p>This is <b class="highlight">cool</b> Yes!</p>
     <br>
 
-    This is <i class="bordered">italic with a border</i>
+    <p>This is <i class="bordered">italic with a border</i></p>
 </body>
 </html>
