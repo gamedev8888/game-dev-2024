@@ -21,6 +21,11 @@
         h1 {
             margin-bottom: 30px;
         }
+        .input-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
         input {
             padding: 10px;
             border: none;
@@ -28,6 +33,7 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
             margin-right: 10px;
             font-size: 16px;
+            width: 200px;
         }
         button {
             padding: 10px 15px;
@@ -55,6 +61,20 @@
         .visible {
             opacity: 1;
         }
+        .notification {
+            position: fixed; 
+            top: 20px; 
+            right: 20px; 
+            background: #4CAF50; 
+            color: white; 
+            padding: 10px; 
+            border-radius: 5px; 
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .notification.show {
+            opacity: 1;
+        }
         ul {
             list-style-type: none;
             padding: 0;
@@ -66,19 +86,30 @@
             margin-top: 20px;
             background-color: #D20103;
         }
+        @media (max-width: 600px) {
+            input {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            .input-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
     </style>
 </head>
 <body>
 
     <h1>Input/Output Example</h1>
-    <div>
+    <div class="input-container">
         <label for="userInput">Enter something:</label>
-        <input type="text" id="userInput" placeholder="Type here...">
+        <input type="text" id="userInput" placeholder="Type here..." aria-required="true" aria-describedby="inputFeedback">
         <button onclick="displayOutput()">Submit</button>
         <button class="clear-button" onclick="clearOutput()">Clear Outputs</button>
     </div>
-
+    <div id="inputFeedback" class="feedback"></div>
     <div id="output" aria-live="polite"></div>
+    <div id="notification" class="notification"></div>
 
     <script>
         const outputs = [];
@@ -86,24 +117,34 @@
         function displayOutput() {
             const userInput = document.getElementById('userInput').value.trim();
             const outputDiv = document.getElementById('output');
+            const inputFeedback = document.getElementById('inputFeedback');
+            const notification = document.getElementById('notification');
 
-            // Clear previous messages
             outputDiv.classList.remove('visible');
+            inputFeedback.innerText = ''; // Reset feedback text
 
-            // Check if the input is not empty
             setTimeout(() => {
                 if (userInput === "") {
-                    outputDiv.innerText = "Please enter something.";
+                    inputFeedback.innerText = "Please enter something.";
                 } else {
-                    // Add input to the outputs array
                     outputs.push(userInput);
                     updateOutputDisplay();
+                    notifyUser("Input submitted successfully!");
                 }
                 outputDiv.classList.add('visible');
-            }, 200); // Delay to enable transition effect
-            
-            // Clear the input field
+            }, 200); 
+
             document.getElementById('userInput').value = "";
+        }
+
+        function notifyUser(message) {
+            const notification = document.getElementById('notification');
+            notification.innerText = message;
+            notification.classList.add('show');
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
         }
 
         function updateOutputDisplay() {
@@ -112,8 +153,9 @@
         }
 
         function clearOutput() {
-            outputs.length = 0; // Clear the outputs array
-            document.getElementById('output').innerHTML = ""; // Clear the output display
+            outputs.length = 0; 
+            document.getElementById('output').innerHTML = "";
+            document.getElementById('inputFeedback').innerText = ''; // Clear feedback on clear
         }
     </script>
 
