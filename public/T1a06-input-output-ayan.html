@@ -55,6 +55,17 @@
         .visible {
             opacity: 1;
         }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin: 5px 0;
+        }
+        .clear-button {
+            margin-top: 20px;
+            background-color: #D20103;
+        }
     </style>
 </head>
 <body>
@@ -64,15 +75,18 @@
         <label for="userInput">Enter something:</label>
         <input type="text" id="userInput" placeholder="Type here...">
         <button onclick="displayOutput()">Submit</button>
+        <button class="clear-button" onclick="clearOutput()">Clear Outputs</button>
     </div>
 
     <div id="output" aria-live="polite"></div>
 
     <script>
+        const outputs = [];
+
         function displayOutput() {
             const userInput = document.getElementById('userInput').value.trim();
             const outputDiv = document.getElementById('output');
-            
+
             // Clear previous messages
             outputDiv.classList.remove('visible');
 
@@ -81,14 +95,25 @@
                 if (userInput === "") {
                     outputDiv.innerText = "Please enter something.";
                 } else {
-                    // Output the value to the div
-                    outputDiv.innerText = `You entered: ${userInput}`;
+                    // Add input to the outputs array
+                    outputs.push(userInput);
+                    updateOutputDisplay();
                 }
                 outputDiv.classList.add('visible');
             }, 200); // Delay to enable transition effect
             
             // Clear the input field
             document.getElementById('userInput').value = "";
+        }
+
+        function updateOutputDisplay() {
+            const outputDiv = document.getElementById('output');
+            outputDiv.innerHTML = `<ul>${outputs.map(item => `<li>You entered: ${item}</li>`).join('')}</ul>`;
+        }
+
+        function clearOutput() {
+            outputs.length = 0; // Clear the outputs array
+            document.getElementById('output').innerHTML = ""; // Clear the output display
         }
     </script>
 
