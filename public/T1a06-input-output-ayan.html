@@ -3,36 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Input/Output by ayan</title>
+    <title>Input/Output by Ayan</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #D20103; /* Setting the background color */
-            color: white; /* Changing text color to white for better contrast */
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #D20103, #FF6A00);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        h1 {
+            margin-bottom: 30px;
+        }
+        input {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            margin-right: 10px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #FF6A00;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        button:hover {
+            background-color: #D20103;
+            transform: scale(1.05);
         }
         #output {
             margin-top: 20px;
             font-weight: bold;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid white;
+            background-color: rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .visible {
+            opacity: 1;
         }
     </style>
 </head>
 <body>
 
     <h1>Input/Output Example</h1>
-    <label for="userInput">Enter something:</label>
-    <input type="text" id="userInput" placeholder="Type here...">
-    <button onclick="displayOutput()">Submit</button>
+    <div>
+        <label for="userInput">Enter something:</label>
+        <input type="text" id="userInput" placeholder="Type here...">
+        <button onclick="displayOutput()">Submit</button>
+    </div>
 
-    <div id="output"></div>
+    <div id="output" aria-live="polite"></div>
 
     <script>
         function displayOutput() {
-            // Get the value from the input field
-            const userInput = document.getElementById('userInput').value;
+            const userInput = document.getElementById('userInput').value.trim();
+            const outputDiv = document.getElementById('output');
+            
+            // Clear previous messages
+            outputDiv.classList.remove('visible');
 
-            // Output the value to the div
-            document.getElementById('output').innerText = `You entered: ${userInput}`;
+            // Check if the input is not empty
+            setTimeout(() => {
+                if (userInput === "") {
+                    outputDiv.innerText = "Please enter something.";
+                } else {
+                    // Output the value to the div
+                    outputDiv.innerText = `You entered: ${userInput}`;
+                }
+                outputDiv.classList.add('visible');
+            }, 200); // Delay to enable transition effect
+            
+            // Clear the input field
+            document.getElementById('userInput').value = "";
         }
     </script>
 
