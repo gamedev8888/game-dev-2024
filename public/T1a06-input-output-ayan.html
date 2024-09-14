@@ -10,7 +10,7 @@
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 20px;
-            background: linear-gradient(135deg, #D20103, #FF6A00);
+            background-color: black; /* Changed to black */
             color: white;
             display: flex;
             flex-direction: column;
@@ -20,6 +20,7 @@
         }
         h1 {
             margin-bottom: 30px;
+            color: #FF6A00; /* Make heading color distinct */
         }
         .input-container {
             display: flex;
@@ -30,10 +31,12 @@
             padding: 10px;
             border: none;
             border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 5px rgba(255, 255, 255, 0.3);
             margin-right: 10px;
             font-size: 16px;
             width: 200px;
+            background-color: #333; /* Darker background for input */
+            color: white; /* Input text color */
         }
         button {
             padding: 10px 15px;
@@ -102,12 +105,12 @@
 
     <h1>Input/Output Example</h1>
     <div class="input-container">
-        <label for="userInput">Enter something:</label>
+        <label for="userInput" style="color: white;">Enter something:</label>
         <input type="text" id="userInput" placeholder="Type here..." aria-required="true" aria-describedby="inputFeedback">
         <button onclick="displayOutput()">Submit</button>
         <button class="clear-button" onclick="clearOutput()">Clear Outputs</button>
     </div>
-    <div id="inputFeedback" class="feedback"></div>
+    <div id="inputFeedback" class="feedback" style="color: #FF6A00;"></div>
     <div id="output" aria-live="polite"></div>
     <div id="notification" class="notification"></div>
 
