@@ -10,7 +10,8 @@
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: black;
+            background: url('https://example.com/your-background-image.jpg') no-repeat center center fixed;
+            background-size: cover; /* Ensure the image covers the entire background */
             color: white;
             display: flex;
             flex-direction: column;
@@ -29,6 +30,9 @@
             margin-bottom: 20px;
             width: 100%;
             max-width: 400px;
+            background: rgba(0, 0, 0, 0.7); /* Add semi-transparent background */
+            padding: 20px; /* Add padding */
+            border-radius: 10px; /* Round the corners */
         }
         label {
             margin-bottom: 5px;
@@ -90,10 +94,6 @@
         }
         li {
             margin: 5px 0;
-        }
-        .clear-button {
-            margin-top: 20px;
-            background-color: #D20103;
         }
     </style>
 </head>
