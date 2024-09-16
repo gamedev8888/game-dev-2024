@@ -10,7 +10,7 @@
             font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: black; /* Changed to black */
+            background-color: black;
             color: white;
             display: flex;
             flex-direction: column;
@@ -20,28 +20,28 @@
         }
         h1 {
             margin-bottom: 30px;
-            color: #FF6A00; /* Make heading color distinct */
+            color: #FF6A00;
         }
         .input-container {
             display: flex;
             flex-direction: column;
-            align-items: stretch; /* Align inputs to stretch */
+            align-items: stretch;
             margin-bottom: 20px;
             width: 100%;
-            max-width: 400px; /* Set max width for input section */
+            max-width: 400px;
         }
         label {
-            margin-bottom: 5px; /* Space between label and input */
+            margin-bottom: 5px;
         }
         input {
             padding: 10px;
             border: none;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(255, 255, 255, 0.3);
-            margin-bottom: 10px; /* Space between inputs */
+            margin-bottom: 10px;
             font-size: 16px;
-            background-color: #333; /* Darker background for input */
-            color: white; /* Input text color */
+            background-color: #333;
+            color: white;
         }
         button {
             padding: 10px 15px;
@@ -51,7 +51,7 @@
             cursor: pointer;
             font-size: 16px;
             transition: background-color 0.3s ease, transform 0.2s ease;
-            margin-top: 10px; /* Add margin above buttons */
+            margin-top: 10px;
         }
         button:hover {
             background-color: #D20103;
@@ -71,13 +71,13 @@
             opacity: 1;
         }
         .notification {
-            position: fixed; 
-            top: 20px; 
-            right: 20px; 
-            background: #4CAF50; 
-            color: white; 
-            padding: 10px; 
-            border-radius: 5px; 
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
             opacity: 0;
             transition: opacity 0.5s ease;
         }
@@ -110,6 +110,7 @@
         <label for="userMessage" style="color: orange;">Enter a message:</label>
         <input type="text" id="userMessage" placeholder="Your message" aria-required="true">
         
+        <button id="submitButton" onclick="displayOutput()">Submit</button>
     </div>
     
     <div id="inputFeedback" class="feedback" style="color: #FF6A00;"></div>
@@ -141,6 +142,7 @@
                 outputDiv.classList.add('visible');
             }, 200); 
 
+            // Clear inputs after submission
             document.getElementById('userName').value = "";
             document.getElementById('userEmail').value = "";
             document.getElementById('userMessage').value = "";
