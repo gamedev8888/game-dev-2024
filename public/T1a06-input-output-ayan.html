@@ -24,17 +24,22 @@
         }
         .input-container {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            align-items: stretch; /* Align inputs to stretch */
             margin-bottom: 20px;
+            width: 100%;
+            max-width: 400px; /* Set max width for input section */
+        }
+        label {
+            margin-bottom: 5px; /* Space between label and input */
         }
         input {
             padding: 10px;
             border: none;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(255, 255, 255, 0.3);
-            margin-right: 10px;
+            margin-bottom: 10px; /* Space between inputs */
             font-size: 16px;
-            width: 200px;
             background-color: #333; /* Darker background for input */
             color: white; /* Input text color */
         }
@@ -46,6 +51,7 @@
             cursor: pointer;
             font-size: 16px;
             transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: 10px; /* Add margin above buttons */
         }
         button:hover {
             background-color: #D20103;
@@ -89,27 +95,25 @@
             margin-top: 20px;
             background-color: #D20103;
         }
-        @media (max-width: 600px) {
-            input {
-                width: 100%;
-                margin-bottom: 10px;
-            }
-            .input-container {
-                flex-direction: column;
-                align-items: stretch;
-            }
-        }
     </style>
 </head>
 <body>
 
     <h1>Input/Output</h1>
     <div class="input-container">
-        <label for="userInput" style="color: orange;">Enter something:</label>
-        <input type="text" id="userInput" placeholder="Type here..." aria-required="true" aria-describedby="inputFeedback">
+        <label for="userName" style="color: orange;">Enter your name:</label>
+        <input type="text" id="userName" placeholder="Your name" aria-required="true">
+        
+        <label for="userEmail" style="color: orange;">Enter your email:</label>
+        <input type="email" id="userEmail" placeholder="Your email" aria-required="true">
+
+        <label for="userMessage" style="color: orange;">Enter a message:</label>
+        <input type="text" id="userMessage" placeholder="Your message" aria-required="true">
+        
         <button onclick="displayOutput()">Submit</button>
         <button class="clear-button" onclick="clearOutput()">Clear Outputs</button>
     </div>
+    
     <div id="inputFeedback" class="feedback" style="color: #FF6A00;"></div>
     <div id="output" aria-live="polite"></div>
     <div id="notification" class="notification"></div>
@@ -118,7 +122,9 @@
         const outputs = [];
 
         function displayOutput() {
-            const userInput = document.getElementById('userInput').value.trim();
+            const userName = document.getElementById('userName').value.trim();
+            const userEmail = document.getElementById('userEmail').value.trim();
+            const userMessage = document.getElementById('userMessage').value.trim();
             const outputDiv = document.getElementById('output');
             const inputFeedback = document.getElementById('inputFeedback');
             const notification = document.getElementById('notification');
@@ -127,17 +133,19 @@
             inputFeedback.innerText = ''; // Reset feedback text
 
             setTimeout(() => {
-                if (userInput === "") {
-                    inputFeedback.innerText = "Please enter something.";
+                if (userName === "" || userEmail === "" || userMessage === "") {
+                    inputFeedback.innerText = "Please fill in all fields.";
                 } else {
-                    outputs.push(userInput);
+                    outputs.push({ name: userName, email: userEmail, message: userMessage });
                     updateOutputDisplay();
                     notifyUser("Input submitted successfully!");
                 }
                 outputDiv.classList.add('visible');
             }, 200); 
 
-            document.getElementById('userInput').value = "";
+            document.getElementById('userName').value = "";
+            document.getElementById('userEmail').value = "";
+            document.getElementById('userMessage').value = "";
         }
 
         function notifyUser(message) {
@@ -152,7 +160,8 @@
 
         function updateOutputDisplay() {
             const outputDiv = document.getElementById('output');
-            outputDiv.innerHTML = `<ul>${outputs.map(item => `<li>You entered: ${item}</li>`).join('')}</ul>`;
+            outputDiv.innerHTML = `<ul>${outputs.map(item => 
+                `<li><strong>Name:</strong> ${item.name}, <strong>Email:</strong> ${item.email}, <strong>Message:</strong> ${item.message}</li>`).join('')}</ul>`;
         }
 
         function clearOutput() {
