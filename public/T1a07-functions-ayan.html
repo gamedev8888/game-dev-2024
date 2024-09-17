@@ -48,6 +48,127 @@
             background-color: rgba(255, 255, 255, 0.8);
             display: inline-block;
         }
+
+        .news-link {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #4CAF50;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<h1>T1a07-functions-ayan.html</h1>
+
+<script>
+function myVar(myIn) {
+    return document.getElementById(myIn);
+}
+
+// Game variables
+let randomNumber = Math.floor(Math.random() * 100) + 1;
+let attempts = 0;
+
+// Function to handle the guessing game
+function guessNumber() {
+    const userGuess = parseInt(myVar('guessInput').value);
+    attempts++;
+    let message = '';
+
+    if (userGuess > randomNumber) {
+        message = 'Your guess is too high!';
+    } else if (userGuess < randomNumber) {
+        message = 'Your guess is too low!';
+    } else if (userGuess === randomNumber) {
+        message = `Congratulations! You've guessed the number ${randomNumber} in ${attempts} attempts!`;
+    } else {
+        message = 'Please enter a valid number.';
+    }
+    
+    myVar('guessResult').innerHTML = message;
+}
+
+// Function to restart the game
+function restartGame() {
+    randomNumber = Math.floor(Math.random() * 100) + 1;
+    attempts = 0;
+    myVar('guessInput').value = '';
+    myVar('guessResult').innerHTML = 'Guess a number between 1 and 100.';
+}
+</script>
+
+<!-- Input fields for name -->
+Input: <input type="text" id="myFirstName" value="Ayan">
+<input type="button" value="Show on page" onclick="{
+    myVar('myDiv01').innerHTML = 'Your name is ' + myVar('myFirstName').value;
+}">
+
+<div id="myDiv01">...</div>
+
+<!-- News Link -->
+<div class="news-link">
+    <a href="https://www.msn.com/en-ca/feed?ocid=msedgntp&pc=DCTS" target="_blank">Check the latest news on MSN</a>
+</div>
+
+<!-- Guess the number game -->
+<h2>Guess the Number Game</h2>
+<input type="text" id="guessInput" placeholder="Enter a number (1-100)">
+<input type="button" value="Guess" onclick="guessNumber()">
+<input type="button" value="Restart" onclick="restartGame()">
+<div id="guessResult">Guess a number between 1 and 100.</div>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T1a07-functions-ayan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('https://1.bp.blogspot.com/-fip0yy6o2Y0/XuXCbLMULmI/AAAAAAAAwZE/-mgeDNU4aq8k-VLPTFB0in_pfzwLicWwQCLcBGAsYHQ/s2560/2020-deadpool-artwork-4k-o4-3840x2160.jpg');
+            background-size: cover;
+            background-position: center;
+            color: #55a63c;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #4CAF50;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            margin: 10px 0;
+            width: 200px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        input[type="button"] {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="button"]:hover {
+            background-color: #45a049;
+        }
+
+        #myDiv01, #guessResult {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: inline-block;
+        }
     </style>
 </head>
 <body>
