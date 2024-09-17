@@ -6,76 +6,47 @@
     <title>T1a07-functions-ayan</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
             background-image: url('https://example.com/your-background-image.jpg'); /* Replace with your image URL */
-            background-size: cover; 
-            background-position: center; 
+            background-size: cover; /* Cover the entire viewport */
+            background-position: center; /* Center the image */
             color: #333;
             text-align: center;
             padding: 20px;
-            margin: 0;
-            height: 100vh; /* Fill the entire viewport height */
-            display: flex; /* Use flexbox for centering */
-            flex-direction: column; /* Align items vertically */
-            justify-content: center; /* Center vertically */
-            align-items: center; /* Center horizontally */
         }
 
         h1 {
             color: #4CAF50;
-            font-size: 2.5em; /* Increase font size */
-            margin-bottom: 20px; /* Space below the heading */
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Text shadow for depth */
         }
 
         input[type="text"] {
             padding: 10px;
             margin: 10px 0;
-            width: 250px; /* Wider input */
-            border: 2px solid #4CAF50; /* Border color matches the heading */
+            width: 200px;
+            border: 1px solid #ddd;
             border-radius: 4px;
-            transition: border 0.3s; /* Smooth border transition */
-        }
-
-        input[type="text"]:focus {
-            border-color: #45a049; /* Change border color on focus */
-            outline: none; /* Remove default outline */
         }
 
         input[type="button"] {
-            padding: 12px 20px; /* More padding for larger button */
+            padding: 10px 15px;
             background-color: #4CAF50;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Shadow for depth */
         }
 
         input[type="button"]:hover {
             background-color: #45a049;
-            transform: translateY(-2px); /* Lift effect on hover */
-        }
-
-        input[type="button"]:active {
-            transform: translateY(0); /* Reset lift effect on click */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Shadow adjustment */
         }
 
         #myDiv01 {
             margin-top: 20px;
-            padding: 15px;
+            padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
-            background-color: rgba(255, 255, 255, 0.9); /* Slightly opaque background for visibility */
+            background-color: rgba(255, 255, 255, 0.8); /* Slightly transparent background for better visibility */
             display: inline-block;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow for depth */
-            transition: transform 0.3s; /* Transition effect */
-        }
-
-        #myDiv01:hover {
-            transform: scale(1.02); /* Slight zoom on hover */
         }
     </style>
 </head>
