@@ -3,14 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Functions by ayan</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Simple Function Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        function showAlert() {
+            alert("Hello! This is a simple function.");
+        }
+    </script>
 </head>
 <body>
-    <h1>Functions</h1>
-    <button onclick="displayDate()">Click me to display Date and Time</button>
-    <p id="dateTime"></p>
-    <script src="script.js"></script>
+    <h1>Welcome to My Simple Function Page</h1>
+    <p>Click the button below to see a function in action:</p>
+    <button onclick="showAlert()">Click Me!</button>
 </body>
 </html>
-
