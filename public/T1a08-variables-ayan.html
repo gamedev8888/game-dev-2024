@@ -3,61 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Variables-Ayan</title>
+    <title>Simple Page with Variables</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
             margin-top: 50px;
-            background-image: url('https://example.com/your-image-url.jpg'); /* Replace with your image URL */
-            background-size: cover; /* Cover the entire background */
-            background-position: center; /* Center the background image */
-            color: white; /* Change text color for better visibility */
         }
         button {
             padding: 10px 20px;
             font-size: 16px;
-            margin-top: 20px;
-        }
-        #info {
-            display: none; /* Initially hidden */
-            margin-top: 20px;
-            font-size: 16px;
-            color: lime; /* Color for the additional info */
         }
     </style>
 </head>
 <body>
 
-    <h1 id="greeting">Welcome to the Variables Page!</h1>
+    <h1 id="greeting">Welcome to My Simple Page!</h1>
     <button onclick="changeGreeting()">Click me to change the greeting</button>
-    <div id="info">This is additional info that can be shown or hidden!</div>
-    <button onclick="toggleInfo()">Toggle Info</button>
 
     <script>
-        // Define a string variable for the greeting message
-        let greetingMessage = "Hello, User! Enjoy your stay here!";
-
-        // Define a boolean variable to control the visibility of additional info
-        let isInfoVisible = false;
-
+        // Define a variable to hold a greeting message
+        let greetingMessage = "Hello, User! Enjoy your stay!";
+        
         // Function to change the greeting on the page
         function changeGreeting() {
+            // Change the text content of the greeting element
             document.getElementById("greeting").innerText = greetingMessage;
-        }
-
-        // Function to toggle the visibility of additional info
-        function toggleInfo() {
-            // Toggle the boolean variable
-            isInfoVisible = !isInfoVisible;
-
-            // Show or hide the info based on the boolean value
-            const infoDiv = document.getElementById("info");
-            if (isInfoVisible) {
-                infoDiv.style.display = "block"; // Show the info
-            } else {
-                infoDiv.style.display = "none"; // Hide the info
-            }
         }
     </script>
 </body>
