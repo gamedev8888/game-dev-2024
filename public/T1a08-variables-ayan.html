@@ -4,40 +4,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>T1a08-variables-ayan.html</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('your-image-url.jpg'); /* Set your background image */
+            background-size: cover; /* Cover the entire background */
+            background-position: center; /* Center the background image */
+            color: white; /* Change text color for contrast */
+            padding: 20px;
+            text-align: center;
+        }
+        input[type="text"] {
+            width: 50px;
+            padding: 5px;
+            margin: 10px 0;
+        }
+        input[type="button"] {
+            padding: 10px 15px;
+            margin: 5px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        input[type="button"]:hover {
+            background-color: #218838;
+        }
+        #results {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background for results */
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
-    <h1 align="center">T1a08-variables-ayan.html</h1>
-
-    W3Schools link to variables <a href="https://www.w3schools.com/js/js_variables.asp">here</a><br>
+    <h1>T1a08 Variables - Ayan</h1>
+    W3Schools link to variables <a href="https://www.w3schools.com/js/js_variables.asp" style="color: #ffd700;">here</a><br>
 
     Input 1: <input type="text" id="myIn01" value="5"><br>
     Input 2: <input type="text" id="myIn02" value="7"><br>
 
-    <input type="button" value="Add and fix" onclick="{
-        let myX = parseInt(document.getElementById('myIn01').value);
-        let myY = parseInt(document.getElementById('myIn02').value);
-        let myTotal = myX + myY;
-        document.getElementById('myDiv01').innerHTML = 'Your answer is ' + myTotal;
-    }"><br>
+    <input type="button" value="Calculate" onclick="calculateResults()"><br>
 
-    <div id="myDiv01">...</div>
+    <div id="results">
+        <h3>Results:</h3>
+        <p id="addResult">Addition Result: </p>
+        <p id="subResult">Subtraction Result: </p>
+        <p id="mulResult">Multiplication Result: </p>
+        <p id="divResult">Division Result: </p>
+    </div>
 
-    <input type="button" value="Add2 and fix" onclick="{
-        let myX = parseInt(document.getElementById('myIn01').value);
-        let myY = parseInt(document.getElementById('myIn02').value);
-        let myTotal = myX + myY;
-        document.getElementById('myDiv01').innerHTML = 'Your answer is ' + myTotal;
-    }"><br><br>
+    <script>
+        function calculateResults() {
+            let myX = parseFloat(document.getElementById('myIn01').value);
+            let myY = parseFloat(document.getElementById('myIn02').value);
+            
+            // Calculations
+            let addTotal = myX + myY;
+            let subTotal = myX - myY;
+            let mulTotal = myX * myY;
+            let divTotal = myY !== 0 ? (myX / myY) : 'undefined';  // Prevent division by zero
 
-    Other programming languages use defined variables:<br>
-    <pre>
-boolean
-int8 or byte
-int
-double
-float
-char 
-string
-    </pre>
+            // Displaying results
+            document.getElementById('addResult').innerText = 'Addition Result: ' + addTotal;
+            document.getElementById('subResult').innerText = 'Subtraction Result: ' + subTotal;
+            document.getElementById('mulResult').innerText = 'Multiplication Result: ' + mulTotal;
+            document.getElementById('divResult').innerText = 'Division Result: ' + divTotal;
+        }
+    </script>
 </body>
 </html>
