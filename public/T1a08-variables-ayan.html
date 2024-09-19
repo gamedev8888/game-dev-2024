@@ -7,10 +7,10 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-image: url('https://www.pixelstalk.net/wp-content/uploads/2016/06/Free-Download-Outer-Space-Wallpapers-HD.jpg'); /* Set your background image */
-            background-size: cover; /* Cover the entire background */
-            background-position: center; /* Center the background image */
-            color: #b30505; /* Change text color for contrast */
+            background-image: url('https://www.pixelstalk.net/wp-content/uploads/2016/06/Free-Download-Outer-Space-Wallpapers-HD.jpg');
+            background-size: cover;
+            background-position: center;
+            color: #b30505;
             padding: 20px;
             text-align: center;
         }
@@ -33,7 +33,7 @@
         #results {
             margin-top: 20px;
             padding: 10px;
-            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background for results */
+            background-color: rgba(255, 255, 255, 0.8);
             border-radius: 5px;
         }
     </style>
@@ -42,9 +42,14 @@
     <h1>T1a08 Variables - Ayan</h1>
     W3Schools link to variables <a href="https://www.w3schools.com/js/js_variables.asp" style="color: #ffd700;">here</a><br>
 
-    Input 1: <input type="text" id="myIn01" value="5.5" placeholder="e.g. 5.5"><br> <!-- Example float value -->
-    Input 2: <input type="text" id="myIn02" value="7.2" placeholder="e.g. 7.2"><br> <!-- Example float value -->
+    Input 1: <input type="text" id="myIn01" value="5.5" placeholder="e.g. 5.5"><br>
+    Input 2: <input type="text" id="myIn02" value="7.2" placeholder="e.g. 7.2"><br>
 
+    <label><input type="checkbox" id="addCheckbox"> Addition</label><br>
+    <label><input type="checkbox" id="subCheckbox"> Subtraction</label><br>
+    <label><input type="checkbox" id="mulCheckbox"> Multiplication</label><br>
+    <label><input type="checkbox" id="divCheckbox"> Division</label><br>
+    
     <input type="button" value="Calculate" onclick="calculateResults()"><br>
 
     <div id="results">
@@ -60,23 +65,38 @@
             let myX = parseFloat(document.getElementById('myIn01').value);
             let myY = parseFloat(document.getElementById('myIn02').value);
             
-            // Checking if inputs are valid numbers
-            if (isNaN(myX) || isNaN(myY)) {
+            // Boolean checks to see if inputs are valid
+            let isValidX = !isNaN(myX);
+            let isValidY = !isNaN(myY);
+
+            if (!isValidX || !isValidY) {
                 alert("Please enter valid numbers.");
-                return; // Stops the function if input is invalid
+                return;
             }
 
-            // Calculations
-            let addTotal = myX + myY;
-            let subTotal = myX - myY;
-            let mulTotal = myX * myY;
-            let divTotal = myY !== 0 ? (myX / myY) : 'undefined';  // Prevent division by zero
+            // Clear previous results
+            document.getElementById('addResult').innerText = 'Addition Result: ';
+            document.getElementById('subResult').innerText = 'Subtraction Result: ';
+            document.getElementById('mulResult').innerText = 'Multiplication Result: ';
+            document.getElementById('divResult').innerText = 'Division Result: ';
 
-            // Displaying results
-            document.getElementById('addResult').innerText = 'Addition Result: ' + addTotal;
-            document.getElementById('subResult').innerText = 'Subtraction Result: ' + subTotal;
-            document.getElementById('mulResult').innerText = 'Multiplication Result: ' + mulTotal;
-            document.getElementById('divResult').innerText = 'Division Result: ' + divTotal;
+            // Perform calculations based on chosen operations
+            if (document.getElementById('addCheckbox').checked) {
+                let addTotal = myX + myY;
+                document.getElementById('addResult').innerText = 'Addition Result: ' + addTotal;
+            }
+            if (document.getElementById('subCheckbox').checked) {
+                let subTotal = myX - myY;
+                document.getElementById('subResult').innerText = 'Subtraction Result: ' + subTotal;
+            }
+            if (document.getElementById('mulCheckbox').checked) {
+                let mulTotal = myX * myY;
+                document.getElementById('mulResult').innerText = 'Multiplication Result: ' + mulTotal;
+            }
+            if (document.getElementById('divCheckbox').checked) {
+                let divTotal = myY !== 0 ? (myX / myY) : 'Cannot divide by zero';
+                document.getElementById('divResult').innerText = 'Division Result: ' + divTotal;
+            }
         }
     </script>
 </body>
