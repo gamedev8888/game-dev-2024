@@ -21,14 +21,15 @@
 </head>
 <body>
     <h1>Snake Game</h1>
-    <canvas id="gameCanvas" width="400" height="400"></canvas>
+    <!-- Updated canvas size to 600x600 -->
+    <canvas id="gameCanvas" width="600" height="600"></canvas>
     <p>Use arrow keys to move the snake.</p>
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
-        let snake = [{ x: 200, y: 200 }];
-        let speed = 10;
+        let snake = [{ x: 300, y: 300 }]; // Start in the middle
+        let speed = 20; // Updated speed to match the new size
         let direction = { x: speed, y: 0 };
         let food = spawnFood();
         let score = 0;
@@ -59,7 +60,10 @@
         function moveSnake() {
             let head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
             snake.unshift(head);
-            snake.pop();
+            // only remove the tail if we haven't eaten food
+            if (!checkFoodCollision()) {
+                snake.pop();
+            }
         }
 
         function changeDirection(event) {
@@ -97,39 +101,11 @@
                 snake.push({}); // Grow the snake
                 food = spawnFood();
                 score++;
-            }
-        }
-
-        function spawnFood() {
-            let x = Math.floor(Math.random() * (canvas.width / speed)) * speed;
-            let y = Math.floor(Math.random() * (canvas.height / speed)) * speed;
-            return { x, y };
-        }
-
-        function clearCanvas() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
-
-        function isGameOver() {
-            if (
-                snake[0].x < 0 ||
-                snake[0].y < 0 ||
-                snake[0].x >= canvas.width ||
-                snake[0].y >= canvas.height
-            ) {
                 return true;
-            }
-
-            for (let i = 1; i < snake.length; i++) {
-                if (snake[i].x === snake[0].x && snake[i].y === snake[0].y) {
-                    return true;
-                }
             }
             return false;
         }
 
-        // Start the game
-        gameLoop();
-    </script>
-</body>
-</html>
+        function spawnFood() {
+            let x = Math.floor(Math.random() * (canvas.width / speed)) * speed;
+            let y = Math.floor(Math.random() * (canvas.height / speed)) *
