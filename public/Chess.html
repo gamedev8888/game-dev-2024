@@ -27,6 +27,9 @@
         .square {
             width: 60px;
             height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .white {
@@ -53,12 +56,14 @@
         const chessboard = document.getElementById('chessboard');
 
         const pieces = {
+            // Black pieces
             'r': 'url("https://upload.wikimedia.org/wikipedia/commons/c/c8/Chess_rlt48.svg")', // Rook
             'n': 'url("https://upload.wikimedia.org/wikipedia/commons/e/ef/Chess_nlt48.svg")', // Knight
             'b': 'url("https://upload.wikimedia.org/wikipedia/commons/9/98/Chess_blt48.svg")', // Bishop
             'q': 'url("https://upload.wikimedia.org/wikipedia/commons/e/ef/Chess_qlt48.svg")', // Queen
             'k': 'url("https://upload.wikimedia.org/wikipedia/commons/0/04/Chess_klt48.svg")', // King
             'p': 'url("https://upload.wikimedia.org/wikipedia/commons/4/45/Chess_plt48.svg")', // Pawn
+            // White pieces
             'R': 'url("https://upload.wikimedia.org/wikipedia/commons/3/3b/Chess_rdt48.svg")', // Rook
             'N': 'url("https://upload.wikimedia.org/wikipedia/commons/c/c7/Chess_ndt48.svg")', // Knight
             'B': 'url("https://upload.wikimedia.org/wikipedia/commons/3/3b/Chess_bdt48.svg")', // Bishop
