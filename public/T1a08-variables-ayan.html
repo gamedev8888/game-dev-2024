@@ -15,7 +15,7 @@
             text-align: center;
         }
         input[type="text"] {
-            width: 50px;
+            width: 70px;
             padding: 5px;
             margin: 10px 0;
         }
@@ -42,8 +42,8 @@
     <h1>T1a08 Variables - Ayan</h1>
     W3Schools link to variables <a href="https://www.w3schools.com/js/js_variables.asp" style="color: #ffd700;">here</a><br>
 
-    Input 1: <input type="text" id="myIn01" value="5"><br>
-    Input 2: <input type="text" id="myIn02" value="7"><br>
+    Input 1: <input type="text" id="myIn01" value="5.5" placeholder="e.g. 5.5"><br> <!-- Example float value -->
+    Input 2: <input type="text" id="myIn02" value="7.2" placeholder="e.g. 7.2"><br> <!-- Example float value -->
 
     <input type="button" value="Calculate" onclick="calculateResults()"><br>
 
@@ -60,6 +60,12 @@
             let myX = parseFloat(document.getElementById('myIn01').value);
             let myY = parseFloat(document.getElementById('myIn02').value);
             
+            // Checking if inputs are valid numbers
+            if (isNaN(myX) || isNaN(myY)) {
+                alert("Please enter valid numbers.");
+                return; // Stops the function if input is invalid
+            }
+
             // Calculations
             let addTotal = myX + myY;
             let subTotal = myX - myY;
