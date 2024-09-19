@@ -113,12 +113,38 @@
             }
         }
 
+        function highlightValidMoves(row, col) {
+            // This is a placeholder for move logic. Just for example, allowing a piece to move to adjacent squares.
+            const validMoves = [
+                { row: row + 1, col: col }, // Down
+                { row: row - 1, col: col }, // Up
+                { row: row, col: col + 1 }, // Right
+                { row: row, col: col - 1 }  // Left
+            ];
+            
+            validMoves.forEach(move => {
+                const targetSquare = document.querySelector(`[data-row="${move.row}"][data-col="${move.col}"]`);
+                if (targetSquare && (move.row >= 0 && move.row < 8 && move.col >= 0 && move.col < 8)) {
+                    targetSquare.style.border = '2px dashed green'; // Example visual feedback for valid moves
+                }
+            });
+        }
+
         function handlePieceClick(event) {
+            if (selectedSquare) { // If we have already selected a piece
+                selectedSquare.style.border = ''; // Clear border from the previously selected square
+            }
             const square = event.currentTarget;
-            selectedSquare = square; // Store the selected square
-            selectedPiece = square.style.backgroundImage; // Get the piece's background image
-            // Optionally add some visual feedback
+            selectedSquare = square; 
+            selectedPiece = square.style.backgroundImage; 
             square.style.border = '2px solid red';
+
+            // Get selected piece's position
+            const row = parseInt(square.getAttribute('data-row'));
+            const col = parseInt(square.getAttribute('data-col'));
+
+            // Highlight valid moves (you'll need to refine this based on the actual piece type)
+            highlightValidMoves(row, col);
         }
 
         function handleSquareClick(event) {
@@ -137,6 +163,10 @@
                 // Reset selection
                 selectedPiece = null; 
                 selectedSquare = null;
+
+                // Clear any highlighted valid moves
+                const allSquares = document.querySelectorAll('.square');
+                allSquares.forEach(sq => sq.style.border = '');
             }
         }
 
