@@ -9,44 +9,44 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin: 0;
-            padding: 20px;
-            background-color: #f0f0f0;
+            margin: 0; 
+            padding: 20px; 
+            background-color: #f0f0f0; 
         }
 
         h1 {
-            font-family: Arial, sans-serif;
+            font-family: Arial, sans-serif; 
         }
 
         #chessboard {
-            display: grid;
-            grid-template-columns: repeat(8, 60px);
-            grid-template-rows: repeat(8, 60px);
+            display: grid; 
+            grid-template-columns: repeat(8, 60px); 
+            grid-template-rows: repeat(8, 60px); 
         }
 
         .square {
-            width: 60px;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
+            width: 60px; 
+            height: 60px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            cursor: pointer; 
         }
 
         .white {
-            background-color: #ffffff;
+            background-color: #ffffff; 
         }
 
         .black {
-            background-color: #000000;
+            background-color: #000000; 
         }
 
         .piece {
-            width: 100%;
-            height: 100%;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
+            width: 100%; 
+            height: 100%; 
+            background-size: contain; 
+            background-repeat: no-repeat; 
+            background-position: center; 
         }
     </style>
 </head>
@@ -58,19 +58,19 @@
 
         const pieces = {
             // Black pieces
-            'r': 'url("https://upload.wikimedia.org/wikipedia/commons/c/c8/Chess_rlt48.svg")', // Rook
-            'n': 'url("https://upload.wikimedia.org/wikipedia/commons/e/ef/Chess_nlt48.svg")', // Knight
-            'b': 'url("https://upload.wikimedia.org/wikipedia/commons/9/98/Chess_blt48.svg")', // Bishop
-            'q': 'url("https://upload.wikimedia.org/wikipedia/commons/e/ef/Chess_qlt48.svg")', // Queen
-            'k': 'url("https://upload.wikimedia.org/wikipedia/commons/0/04/Chess_klt48.svg")', // King
-            'p': 'url("https://upload.wikimedia.org/wikipedia/commons/4/45/Chess_plt48.svg")', // Pawn
+            'r': 'https://upload.wikimedia.org/wikipedia/commons/c/c8/Chess_rlt48.svg', // Rook
+            'n': 'https://upload.wikimedia.org/wikipedia/commons/e/ef/Chess_nlt48.svg', // Knight
+            'b': 'https://upload.wikimedia.org/wikipedia/commons/9/98/Chess_blt48.svg', // Bishop
+            'q': 'https://upload.wikimedia.org/wikipedia/commons/e/ef/Chess_qlt48.svg', // Queen
+            'k': 'https://upload.wikimedia.org/wikipedia/commons/0/04/Chess_klt48.svg', // King
+            'p': 'https://upload.wikimedia.org/wikipedia/commons/4/45/Chess_plt48.svg', // Pawn
             // White pieces
-            'R': 'url("https://upload.wikimedia.org/wikipedia/commons/3/3b/Chess_rdt48.svg")', // Rook
-            'N': 'url("https://upload.wikimedia.org/wikipedia/commons/c/c7/Chess_ndt48.svg")', // Knight
-            'B': 'url("https://upload.wikimedia.org/wikipedia/commons/3/3b/Chess_bdt48.svg")', // Bishop
-            'Q': 'url("https://upload.wikimedia.org/wikipedia/commons/1/1b/Chess_qdt48.svg")', // Queen
-            'K': 'url("https://upload.wikimedia.org/wikipedia/commons/a/a0/Chess_kdt48.svg")', // King
-            'P': 'url("https://upload.wikimedia.org/wikipedia/commons/1/15/Chess_pdt48.svg")'  // Pawn
+            'R': 'https://upload.wikimedia.org/wikipedia/commons/3/3b/Chess_rdt48.svg', // Rook
+            'N': 'https://upload.wikimedia.org/wikipedia/commons/c/c7/Chess_ndt48.svg', // Knight
+            'B': 'https://upload.wikimedia.org/wikipedia/commons/3/3b/Chess_bdt48.svg', // Bishop
+            'Q': 'https://upload.wikimedia.org/wikipedia/commons/1/1b/Chess_qdt48.svg', // Queen
+            'K': 'https://upload.wikimedia.org/wikipedia/commons/a/a0/Chess_kdt48.svg', // King
+            'P': 'https://upload.wikimedia.org/wikipedia/commons/1/15/Chess_pdt48.svg'  // Pawn
         };
 
         const initialBoard = [
@@ -94,12 +94,14 @@
                     square.classList.add('square');
                     square.classList.add((row + col) % 2 === 0 ? 'white' : 'black');
                     square.setAttribute('data-row', row);
-                    square.setAttribute('data-col', col); // Add row and col data attributes
+                    square.setAttribute('data-col', col);
                     
                     const piece = initialBoard[row][col];
                     if (piece !== '.') {
                         square.classList.add('piece');
-                        square.style.backgroundImage = pieces[piece];
+                        square.style.backgroundImage = `url(${pieces[piece]})`;
+                        square.style.backgroundSize = 'contain';
+                        square.style.backgroundRepeat = 'no-repeat';
 
                         // Add click event to square with piece
                         square.addEventListener('click', handlePieceClick);
