@@ -30,6 +30,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
         }
 
         .white {
@@ -56,20 +57,20 @@
         const chessboard = document.getElementById('chessboard');
 
         const pieces = {
-            Black pieces
-            'r': 'url("https://upload.wikimedia.org/wikipedia/commons/c/c8/Chess_rlt48.svg")', Rook
-            'n': 'url("https://upload.wikimedia.org/wikipedia/commons/e/ef/Chess_nlt48.svg")', knight
-            'b': 'url("https://upload.wikimedia.org/wikipedia/commons/9/98/Chess_blt48.svg")', Bishop
-            'q': 'url("https://upload.wikimedia.org/wikipedia/commons/e/ef/Chess_qlt48.svg")', Queen
-            'k': 'url("https://upload.wikimedia.org/wikipedia/commons/0/04/Chess_klt48.svg")', King
-            'p': 'url("https://upload.wikimedia.org/wikipedia/commons/4/45/Chess_plt48.svg")', Pawn
-            White pieces
-            'R': 'url("https://upload.wikimedia.org/wikipedia/commons/3/3b/Chess_rdt48.svg")', Rook
-            'N': 'url("https://upload.wikimedia.org/wikipedia/commons/c/c7/Chess_ndt48.svg")', Knight
-            'B': 'url("https://upload.wikimedia.org/wikipedia/commons/3/3b/Chess_bdt48.svg")', Bishop
-            'Q': 'url("https://upload.wikimedia.org/wikipedia/commons/1/1b/Chess_qdt48.svg")', Queen
-            'K': 'url("https://upload.wikimedia.org/wikipedia/commons/a/a0/Chess_kdt48.svg")', King
-            'P': 'url("https://upload.wikimedia.org/wikipedia/commons/1/15/Chess_pdt48.svg")', Pawn
+            // Black pieces
+            'r': 'url("https://upload.wikimedia.org/wikipedia/commons/c/c8/Chess_rlt48.svg")', // Rook
+            'n': 'url("https://upload.wikimedia.org/wikipedia/commons/e/ef/Chess_nlt48.svg")', // Knight
+            'b': 'url("https://upload.wikimedia.org/wikipedia/commons/9/98/Chess_blt48.svg")', // Bishop
+            'q': 'url("https://upload.wikimedia.org/wikipedia/commons/e/ef/Chess_qlt48.svg")', // Queen
+            'k': 'url("https://upload.wikimedia.org/wikipedia/commons/0/04/Chess_klt48.svg")', // King
+            'p': 'url("https://upload.wikimedia.org/wikipedia/commons/4/45/Chess_plt48.svg")', // Pawn
+            // White pieces
+            'R': 'url("https://upload.wikimedia.org/wikipedia/commons/3/3b/Chess_rdt48.svg")', // Rook
+            'N': 'url("https://upload.wikimedia.org/wikipedia/commons/c/c7/Chess_ndt48.svg")', // Knight
+            'B': 'url("https://upload.wikimedia.org/wikipedia/commons/3/3b/Chess_bdt48.svg")', // Bishop
+            'Q': 'url("https://upload.wikimedia.org/wikipedia/commons/1/1b/Chess_qdt48.svg")', // Queen
+            'K': 'url("https://upload.wikimedia.org/wikipedia/commons/a/a0/Chess_kdt48.svg")', // King
+            'P': 'url("https://upload.wikimedia.org/wikipedia/commons/1/15/Chess_pdt48.svg")'  // Pawn
         };
 
         const initialBoard = [
@@ -83,21 +84,59 @@
             ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
         ];
 
+        let selectedPiece = null; // To store the selected piece
+        let selectedSquare = null; // To store the square of the selected piece
+
         function createChessBoard() {
             for (let row = 0; row < 8; row++) {
                 for (let col = 0; col < 8; col++) {
                     const square = document.createElement('div');
                     square.classList.add('square');
                     square.classList.add((row + col) % 2 === 0 ? 'white' : 'black');
+                    square.setAttribute('data-row', row);
+                    square.setAttribute('data-col', col); // Add row and col data attributes
                     
                     const piece = initialBoard[row][col];
                     if (piece !== '.') {
                         square.classList.add('piece');
                         square.style.backgroundImage = pieces[piece];
+
+                        // Add click event to square with piece
+                        square.addEventListener('click', handlePieceClick);
+                    } else {
+                        // Add click event to empty square
+                        square.addEventListener('click', handleSquareClick);
                     }
-                    
+
                     chessboard.appendChild(square);
                 }
+            }
+        }
+
+        function handlePieceClick(event) {
+            const square = event.currentTarget;
+            selectedSquare = square; // Store the selected square
+            selectedPiece = square.style.backgroundImage; // Get the piece's background image
+            // Optionally add some visual feedback
+            square.style.border = '2px solid red';
+        }
+
+        function handleSquareClick(event) {
+            const square = event.currentTarget;
+
+            if (selectedPiece) {
+                // Move the piece
+                square.style.backgroundImage = selectedPiece;
+                square.classList.add('piece');
+
+                // Clear the old square
+                selectedSquare.style.backgroundImage = '';
+                selectedSquare.classList.remove('piece');
+                selectedSquare.style.border = '';
+                
+                // Reset selection
+                selectedPiece = null; 
+                selectedSquare = null;
             }
         }
 
