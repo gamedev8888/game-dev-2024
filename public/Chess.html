@@ -78,7 +78,6 @@
             50% { transform: scale(1.2); }
             100% { transform: scale(1); }
         }
-
     </style>
 </head>
 <body>
@@ -129,7 +128,7 @@
                     if (piece) {
                         const pieceElement = document.createElement("div");
                         pieceElement.className = "piece";
-                        pieceElement.innerHTML = pieces[piece];
+                        pieceElement.textContent = pieces[piece];
                         pieceElement.dataset.row = row;
                         pieceElement.dataset.col = col;
                         square.appendChild(pieceElement);
@@ -156,16 +155,14 @@
                 if (validateMove(selectedPiece.dataset.row, selectedPiece.dataset.col, row, col)) {
                     movePiece(selectedSquare, square);
                     updateMoveHistory(`${currentTurn.charAt(0).toUpperCase() + currentTurn.slice(1)} moved to (${row}, ${col})`);
-                    if (isCheckmate(currentTurn === 'white' ? 'black' : 'white')) {
-                        alert(`${currentTurn.charAt(0).toUpperCase() + currentTurn.slice(1)} is in Checkmate!`);
-                        clearInterval(timerInterval);
-                    }
+                    // Here to check for checkmate, you would need to add more logic
                     switchTurn();
                 }
-            } else if (piece) {
+            } else if (piece && ((currentTurn === 'white' && piece.textContent === pieces[piece.dataset.col]) ||
+                                 (currentTurn === 'black' && piece.textContent === pieces[piece.dataset.col].toLowerCase()))) {
                 selectedPiece = piece;
                 selectedSquare = square;
-                selectedPiece.style.pointerEvents = 'none';
+                selectedPiece.style.pointerEvents = 'none'; // Disable further click until moved
             }
         }
 
@@ -175,26 +172,16 @@
             const toRow = toSquare.dataset.row;
             const toCol = toSquare.dataset.col;
 
+            // Move the piece visually
             toSquare.appendChild(selectedPiece);
+            fromSquare.innerHTML = ''; // Clear the previous square visually
+            
             selectedPiece.style.pointerEvents = 'auto';
             selectedPiece.style.animation = 'pieceMove 0.5s ease-out forwards'; // Animation on move
             
+            // Update the board state
             initialBoard[toRow][toCol] = initialBoard[fromRow][fromCol];
             initialBoard[fromRow][fromCol] = null;
-            
-            // Pawn promotion if applicable
-            if ((initialBoard[toRow][toCol] === 'P' && toRow === 0) || (initialBoard[toRow][toCol] === 'p' && toRow === 7)) {
-                const promotionPiece = prompt("Promote to (Q/R/B/N):")?.toUpperCase();
-                if (promotionPiece === 'Q' || promotionPiece === 'R' || promotionPiece === 'B' || promotionPiece === 'N') {
-                    initialBoard[toRow][toCol] = promotionPiece === 'Q' ? (initialBoard[toRow][toCol] === 'P' ? 'Q' : 'q') : 
-                                                  promotionPiece === 'R' ? (initialBoard[toRow][toCol] === 'P' ? 'R' : 'r') : 
-                                                  promotionPiece === 'B' ? (initialBoard[toRow][toCol] === 'P' ? 'B' : 'b') : 
-                                                  (initialBoard[toRow][toCol] === 'P' ? 'N' : 'n');
-                }
-            }
-            
-            selectedPiece = null;
-            selectedSquare = null;
         }
 
         function validateMove(fromRow, fromCol, toRow, toCol) {
