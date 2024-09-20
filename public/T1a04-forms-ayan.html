@@ -3,19 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Simple Form</title>
+    <title>Forms</title>
     <style>
         body {
-            background-color: gold; /* Set background color to gold */
+            background-image: url('https://wallpaperaccess.com/full/31253.jpg'); /* Change the URL to your desired background image */
+            background-size: cover; /* Ensure the image covers the entire background */
+            background-position: center; /* Center the image */
+            background-repeat: no-repeat; /* Prevent repeating the image */
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: yellow; /* Adjust text color for readability */
         }
         form {
-            background-color: yellow; /* Set form background to yellow */
-            padding: 20px;
+            background-color: rgba(255, 255, 0, 0.8); /* Semi-transparent yellow to ensure readability */
+            padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            width: fit-content;
-            margin: auto;
-            margin-top: 50px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+        }
+        label {
+            margin: 10px 0 5px;
+            font-weight: bold;
+            color: #333; /* Darker label color for better visibility */
+        }
+        input[type="text"], 
+        input[type="number"], 
+        select {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin: 5px 0 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input[type="radio"] {
+            margin: 0 10px;
         }
         input[type="submit"] {
             cursor: pointer;
@@ -23,60 +52,81 @@
             color: white;
             border: none;
             border-radius: 5px;
-            padding: 10px 20px;
+            padding: 12px 20px;
+            width: 100%;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
         }
         input[type="submit"]:hover {
             background-color: darkblue;
         }
         .feedback {
             margin-top: 20px;
+            display: none;
             text-align: center;
             font-size: 1.2em;
-            color: green; /* Color of the feedback text */
+            color: green;
+            transition: opacity 0.5s ease;
         }
     </style>
 </head>
 <body>
-    <h1 align="center">Welcome to My Simple Form!</h1>
+    <h1>Forms</h1>
 
-    <form id="myForm">
-        <label for="name">What is your name?</label><br>
-        <input type="text" id="name" name="name" required placeholder="Enter your name"><br><br>
+    <form id="myForm" aria-labelledby="formTitle" novalidate>
+        <div>
+            <label for="name">What is your name?</label>
+            <input type="text" id="name" name="name" required placeholder="Enter your name">
+        </div>
 
-        <label for="age">How old are you?</label><br>
-        <input type="number" id="age" name="age" min="1" max="120" required placeholder="Enter your age"><br><br>
+        <div>
+            <label for="age">How old are you?</label>
+            <input type="number" id="age" name="age" min="1" max="120" required placeholder="Enter your age">
+        </div>
 
-        <label for="favoriteColor">What is your favorite color?</label><br>
-        <input type="text" id="favoriteColor" name="favoriteColor" placeholder="e.g., Blue, Red"><br><br>
+        <div>
+            <label for="favoriteColor">What is your favorite color?</label>
+            <input type="text" id="favoriteColor" name="favoriteColor" placeholder="e.g., Blue, Red">
+        </div>
 
-        <label>Do you prefer cats or dogs?</label><br>
-        <input type="radio" id="cats" name="pets" value="cats" required>
-        <label for="cats">Cats</label><br>
-        <input type="radio" id="dogs" name="pets" value="dogs">
-        <label for="dogs">Dogs</label><br><br>
+        <div>
+            <label>Do you prefer cats or dogs?</label><br>
+            <input type="radio" id="cats" name="pets" value="cats" required>
+            <label for="cats">Cats</label>
+            <input type="radio" id="dogs" name="pets" value="dogs">
+            <label for="dogs">Dogs</label>
+        </div>
 
-        <label for="game">What is your favorite game?</label><br>
-        <select id="game" name="game">
-            <option value="soccer">Soccer</option>
-            <option value="basketball">Basketball</option>
-            <option value="videoGames">Video Games</option>
-            <option value="hideAndSeek">Hide and Seek</option>
-        </select><br><br>
+        <div>
+            <label for="game">What is your favorite game?</label>
+            <select id="game" name="game" required>
+                <option value="">Select your game</option>
+                <option value="soccer">Soccer</option>
+                <option value="basketball">Basketball</option>
+                <option value="videoGames">Video Games</option>
+                <option value="hideAndSeek">Hide and Seek</option>
+            </select>
+        </div>
 
         <input type="submit" value="Submit!">
     </form>
 
-    <div id="feedback" class="feedback" style="display:none;">Thank you for your submission!</div>
+    <div id="feedback" class="feedback">Thank you for your submission!</div>
 
     <script>
         document.getElementById('myForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent the default form submission
 
             // Display feedback message
-            document.getElementById('feedback').style.display = 'block';
+            const feedbackElement = document.getElementById('feedback');
+            feedbackElement.style.display = 'block';
+            feedbackElement.style.opacity = 1;
 
-            // Optionally, you can reset the form after submission
-            this.reset();
+            // Optionally, reset the form after a delay
+            setTimeout(() => {
+                this.reset();
+                feedbackElement.style.opacity = 0; // Fade out effect
+            }, 3000);
         });
     </script>
 </body>
