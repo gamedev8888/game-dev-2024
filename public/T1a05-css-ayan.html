@@ -91,6 +91,19 @@
             font-size: 1.2em; /* Larger font size */
         }
 
+        /* Styling for the radio button section */
+        fieldset {
+            border: 2px solid white; /* White border for fieldset */
+            margin: 20px auto; /* Centered margin */
+            padding: 10px; /* Padding */
+            border-radius: 10px; /* Rounded corners */
+        }
+
+        legend {
+            font-weight: bold; /* Bold text for legend */
+            color: white; /* Legend color */
+        }
+
         /* Media Queries for Responsiveness */
         @media (max-width: 600px) {
             h1 {
@@ -125,10 +138,30 @@
         <section>
             <p>This is <i class="bordered">italic with a border</i></p>
         </section>
+
+        <section>
+            <h2>Choose Your Color Theme</h2>
+            <form>
+                <fieldset>
+                    <legend>Select a theme:</legend>
+                    <label>
+                        <input type="radio" name="theme" value="light"> Light Mode
+                    </label>
+                    <br>
+                    <label>
+                        <input type="radio" name="theme" value="dark" checked> Dark Mode
+                    </label>
+                    <br>
+                    <label>
+                        <input type="radio" name="theme" value="colorful"> Colorful Mode
+                    </label>
+                </fieldset>
+            </form>
+        </section>
     </main>
 
     <footer>
-        <p>&copy; 2024 Your Name. All rights reserved.</p>
+        <p>© 2024 Your Name. All rights reserved.</p>
     </footer>
 </body>
 
