@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>T1a05-css-ayan.html</title>
+    <title>Background Color Changer</title>
     <style>
         /* CSS Reset */
         * {
@@ -15,11 +15,12 @@
         }
 
         body {
-            background: linear-gradient(135deg, #000000, #434343); /* Gradient background */
+            background: linear-gradient(135deg, #000000, #434343); /* Initial gradient background */
             font-family: 'Arial', sans-serif; /* Modern font */
             color: white; /* Text color */
             text-align: center; /* Center align text */
             padding: 20px 10px;
+            transition: background 0.5s; /* Smooth transition for background color change */
         }
 
         h1 {
@@ -124,12 +125,10 @@
 
 <body>
     <header>
-        <h1>T1a05-css-ayan.html</h1>
+        <h1>Background Color Changer</h1>
     </header>
 
     <main>
-        <a href="https://www.w3schools.com/css/css_border.asp" class="link" title="Learn more about CSS borders on W3Schools">Visit W3Schools CSS</a><br><br>
-
         <section>
             <p>This is <strong>bold</strong> True?</p>
             <p>This is <strong class="highlight">cool</strong> Yes!</p>
@@ -143,18 +142,15 @@
             <h2>Choose Your Color Theme</h2>
             <form>
                 <fieldset>
-                    <legend>Select a theme:</legend>
+                    <legend>Select a background:</legend>
                     <label>
-                        <input type="radio" name="theme" value="light"> Light Mode
+                        <input type="radio" name="theme" value="black" onclick="changeBackground('black')" checked> Black Background
                     </label>
                     <br>
                     <label>
-                        <input type="radio" name="theme" value="dark" checked> Dark Mode
+                        <input type="radio" name="theme" value="white" onclick="changeBackground('white')"> White Background
                     </label>
                     <br>
-                    <label>
-                        <input type="radio" name="theme" value="colorful"> Colorful Mode
-                    </label>
                 </fieldset>
             </form>
         </section>
@@ -163,6 +159,19 @@
     <footer>
         <p>© 2024 Your Name. All rights reserved.</p>
     </footer>
+
+    <script>
+        function changeBackground(theme) {
+            const body = document.body;
+            if (theme === 'black') {
+                body.style.background = 'linear-gradient(135deg, #000000, #434343)'; // Black background
+                body.style.color = 'white'; // Text color for black background
+            } else if (theme === 'white') {
+                body.style.background = 'linear-gradient(135deg, #FFFFFF, #D3D3D3)'; // White background
+                body.style.color = 'black'; // Text color for white background
+            }
+        }
+    </script>
 </body>
 
 </html>
