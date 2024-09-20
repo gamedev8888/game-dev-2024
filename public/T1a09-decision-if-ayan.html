@@ -29,6 +29,7 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            margin: 5px;
         }
         input[type="button"]:hover {
             background-color: #0056b3;
@@ -50,26 +51,50 @@
 <!-- Div for displaying messages -->
 <div id="myDiv01">...</div>
 
-<!-- Button to check for 'Ayan' -->
-<input type="button" value="is Ayan" onclick="checkAyan(true)"><br>
-
-<!-- Button with else condition -->
-<input type="button" value="is Ayan else" onclick="checkAyan(false)"><br>
+<!-- Buttons Demonstrating Different Logical Operators -->
+<input type="button" value="is Ayan" onclick="checkConditions('Ayan', true, false)"><br>
+<input type="button" value="is not Ayan" onclick="checkConditions('Ayan', false, true)"><br>
+<input type="button" value="is Ayan and number > 10" onclick="checkConditions('Ayan', true, false, 10)"><br>
+<input type="button" value="is Ayan or number < 10" onclick="checkConditions('Ayan', false, false, 10)"><br>
+<input type="button" value="is not Ayan and number > 10" onclick="checkConditions('Ayan', false, true, 10)"><br>
+<input type="button" value="is Ayan or not number < 10" onclick="checkConditions('Ayan', false, false, 10, true)"><br>
+<input type="button" value="is Ayan and number > 10 or < 20" onclick="checkConditions('Ayan', true, false, 20, false)"><br>
+<input type="button" value="complex decision" onclick="complexDecision()"><br>
 
 <script>
-function checkAyan(isExact) {
+function checkConditions(expectedName, isExact, isNot, comparisonValue, negateComparison = false) {
     let myIn1 = document.getElementById('myText1').value; // Get input name
-    document.getElementById('myDiv01').innerHTML = ''; // Clear previous message
+    let myNum = parseInt(document.getElementById('myNum1').value, 10); // Get number input
+
+    myIn1 = myIn1.toLowerCase(); // Make name input case insensitive
+    expectedName = expectedName.toLowerCase(); // Make expected name case insensitive
+    const nameMatches = isExact ? myIn1 === expectedName : isNot ? myIn1 !== expectedName : false;
+    
+    let comparisonResult = false;
+    if (comparisonValue !== undefined) {
+        comparisonResult = negateComparison ? myNum < comparisonValue : myNum > comparisonValue;
+    }
+    
+    let result;
     if (isExact) {
-        if (myIn1 === 'Ayan') { // Check for "Ayan"
-            document.getElementById('myDiv01').innerHTML = 'hi Ayan';
-        }
+        result = nameMatches ? 'hi Ayan' : 'Was expecting Ayan <:';
+    } else if (isNot) {
+        result = nameMatches ? 'Unexpected name, did not want Ayan.' : 'All good, name is not Ayan.';
     } else {
-        if (myIn1 === 'Ayan') {
-            document.getElementById('myDiv01').innerHTML = 'hi Ayan';
-        } else {
-            document.getElementById('myDiv01').innerHTML = 'was expecting Ayan <:';
-        }
+        result = nameMatches && comparisonResult ? 'Ayan and condition met' : !nameMatches && comparisonResult ? 'Not Ayan but condition met' : 'Both conditions not met';
+    }
+
+    document.getElementById('myDiv01').innerHTML = result;
+}
+
+function complexDecision() {
+    let myIn1 = document.getElementById('myText1').value.toLowerCase();
+    let myNum = parseInt(document.getElementById('myNum1').value, 10);
+
+    if ((myIn1 === 'ayan' && myNum > 10) || (myIn1 !== 'ayan' && myNum < 10)) {
+        document.getElementById('myDiv01').innerHTML = 'Complex Decision: True';
+    } else {
+        document.getElementById('myDiv01').innerHTML = 'Complex Decision: False';
     }
 }
 </script>
