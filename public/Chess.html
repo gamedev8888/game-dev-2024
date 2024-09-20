@@ -7,13 +7,13 @@
     <style>
         body {
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             height: 100vh;
             margin: 0;
             background-color: #f0d9b5;
         }
-        
+
         .chessboard {
             width: 400px;
             height: 400px;
@@ -41,17 +41,28 @@
         }
 
         .piece {
-            pointer-events: auto; /* Allow pointer events for pieces */
+            pointer-events: auto;
+        }
+        
+        .timer {
+            font-size: 20px;
+            margin: 20px;
         }
     </style>
 </head>
 <body>
+    <div class="timer" id="timer">White's Turn: 300s</div>
     <div class="chessboard" id="chessboard"></div>
     
     <script>
         const chessboard = document.getElementById("chessboard");
-        let selectedPiece = null; // Store the currently selected piece
-        let selectedSquare = null; // Store the square of the selected piece
+        const timerDisplay = document.getElementById("timer");
+        let selectedPiece = null;
+        let selectedSquare = null;
+        let currentTurn = 'white'; // Track whose turn it is
+        let whiteTime = 300; // 5 minutes in seconds
+        let blackTime = 300; // 5 minutes in seconds
+        let timerInterval;
 
         // Piece symbols
         const pieces = {
@@ -73,25 +84,24 @@
 
         // Generate the chessboard
         function generateBoard() {
-            chessboard.innerHTML = ''; // Clear existing board
+            chessboard.innerHTML = '';
             for (let row = 0; row < 8; row++) {
                 for (let col = 0; col < 8; col++) {
                     const square = document.createElement("div");
                     square.className = `square ${(row + col) % 2 === 0 ? 'white' : 'black'}`;
                     square.dataset.row = row;
-                    square.dataset.col = col; // Store the row and col in data attributes
+                    square.dataset.col = col;
 
                     const piece = initialBoard[row][col];
                     if (piece) {
                         const pieceElement = document.createElement("div");
                         pieceElement.className = "piece";
                         pieceElement.innerHTML = pieces[piece];
-                        pieceElement.dataset.row = row; // Store the piece's row and col
+                        pieceElement.dataset.row = row;
                         pieceElement.dataset.col = col;
                         square.appendChild(pieceElement);
                     }
 
-                    // Attach click event to squares
                     square.addEventListener("click", () => squareClicked(row, col));
                     chessboard.appendChild(square);
                 }
@@ -103,15 +113,18 @@
             const piece = square.querySelector('.piece');
             
             if (selectedPiece) {
-                // Move the piece if a square is clicked after selecting a piece
-                if (square) {
+                if (validateMove(selectedPiece.dataset.row, selectedPiece.dataset.col, row, col)) {
                     movePiece(selectedSquare, square);
+                    if (isCheckmate(currentTurn === 'white' ? 'black' : 'white')) {
+                        alert(`${currentTurn.charAt(0).toUpperCase() + currentTurn.slice(1)} is in Checkmate!`);
+                        clearInterval(timerInterval);
+                    }
+                    switchTurn();
                 }
             } else if (piece) {
-                // Select the piece if a piece is clicked
                 selectedPiece = piece;
-                selectedSquare = square; // Keep track of the selected square
-                selectedPiece.style.pointerEvents = 'none'; // Disable event for the selected piece
+                selectedSquare = square;
+                selectedPiece.style.pointerEvents = 'none';
             }
         }
 
@@ -121,19 +134,184 @@
             const toRow = toSquare.dataset.row;
             const toCol = toSquare.dataset.col;
 
-            // Move the piece visually
             toSquare.appendChild(selectedPiece);
-            selectedPiece.style.pointerEvents = 'auto'; // Allow interaction again
-            selectedPiece = null; // Reset selected piece
-            selectedSquare = null; // Reset the selected square
+            selectedPiece.style.pointerEvents = 'auto';
+            
+            initialBoard[toRow][toCol] = initialBoard[fromRow][fromCol];
+            initialBoard[fromRow][fromCol] = null;
+            
+            selectedPiece = null;
+            selectedSquare = null;
+        }
 
-            // Update the initialBoard array
-            initialBoard[toRow][toCol] = initialBoard[fromRow][fromCol]; // Move the piece to the new location
-            initialBoard[fromRow][fromCol] = null; // Remove the piece from the old location
+        function validateMove(fromRow, fromCol, toRow, toCol) {
+            const piece = initialBoard[fromRow][fromCol];
+            const targetPiece = initialBoard[toRow][toCol];
+
+            if (piece === null || (fromRow === toRow && fromCol === toCol)) return false;
+
+            const isSameColor = (piece === piece.toUpperCase() && targetPiece === targetPiece?.toUpperCase()) ||
+                                (piece === piece.toLowerCase() && targetPiece === targetPiece?.toLowerCase());
+            if (isSameColor) return false;
+
+            const pieceType = piece.toLowerCase();
+
+            switch (pieceType) {
+                case 'p':
+                    const direction = piece === 'p' ? 1 : -1;
+                    if (fromCol === toCol) {
+                        if (toRow - fromRow === direction && targetPiece == null) {
+                            return true;
+                        }
+                        if (fromRow === (piece === 'p' ? 1 : 6) && toRow - fromRow === 2 * direction && targetPiece == null) {
+                            return true;
+                        }
+                    } else if (Math.abs(fromCol - toCol) === 1 && toRow - fromRow === direction) {
+                        return targetPiece !== null; 
+                    }
+                    break;
+                case 'r':
+                    if (fromRow === toRow || fromCol === toCol) {
+                        if (isPathClear(fromRow, fromCol, toRow, toCol)) return true;
+                    }
+                    break;
+                case 'n':
+                    if ((Math.abs(fromRow - toRow) === 2 && Math.abs(fromCol - toCol) === 1) ||
+                        (Math.abs(fromRow - toRow) === 1 && Math.abs(fromCol - toCol) === 2)) {
+                        return true;
+                    }
+                    break;
+                case 'b':
+                    if (Math.abs(fromRow - toRow) === Math.abs(fromCol - toCol)) {
+                        if (isPathClear(fromRow, fromCol, toRow, toCol)) return true;
+                    }
+                    break;
+                case 'q':
+                    if (fromRow === toRow || fromCol === toCol || Math.abs(fromRow - toRow) === Math.abs(fromCol - toCol)) {
+                        if (isPathClear(fromRow, fromCol, toRow, toCol)) return true;
+                    }
+                    break;
+                case 'k':
+                    if (Math.abs(fromRow - toRow) <= 1 && Math.abs(fromCol - toCol) <= 1) {
+                        return true;
+                    }
+                    break;
+            }
+            return false;
+        }
+
+        function isPathClear(fromRow, fromCol, toRow, toCol) {
+            const rowStep = toRow > fromRow ? 1 : toRow < fromRow ? -1 : 0;
+            const colStep = toCol > fromCol ? 1 : toCol < fromCol ? -1 : 0;
+
+            let row = fromRow + rowStep;
+            let col = fromCol + colStep;
+
+            while (row !== toRow || col !== toCol) {
+                if (initialBoard[row][col] !== null) return false; 
+                row += rowStep;
+                col += colStep;
+            }
+
+            return true; 
+        }
+
+        function switchTurn() {
+            currentTurn = currentTurn === 'white' ? 'black' : 'white';
+            startTimer();
+            timerDisplay.innerText = `${currentTurn.charAt(0).toUpperCase() + currentTurn.slice(1)}'s Turn: ${currentTurn === 'white' ? whiteTime : blackTime}s`;
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval); // Clear previous timer
+
+            timerInterval = setInterval(() => {
+                if (currentTurn === 'white') {
+                    whiteTime--;
+                    if (whiteTime <= 0) {
+                        alert("Black wins by time!");
+                        clearInterval(timerInterval);
+                    }
+                    timerDisplay.innerText = `White's Turn: ${whiteTime}s`;
+                } else {
+                    blackTime--;
+                    if (blackTime <= 0) {
+                        alert("White wins by time!");
+                        clearInterval(timerInterval);
+                    }
+                    timerDisplay.innerText = `Black's Turn: ${blackTime}s`;
+                }
+            }, 1000);
+        }
+
+        function isCheckmate(color) {
+            const kingSymbol = color === 'white' ? 'K' : 'k';
+            let kingPosition = null;
+            const kingMoves = getPossibleKingMoves(color);
+
+            // Find the king's position
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    if (initialBoard[row][col] === kingSymbol) {
+                        kingPosition = { row, col };
+                        break;
+                    }
+                }
+            }
+
+            if (!kingPosition) return false; // No king found, something is wrong.
+
+            // Check if king is in check
+            let inCheck = isInCheck(kingPosition.row, kingPosition.col, color);
+
+            if (inCheck) {
+                // Check if king can escape
+                for (const move of kingMoves) {
+                    if (!isInCheck(move.row, move.col, color)) {
+                        return false; // King can escape
+                    }
+                }
+                return true; // No escape, checkmate!
+            }
+            return false; // Not in check
+        }
+
+        function isInCheck(row, col, color) {
+            const opponentPieces = color === 'white' ? 'rnbqkp' : 'RNBQKP';
+            for (let r = 0; r < 8; r++) {
+                for (let c = 0; c < 8; c++) {
+                    if (opponentPieces.includes(initialBoard[r][c])) {
+                        if (validateMove(r, c, row, col)) {
+                            return true; // In check
+                        }
+                    }
+                }
+            }
+            return false; // Not in check
+        }
+
+        function getPossibleKingMoves(color) {
+            const kingMoves = [];
+            const moveOffsets = [
+                [-1, -1], [-1, 0], [-1, 1],
+                [0, -1], [0, 1],
+                [1, -1], [1, 0], [1, 1]
+            ];
+
+            for (const [rowOffset, colOffset] of moveOffsets) {
+                const newRow = 0 + rowOffset; // replace 0 with the king's actual row when implemented
+                const newCol = 0 + colOffset; // replace 0 with the king's actual column when implemented
+                if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
+                    kingMoves.push({ row: newRow, col: newCol });
+                }
+            }
+
+            return kingMoves;
         }
 
         // Start the game
         generateBoard();
+        startTimer(); // Start the timer for the first turn
     </script>
 </body>
 </html>
