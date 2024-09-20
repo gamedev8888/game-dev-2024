@@ -68,19 +68,17 @@
         const restartButton = document.getElementById("restartButton");
         let selectedPiece = null;
         let selectedSquare = null;
-        let currentTurn = 'white'; // Track whose turn it is
-        let whiteTime = 300; // 5 minutes in seconds
-        let blackTime = 300; // 5 minutes in seconds
+        let currentTurn = 'white';
+        let whiteTime = 300; 
+        let blackTime = 300; 
         let timerInterval;
-        let moveHistory = []; // Store the history of moves
+        let moveHistory = []; 
 
-        // Piece symbols
         const pieces = {
             r: '♖', n: '♘', b: '♗', q: '♔', k: '♕', p: '♙',
             R: '♜', N: '♞', B: '♟', Q: '♛', K: '♚', P: '♟'
         };
 
-        // Initial board setup
         let initialBoard = [
             "r n b q k b n r".split(" "),
             "p p p p p p p p".split(" "),
@@ -92,7 +90,6 @@
             "R N B Q K B N R".split(" ")
         ];
 
-        // Generate the chessboard
         function generateBoard() {
             chessboard.innerHTML = '';
             for (let row = 0; row < 8; row++) {
@@ -118,7 +115,6 @@
             }
         }
 
-        // Move history function
         function updateMoveHistory(move) {
             let historyEntry = document.createElement('div');
             historyEntry.textContent = move;
@@ -133,7 +129,7 @@
             if (selectedPiece) {
                 if (validateMove(selectedPiece.dataset.row, selectedPiece.dataset.col, row, col)) {
                     movePiece(selectedSquare, square);
-                    updateMoveHistory(`${currentTurn.charAt(0).toUpperCase() + currentTurn.slice(1)} moved ${pieces[initialBoard[row][col]] || 'empty'} to (${row}, ${col})`);
+                    updateMoveHistory(`${currentTurn.charAt(0).toUpperCase() + currentTurn.slice(1)} moved to (${row}, ${col})`);
                     if (isCheckmate(currentTurn === 'white' ? 'black' : 'white')) {
                         alert(`${currentTurn.charAt(0).toUpperCase() + currentTurn.slice(1)} is in Checkmate!`);
                         clearInterval(timerInterval);
@@ -156,9 +152,19 @@
             toSquare.appendChild(selectedPiece);
             selectedPiece.style.pointerEvents = 'auto';
             
-            // Update initial board state
             initialBoard[toRow][toCol] = initialBoard[fromRow][fromCol];
             initialBoard[fromRow][fromCol] = null;
+            
+            // Pawn promotion if applicable
+            if ((initialBoard[toRow][toCol] === 'P' && toRow === 0) || (initialBoard[toRow][toCol] === 'p' && toRow === 7)) {
+                const promotionPiece = prompt("Promote to (Q/R/B/N):")?.toUpperCase();
+                if (promotionPiece === 'Q' || promotionPiece === 'R' || promotionPiece === 'B' || promotionPiece === 'N') {
+                    initialBoard[toRow][toCol] = promotionPiece === 'Q' ? (initialBoard[toRow][toCol] === 'P' ? 'Q' : 'q') : 
+                                                  promotionPiece === 'R' ? (initialBoard[toRow][toCol] === 'P' ? 'R' : 'r') : 
+                                                  promotionPiece === 'B' ? (initialBoard[toRow][toCol] === 'P' ? 'B' : 'b') : 
+                                                  (initialBoard[toRow][toCol] === 'P' ? 'N' : 'n');
+                }
+            }
             
             selectedPiece = null;
             selectedSquare = null;
@@ -168,6 +174,7 @@
             const piece = initialBoard[fromRow][fromCol];
             const targetPiece = initialBoard[toRow][toCol];
 
+            // Move is invalid if it is the same square or no piece is selected
             if (piece === null || (fromRow === toRow && fromCol === toCol)) return false;
 
             const isSameColor = (piece === piece.toUpperCase() && targetPiece === targetPiece?.toUpperCase()) ||
@@ -177,37 +184,65 @@
             const pieceType = piece.toLowerCase();
 
             switch (pieceType) {
-                // Add your existing validation logic for other pieces...
                 case 'p':
-                    // Add pawn promotion logic here
                     const direction = piece === 'p' ? 1 : -1;
-                    // Check for promotion
-                    if ((piece === 'p' && toRow === 7) || (piece === 'P' && toRow === 0)) {
-                        const promotionPiece = prompt("Promote to (Q/R/B/N):")?.toUpperCase();
-                        if (["Q", "R", "B", "N"].includes(promotionPiece)) {
-                            initialBoard[toRow][toCol] = promotionPiece === 'Q' ? 'Q' : promotionPiece === 'R' ? 'R' : promotionPiece === 'B' ? 'B' : 'N';
-                            return true; // Pawn promotion valid
+                    // Pawn movement
+                    if (fromCol === toCol) {
+                        if (toRow - fromRow === direction && targetPiece == null) {
+                            return true; // Normal move forward
                         }
+                        if ((piece === 'p' && fromRow === 1 && toRow - fromRow === 2 * direction && targetPiece == null) || 
+                            (piece === 'P' && fromRow === 6 && toRow - fromRow === 2 * direction && targetPiece == null)) {
+                            return true; // Double move from starting position
+                        }
+                    } else if (Math.abs(fromCol - toCol) === 1 && toRow - fromRow === direction) {
+                        return targetPiece !== null; // Capture
                     }
-                    // Validate other pawn moves...
                     break;
                 case 'r':
-                    // Add rook logic...
+                    if (fromRow === toRow || fromCol === toCol) {
+                        if (isPathClear(fromRow, fromCol, toRow, toCol)) return true;
+                    }
                     break;
                 case 'n':
-                    // Add knight logic...
+                    if ((Math.abs(fromRow - toRow) === 2 && Math.abs(fromCol - toCol) === 1) ||
+                        (Math.abs(fromRow - toRow) === 1 && Math.abs(fromCol - toCol) === 2)) {
+                        return true;
+                    }
                     break;
                 case 'b':
-                    // Add bishop logic...
+                    if (Math.abs(fromRow - toRow) === Math.abs(fromCol - toCol)) {
+                        if (isPathClear(fromRow, fromCol, toRow, toCol)) return true;
+                    }
                     break;
                 case 'q':
-                    // Add queen logic...
+                    if (fromRow === toRow || fromCol === toCol || Math.abs(fromRow - toRow) === Math.abs(fromCol - toCol)) {
+                        if (isPathClear(fromRow, fromCol, toRow, toCol)) return true;
+                    }
                     break;
                 case 'k':
-                    // Add king logic...
+                    if (Math.abs(fromRow - toRow) <= 1 && Math.abs(fromCol - toCol) <= 1) {
+                        return true;
+                    }
                     break;
             }
-            return false; // Invalid move
+            return false;
+        }
+
+        function isPathClear(fromRow, fromCol, toRow, toCol) {
+            const rowStep = toRow > fromRow ? 1 : toRow < fromRow ? -1 : 0;
+            const colStep = toCol > fromCol ? 1 : toCol < fromCol ? -1 : 0;
+
+            let row = fromRow + rowStep;
+            let col = fromCol + colStep;
+
+            while (row !== toRow || col !== toCol) {
+                if (initialBoard[row][col] !== null) return false; 
+                row += rowStep;
+                col += colStep;
+            }
+
+            return true; 
         }
 
         function switchTurn() {
@@ -238,7 +273,6 @@
             }, 1000);
         }
 
-        // Restart game functionality
         restartButton.addEventListener("click", () => {
             initialBoard = [
                 "r n b q k b n r".split(" "),
