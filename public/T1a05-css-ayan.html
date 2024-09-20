@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -30,9 +31,17 @@
 
         /* Cool Text Animation */
         @keyframes textEffect {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0); }
+            0% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0);
+            }
         }
 
         h1:hover {
@@ -43,7 +52,7 @@
         .link {
             color: #FFD700; /* Gold color for the link */
             text-decoration: none; /* Remove underline */
-            font-weight: bold; 
+            font-weight: bold;
             padding: 10px 20px; /* Button-like padding */
             border: 2px solid #FFD700; /* Same color border */
             border-radius: 5px; /* Rounded corners */
@@ -87,26 +96,40 @@
             h1 {
                 font-size: 2em; /* Smaller font for h1 */
             }
-            
+
             p {
                 font-size: 1em; /* Smaller font for paragraphs */
             }
-            
-            .bordered, .link {
+
+            .bordered,
+            .link {
                 font-size: 0.9em; /* Adjust font size for links and bordered texts */
             }
         }
     </style>
 </head>
+
 <body>
-    <h1>T1a05-css-ayan.html</h1>
+    <header>
+        <h1>T1a05-css-ayan.html</h1>
+    </header>
 
-    <a href="https://www.w3schools.com/css/css_border.asp" class="link" title="Learn more about CSS borders on W3Schools">Visit W3Schools CSS</a><br><br>
+    <main>
+        <a href="https://www.w3schools.com/css/css_border.asp" class="link" title="Learn more about CSS borders on W3Schools">Visit W3Schools CSS</a><br><br>
 
-    <p>This is <b>bold</b> True?</p>
-    <p>This is <b class="highlight">cool</b> Yes!</p>
-    <br>
+        <section>
+            <p>This is <strong>bold</strong> True?</p>
+            <p>This is <strong class="highlight">cool</strong> Yes!</p>
+        </section>
 
-    <p>This is <i class="bordered">italic with a border</i></p>
+        <section>
+            <p>This is <i class="bordered">italic with a border</i></p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2023 Your Name. All rights reserved.</p>
+    </footer>
 </body>
+
 </html>
