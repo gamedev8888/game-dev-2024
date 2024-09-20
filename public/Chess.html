@@ -3,92 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chess Board</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Chess Game</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0d9a1;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        #chessboard {
+            display: grid;
+            grid-template-columns: repeat(8, 60px);
+            grid-template-rows: repeat(8, 60px);
+        }
+
+        .square {
+            width: 60px;
+            height: 60px;
+        }
+
+        .square:nth-child(odd) {
+            background-color: #eee;
+        }
+
+        .square:nth-child(even) {
+            background-color: #ddd;
+        }
+
+        .piece {
+            font-size: 50px;
+            text-align: center;
+            line-height: 60px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-    <div class="chessboard">
-        <!-- Generate 64 squares -->
-        <div class="row">
-            <div class="square black"></div>
-            <div class="square white"></div>
-            <div class="square black"></div>
-            <div class="square white"></div>
-            <div class="square black"></div>
-            <div class="square white"></div>
-            <div class="square black"></div>
-            <div class="square white"></div>
-        </div>
-        <div class="row">
-            <div class="square white"></div>
-            <div class="square black"></div>
-            <div class="square white"></div>
-            <div class="square black"></div>
-            <div class="square white"></div>
-            <div class="square black"></div>
-            <div class="square white"></div>
-            <div class="square black"></div>
-        </div>
-        <div class="row">
-            <div class="square black"></div>
-            <div class="square white"></div>
-            <div class="square black"></div>
-            <div class="square white"></div>
-            <div class="square black"></div>
-            <div class="square white"></div>
-            <div class="square black"></div>
-            <div class="square white"></div>
-        </div>
-        <div class="row">
-            <div class="square white"></div>
-            <div class="square black"></div>
-            <div class="square white"></div>
-            <div class="square black"></div>
-            <div class="square white"></div>
-            <div class="square black"></div>
-            <div class="square white"></div>
-            <div class="square black"></div>
-        </div>
-        <div class="row">
-            <div class="square black"></div>
-            <div class="square white"></div>
-            <div class="square black"></div>
-            <div class="square white"></div>
-            <div class="square black"></div>
-            <div class="square white"></div>
-            <div class="square black"></div>
-            <div class="square white"></div>
-        </div>
-        <div class="row">
-            <div class="square white"></div>
-            <div class="square black"></div>
-            <div class="square white"></div>
-            <div class="square black"></div>
-            <div class="square white"></div>
-            <div class="square black"></div>
-            <div class="square white"></div>
-            <div class="square black"></div>
-        </div>
-        <div class="row">
-            <div class="square black"></div>
-            <div class="square white"></div>
-            <div class="square black"></div>
-            <div class="square white"></div>
-            <div class="square black"></div>
-            <div class="square white"></div>
-            <div class="square black"></div>
-            <div class="square white"></div>
-        </div>
-        <div class="row">
-            <div class="square white"></div>
-            <div class="square black"></div>
-            <div class="square white"></div>
-            <div class="square black"></div>
-            <div class="square white"></div>
-            <div class="square black"></div>
-            <div class="square white"></div>
-            <div class="square black"></div>
-        </div>
-    </div>
+    <h1>Simple Chess Game</h1>
+    <div id="chessboard"></div>
+
+    <script>
+        const board = [
+            ['♖', '♘', '♗', '♕', '♔', '♗', '♘', '♖'],
+            ['♙', '♙', '♙', '♙', '♙', '♙', '♙', '♙'],
+            ['.', '.', '.', '.', '.', '.', '.', '.'],
+            ['.', '.', '.', '.', '.', '.', '.', '.'],
+            ['.', '.', '.', '.', '.', '.', '.', '.'],
+            ['.', '.', '.', '.', '.', '.', '.', '.'],
+            ['♟', '♟', '♟', '♟', '♟', '♟', '♟', '♟'],
+            ['♜', '♞', '♝', '♛', '♚', '♝', '♞', '♜'],
+        ];
+
+        let selectedPiece = null;
+        let selectedSquare = null;
+
+        function createBoard() {
+            const chessboard = document.getElementById('chessboard');
+            chessboard.innerHTML = '';
+
+            board.forEach((row, rowIndex) => {
+                row.forEach((piece, colIndex) => {
+                    const square = document.createElement('div');
+                    square.classList.add('square');
+                    square.dataset.row = rowIndex;
+                    square.dataset.col = colIndex;
+                    square.innerHTML = piece !== '.' ? `<span class="piece">${piece}</span>` : '';
+
+                    square.addEventListener('click', () => handleSquareClick(square));
+
+                    chessboard.appendChild(square);
+                });
+            });
+        }
+
+        function handleSquareClick(square) {
+            const row = square.dataset.row;
+            const col = square.dataset.col;
+
+            if (selectedPiece) {
+                // Move the selected piece to the clicked square
+                if (selectedSquare) {
+                    board[row][col] = selectedPiece;
+                    board[selectedSquare.row][selectedSquare.col] = '.';
+                    selectedPiece = null;
+                    selectedSquare = null;
+                    createBoard();
+                }
+            } else {
+                // Select a piece
+                const piece = board[row][col];
+                if (piece !== '.') {
+                    selectedPiece = piece;
+                    selectedSquare = { row, col };
+                }
+            }
+        }
+
+        createBoard();
+    </script>
 </body>
 </html>
