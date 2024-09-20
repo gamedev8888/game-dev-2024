@@ -4,14 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>T1a03-table-list-ayan</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Including Font Awesome -->
     <style>
         body {
-            background-color: #d3d3d3; /* Light grey background */
+            background-image: url('https://wallpapercave.com/wp/wp3237812.jpg'); /* Use your own image URL */
+            background-size: cover; /* Cover the entire viewport */
+            background-attachment: fixed; /* Keep it fixed on scroll */
+            color: #333; /* Text color for better readability */
+            font-family: Arial, sans-serif; /* Using a common sans-serif font */
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: rgba(76, 175, 80, 0.8); /* Semi-transparent green for header */
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        nav {
+            margin: 10px 0; /* margin for navigation */
+            text-align: center;
+        }
+        nav a {
+            margin: 0 15px;
+            color: white;
+            text-decoration: none; 
+            font-weight: bold;
+        }
+        nav a:hover {
+            text-decoration: underline; /* underline effect on hover */
         }
         table {
-            width: 50%;
+            width: 80%; /* Adjusted width for better responsiveness */
             border-collapse: collapse;
             margin: 20px auto; /* Centers the table */
+            transition: transform 0.2s; /* Adding transition for table */
+            background-color: rgba(255, 255, 255, 0.8); /* Slightly transparent background */
+        }
+        table:hover {
+            transform: scale(1.02); /* Slightly scale on hover */
         }
         th, td {
             border: 1px solid black;
@@ -19,49 +50,92 @@
             text-align: center;
         }
         th {
-            background-color: #f2f2f2;
+            background-color: rgba(242, 242, 242, 0.8); /* Semi-transparent table headers */
         }
-        h1 {
-            text-align: center;
+        th:hover, td:hover { /* Adding hover effects */
+            background-color: rgba(232, 232, 232, 0.8); 
+        }
+        h1, h2 {
+            text-align: center; /* Centering h1 and h2 headers */
         }
         .list-container {
-            width: 50%;
+            width: 60%; /* Adjusted width */
             margin: 20px auto; /* Centers the lists */
             text-align: left; /* Aligns text to the left for better readability */
+            background-color: rgba(255, 255, 255, 0.8); /* Slightly transparent background */
+            padding: 15px; /* Add padding for better spacing */
+            border-radius: 5px; /* Round corners */
+        }
+        footer {
+            background-color: rgba(76, 175, 80, 0.8);
+            color: white;
+            padding: 10px;
+            text-align: center;
+            position: relative; /* to allow for positioning adjustments */
+            bottom: 0; /* stick to the bottom */
+            width: 100%; /* full width */
+        }
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            table, .list-container {
+                width: 90%;
+                margin: 0 auto; /* Centers the elements */
+            }
         }
     </style>
 </head>
 <body>
-    <h1>My Simple 2x2 Table</h1>
-    <table>
-        <tr>
-            <th>Column 1</th>
-            <th>Column 2</th>
-        </tr>
-        <tr>
-            <td>Row A, Cell B</td>
-            <td>Row C, Cell D</td> <!-- Adjusted cell name for clarity -->
-        </tr>
-        <tr>
-            <td>Row E, Cell F</td> <!-- Adjusted cell name for clarity -->
-            <td>Row G, Cell H</td>
-        </tr>
-    </table>
+    <header>
+        <h1>My Simple 2x2 Table</h1>
+        <nav>
+            <a href="#table">Table</a>
+            <a href="#ordered">Ordered List</a>
+            <a href="#unordered">Unordered List</a>
+        </nav>
+    </header>
 
-    <div class="list-container">
-        <h2>Ordered List</h2>
-        <ol>
-            <li>jogging</li>
-            <li>sleeping</li>
-            <li>walking</li>
-        </ol>
+    <main>
+        <section id="table">
+            <h2>My Table</h2>
+            <table>
+                <tr>
+                    <th>Column 1</th>
+                    <th>Column 2</th>
+                </tr>
+                <tr>
+                    <td>Row A, Cell B</td>
+                    <td>Row C, Cell D</td>
+                </tr>
+                <tr>
+                    <td>Row E, Cell F</td>
+                    <td>Row G, Cell H</td>
+                </tr>
+            </table>
+        </section>
 
-        <h2>Unordered List</h2>
-        <ul>
-            <li>China</li>
-            <li>Canada</li>
-            <li>America</li>
-        </ul>
-    </div>
+        <div class="list-container">
+            <h2 id="ordered">Ordered List</h2>
+            <ol>
+                <li>Jogging</li>
+                <li>Sleeping</li>
+                <li>Walking</li>
+            </ol>
+
+            <h2 id="unordered">Unordered List</h2>
+            <ul>
+                <li>China</li>
+                <li>Canada</li>
+                <li>America</li>
+            </ul>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2024 Your Name. All Rights Reserved.</p>
+        <p>
+            <a href="mailto:youremail@example.com" style="color: white;">Contact Us</a> |
+            <a href="https://github.com/yourprofile" target="_blank" style="color: white;" class="fab fa-github"></a>
+        </p>
+    </footer>
 </body>
 </html>
