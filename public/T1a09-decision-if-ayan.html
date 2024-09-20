@@ -1,26 +1,121 @@
-h1 align=center>T1a09-decision-if-ayan.html</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, content=initial-scale=1.0">
+    <title>T1a09 Decision if Ayan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        #myDiv01 {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            width: 300px;
+            text-align: center;
+        }
+        input[type="button"] {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
 
+<h1 align="center">T1a09-decision-if-ayan.html</h1>
 
-Input:<input=text id="myText1" value="Ayan">
-Input:<input type=number id="myNum1" value="14">
+<!-- Input for name -->
+<label for="myText1">Name:</label>
+<input type="text" id="myText1" value="Ayan"><br><br>
+
+<!-- Input for age -->
+<label for="myNum1">Age:</label>
+<input type="number" id="myNum1" value="14"><br><br>
+
+<!-- Div for displaying messages -->
 <div id="myDiv01">...</div>
 
-<input type=button value="is Ayan" onclick="{
-  let myIn1 = document.getElementByid('myText1').value
-  document.getElementByid('myDiv01').innerHTML = ' <br> '
-  if (myin1 == 'Ayan'){
-    document.getElementByid('myDiv01').innerHTML = ' hi Ayan'
-}
-}"><br>
+<!-- Button to check for 'Ayan' -->
+<input type="button" value="Check if Ayan" onclick="checkAyan();"><br>
 
-<input type=button value="is Ayan else" onclick="{
-  let myIn1 = document.getElementByid('myText1').value
-  document.getElementByid('myDiv01').innerHTML = ' <br> '
-  if (myin1 == 'Ayan'){
-     document.getElementByid('myDiv01').innerHTML = ' hi Ayan'
-  } else {
-    document.getElementByid('myDiv01').innerHTML = ' was expecting Ayan <:'
-}
-}"><br>
+<!-- Button showing NOT operation -->
+<input type="button" value="Check NOT Ayan" onclick="checkNotAyan();"><br>
 
+<!-- Button for AND operation -->
+<input type="button" value="Check Ayan AND Age > 10" onclick="checkAyanAndAge();"><br>
 
+<!-- Button for OR operation -->
+<input type="button" value="Check Ayan OR Age < 20" onclick="checkAyanOrAge();"><br>
+
+<!-- Button for combined logical operations -->
+<input type="button" value="Check Ayan AND (Age > 10 OR Age < 18)" onclick="checkCombined();"><br>
+
+<!-- Functions for checking conditions -->
+<script>
+    function clearDiv() {
+        document.getElementById('myDiv01').innerHTML = ''; // Clear previous message
+    }
+
+    function checkAyan() {
+        let myIn1 = document.getElementById('myText1').value; // Input for name
+        clearDiv();
+        if (myIn1 === 'Ayan') {
+            document.getElementById('myDiv01').innerHTML = 'hi Ayan';
+        } else {
+            document.getElementById('myDiv01').innerHTML = 'was expecting Ayan <:';
+        }
+    }
+
+    function checkNotAyan() {
+        let myIn1 = document.getElementById('myText1').value; // Input for name
+        clearDiv();
+        if (myIn1 !== 'Ayan') { // NOT operation
+            document.getElementById('myDiv01').innerHTML = 'Not Ayan!';
+        } else {
+            document.getElementById('myDiv01').innerHTML = 'You are Ayan.';
+        }
+    }
+
+    function checkAyanAndAge() {
+        let myIn1 = document.getElementById('myText1').value; // Input for name
+        let myAge = parseInt(document.getElementById('myNum1').value); // Input for age
+        clearDiv();
+        if (myIn1 === 'Ayan' && myAge > 10) { // AND operation
+            document.getElementById('myDiv01').innerHTML = 'hi Ayan, you are older than 10!';
+        } else {
+            document.getElementById('myDiv01').innerHTML = 'Condition not met.';
+        }
+    }
+
+    function checkAyanOrAge() {
+        let myIn1 = document.getElementById('myText1').value; // Input for name
+        let myAge = parseInt(document.getElementById('myNum1').value); // Input for age
+        clearDiv();
+        if (myIn1 === 'Ayan' || myAge < 20) { // OR operation
+            document.getElementById('myDiv01').innerHTML = 'Condition is satisfied.';
+        } else {
+            document.getElementById('myDiv01').innerHTML = 'Condition not met.';
+        }
+    }
+
+    function checkCombined() {
+        let myIn1 = document.getElementById('myText1').value; // Input for name
+        let myAge = parseInt(document.getElementById('myNum1').value); // Input for age
+        clearDiv();
+        if (myIn1 === 'Ayan' && (myAge > 10 || myAge < 18)) { // Combined AND / OR operation
+            document.getElementById('myDiv01').innerHTML = 'Condition satisfied: Ayan and age either over 10 or under 18.';
+        } else {
+            document.getElementById('myDiv01').innerHTML = 'Combined condition not met.';
+        }
+    }
+</script>
+
+</body>
+</html>
