@@ -5,15 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Webcam Capture</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+
         video {
             width: 100%;
             max-width: 600px;
             border: 1px solid black;
+            margin-bottom: 10px;
         }
+
         canvas {
             display: none;
         }
-        /* Style for the QR link */
+
         #qr-link {
             margin-top: 20px;
             display: inline-block;
@@ -22,6 +30,11 @@
             background-color: blue;
             text-decoration: none;
             border-radius: 5px;
+        }
+
+        .error {
+            color: red;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -35,8 +48,8 @@
     
     <canvas id="canvas"></canvas>
 
-    <!-- QR code link -->
-    <a id="qr-link" href="https://qr.link/ZVJD4m" target="_blank">Open QR Code</a>
+    <a id="qr-link" href="https://qr.link/FVQDxl" target="_blank">Open QR Code</a>
+    <div class="error" id="error-message" style="display:none;"></div>
 
     <script>
         const video = document.getElementById('video');
@@ -45,6 +58,7 @@
         const downloadLink = document.getElementById('download');
         const canvas = document.getElementById('canvas');
         const context = canvas.getContext('2d');
+        const errorMessage = document.getElementById('error-message');
 
         // Access the webcam
         navigator.mediaDevices.getUserMedia({ video: true })
@@ -52,6 +66,7 @@
                 video.srcObject = stream;
             })
             .catch(err => {
+                displayError("Error accessing webcam: " + err.message);
                 console.error("Error accessing webcam: ", err);
             });
 
@@ -64,7 +79,7 @@
             context.drawImage(video, 0, 0);
 
             // Create a link to download the image
-            const filename = filenameInput.value || 'captured_image';
+            const filename = filenameInput.value.trim() || 'captured_image';
             const link = document.createElement('a');
             link.download = `${filename}.jpg`;
             link.href = canvas.toDataURL('image/jpeg');
@@ -74,7 +89,13 @@
             downloadLink.download = link.download;
             downloadLink.textContent = 'Download Photo';
             downloadLink.style.display = 'block';
+            errorMessage.style.display = 'none'; // Hide error message if any
         });
+
+        function displayError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
     </script>
 </body>
 </html>
