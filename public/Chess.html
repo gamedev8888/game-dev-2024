@@ -13,7 +13,7 @@
             margin: 0;
             background-color: #f0d9b5;
         }
-
+        
         .chessboard {
             width: 400px;
             height: 400px;
@@ -41,7 +41,7 @@
         }
 
         .piece {
-            pointer-events: none;  /* Disable pointer events for pieces */
+            pointer-events: auto; /* Allow pointer events for pieces */
         }
     </style>
 </head>
@@ -50,6 +50,8 @@
     
     <script>
         const chessboard = document.getElementById("chessboard");
+        let selectedPiece = null; // Store the currently selected piece
+        let selectedSquare = null; // Store the square of the selected piece
 
         // Piece symbols
         const pieces = {
@@ -71,22 +73,63 @@
 
         // Generate the chessboard
         function generateBoard() {
+            chessboard.innerHTML = ''; // Clear existing board
             for (let row = 0; row < 8; row++) {
                 for (let col = 0; col < 8; col++) {
                     const square = document.createElement("div");
                     square.className = `square ${(row + col) % 2 === 0 ? 'white' : 'black'}`;
+                    square.dataset.row = row;
+                    square.dataset.col = col; // Store the row and col in data attributes
 
                     const piece = initialBoard[row][col];
                     if (piece) {
                         const pieceElement = document.createElement("div");
                         pieceElement.className = "piece";
                         pieceElement.innerHTML = pieces[piece];
+                        pieceElement.dataset.row = row; // Store the piece's row and col
+                        pieceElement.dataset.col = col;
                         square.appendChild(pieceElement);
                     }
 
+                    // Attach click event to squares
+                    square.addEventListener("click", () => squareClicked(row, col));
                     chessboard.appendChild(square);
                 }
             }
+        }
+
+        function squareClicked(row, col) {
+            const square = chessboard.querySelector(`.square[data-row='${row}'][data-col='${col}']`);
+            const piece = square.querySelector('.piece');
+            
+            if (selectedPiece) {
+                // Move the piece if a square is clicked after selecting a piece
+                if (square) {
+                    movePiece(selectedSquare, square);
+                }
+            } else if (piece) {
+                // Select the piece if a piece is clicked
+                selectedPiece = piece;
+                selectedSquare = square; // Keep track of the selected square
+                selectedPiece.style.pointerEvents = 'none'; // Disable event for the selected piece
+            }
+        }
+
+        function movePiece(fromSquare, toSquare) {
+            const fromRow = fromSquare.dataset.row;
+            const fromCol = fromSquare.dataset.col;
+            const toRow = toSquare.dataset.row;
+            const toCol = toSquare.dataset.col;
+
+            // Move the piece visually
+            toSquare.appendChild(selectedPiece);
+            selectedPiece.style.pointerEvents = 'auto'; // Allow interaction again
+            selectedPiece = null; // Reset selected piece
+            selectedSquare = null; // Reset the selected square
+
+            // Update the initialBoard array
+            initialBoard[toRow][toCol] = initialBoard[fromRow][fromCol]; // Move the piece to the new location
+            initialBoard[fromRow][fromCol] = null; // Remove the piece from the old location
         }
 
         // Start the game
