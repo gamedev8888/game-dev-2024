@@ -10,8 +10,9 @@
             flex-direction: column;
             align-items: center;
             background-color: #f0d9a1;
+            font-family: Arial, sans-serif;
         }
-
+        
         h1 {
             margin-bottom: 20px;
         }
@@ -28,11 +29,11 @@
         }
 
         .square:nth-child(odd) {
-            background-color: #eee;
+            background-color: #eeeed2;
         }
 
         .square:nth-child(even) {
-            background-color: #ddd;
+            background-color: #769656;
         }
 
         .piece {
@@ -41,11 +42,21 @@
             line-height: 60px;
             cursor: pointer;
         }
+
+        .highlight {
+            background-color: rgba(255, 255, 0, 0.5);
+        }
+
+        #status {
+            margin-top: 20px;
+            font-size: 20px;
+        }
     </style>
 </head>
 <body>
-    <h1>Simple Chess Game</h1>
+    <h1>Chess Game</h1>
     <div id="chessboard"></div>
+    <div id="status">Turn: White</div>
 
     <script>
         const board = [
@@ -61,10 +72,13 @@
 
         let selectedPiece = null;
         let selectedSquare = null;
+        let currentTurn = 'white'; // Track the current player's turn
+
+        const chessboardElem = document.getElementById('chessboard');
+        const statusElem = document.getElementById('status');
 
         function createBoard() {
-            const chessboard = document.getElementById('chessboard');
-            chessboard.innerHTML = '';
+            chessboardElem.innerHTML = '';
 
             board.forEach((row, rowIndex) => {
                 row.forEach((piece, colIndex) => {
@@ -76,7 +90,7 @@
 
                     square.addEventListener('click', () => handleSquareClick(square));
 
-                    chessboard.appendChild(square);
+                    chessboardElem.appendChild(square);
                 });
             });
         }
@@ -86,22 +100,85 @@
             const col = square.dataset.col;
 
             if (selectedPiece) {
-                // Move the selected piece to the clicked square
-                if (selectedSquare) {
+                // Attempt to move the selected piece
+                if (isValidMove(selectedSquare, { row, col })) {
+                    const targetPiece = board[row][col];
+                    if (targetPiece !== '.' && isPlayerPiece(targetPiece)) {
+                        alert("You cannot capture your own pieces!");
+                        return;
+                    }
+                    // Move the piece
                     board[row][col] = selectedPiece;
                     board[selectedSquare.row][selectedSquare.col] = '.';
                     selectedPiece = null;
                     selectedSquare = null;
+                    currentTurn = currentTurn === 'white' ? 'black' : 'white';
+                    statusElem.textContent = `Turn: ${currentTurn.charAt(0).toUpperCase() + currentTurn.slice(1)}`;
                     createBoard();
+                } else {
+                    alert("Invalid move.");
                 }
             } else {
                 // Select a piece
                 const piece = board[row][col];
-                if (piece !== '.') {
+                if (piece !== '.' && isPlayerPiece(piece)) {
                     selectedPiece = piece;
                     selectedSquare = { row, col };
+                    highlightSquares(selectedSquare);
                 }
             }
+        }
+
+        function isPlayerPiece(piece) {
+            return (currentTurn === 'white' && '♙♖♗♕♔'.includes(piece)) ||
+                   (currentTurn === 'black' && '♟♜♞♝♛♚'.includes(piece));
+        }
+
+        function highlightSquares(square) {
+            const squares = document.querySelectorAll('.square');
+            squares.forEach(sq => sq.classList.remove('highlight'));
+            const row = parseInt(square.row);
+            const col = parseInt(square.col);
+            
+            // Highlight potential move squares
+            // Simplified for all pieces (no real chess logic)
+            for (let r = 0; r < 8; r++) {
+                for (let c = 0; c < 8; c++) {
+                    if (isValidMove(square, { row: r, col: c })) {
+                        const targetSquare = document.querySelector(`.square[data-row="${r}"][data-col="${c}"]`);
+                        targetSquare.classList.add('highlight');
+                    }
+                }
+            }
+        }
+
+        function isValidMove(from, to) {
+            const fromRow = parseInt(from.row);
+            const fromCol = parseInt(from.col);
+            const toRow = parseInt(to.row);
+            const toCol = parseInt(to.col);
+            const piece = board[fromRow][fromCol];
+
+            if (piece === '♙') {
+                return toRow === fromRow - 1 && toCol === fromCol; // Simple pawn move (one forward)
+            } else if (piece === '♟') {
+                return toRow === fromRow + 1 && toCol === fromCol; // Simple pawn move (one forward)
+            } else if (piece === '♖' || piece === '♜') {
+                return fromRow === toRow || fromCol === toCol; // Rook movement
+            } else if (piece === '♘' || piece === '♞') {
+                const rowDiff = Math.abs(toRow - fromRow);
+                const colDiff = Math.abs(toCol - fromCol);
+                return (rowDiff === 2 && colDiff === 1) || (rowDiff === 1 && colDiff === 2); // Knight movement
+            } else if (piece === '♗' || piece === '♝') {
+                return Math.abs(toRow - fromRow) === Math.abs(toCol - fromCol); // Bishop movement
+            } else if (piece === '♕' || piece === '♛') {
+                return (fromRow === toRow || fromCol === toCol) || 
+                       (Math.abs(toRow - fromRow) === Math.abs(toCol - fromCol)); // Queen movement
+            } else if (piece === '♔' || piece === '♚') {
+                return Math.abs(toRow - fromRow) <= 1 && Math.abs(toCol - fromCol) <= 1; // King movement
+            }
+
+            return false;
         }
 
         createBoard();
