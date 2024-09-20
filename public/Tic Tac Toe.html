@@ -11,11 +11,17 @@
             align-items: center;
             justify-content: center;
             height: 100vh;
-            background-color: #f2f2f2;
+            background-image: url('https://wallpapercave.com/wp/wp4254882.jpg'); /* Replace with your image URL */
+            background-size: cover;
+            background-position: center;
+            color: white; /* You might want to change this based on your background */
         }
 
         .container {
             text-align: center;
+            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+            border-radius: 10px;
+            padding: 20px;
         }
 
         .board {
@@ -36,6 +42,7 @@
             justify-content: center;
             font-size: 2em;
             cursor: pointer;
+            transition: background-color 0.3s ease; /* Transition effect */
         }
 
         .cell:hover {
