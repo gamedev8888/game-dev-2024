@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CSS</title>
+    <title>CSS with Canvas</title>
     <style>
         /* CSS Reset */
         * {
@@ -105,6 +105,12 @@
             color: white; /* Legend color */
         }
 
+        /* Canvas styling */
+        #myCanvas {
+            border: 2px solid #FFFFFF; /* White border for canvas */
+            margin-top: 20px; /* Margin on top */
+        }
+
         /* Media Queries for Responsiveness */
         @media (max-width: 600px) {
             h1 {
@@ -125,7 +131,7 @@
 
 <body>
     <header>
-        <h1>CSS</h1>
+        <h1>CSS with Canvas</h1>
     </header>
 
     <main>
@@ -154,6 +160,13 @@
                 </fieldset>
             </form>
         </section>
+
+        <!-- Canvas Section -->
+        <section>
+            <h2>Canvas Area</h2>
+            <canvas id="myCanvas" width="400" height="200"></canvas>
+            <button onclick="drawRectangle()">Draw Rectangle</button>
+        </section>
     </main>
 
     <footer>
@@ -173,6 +186,14 @@
                 body.style.background = 'linear-gradient(135deg, #FFFFFF, #D3D3D3)'; // White background
                 body.style.color = 'black'; // Text color for white background
             }
+        }
+
+        // Function to draw a rectangle on the canvas
+        function drawRectangle() {
+            const canvas = document.getElementById('myCanvas');
+            const context = canvas.getContext('2d');
+            context.fillStyle = 'rgba(255, 0, 0, 0.5)'; // Red color with transparency
+            context.fillRect(50, 20, 150, 100); // Draw rectangle (x, y, width, height)
         }
     </script>
 </body>
