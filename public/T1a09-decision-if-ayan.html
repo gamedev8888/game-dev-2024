@@ -7,18 +7,18 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-image: url('https://wallpapercave.com/wp/wp3438359.png'); /* Replace with your image URL */
-            background-size: cover; /* Covers the entire background */
-            background-position: center; /* Centers the background image */
-            background-repeat: no-repeat; /* Prevents repeating the image */
+            background-image: url('https://wallpapercave.com/wp/wp3438359.png'); /* Background image */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             text-align: center;
             padding: 20px;
-            color: black; /* Changes text color for better contrast */
+            color: black;
         }
         #myDiv01 {
             margin-top: 20px;
             font-weight: bold;
-            color: #333; /* Retained original color for better visibility on white backgrounds */
+            color: #333;
         }
         input[type="text"], input[type="number"] {
             padding: 10px;
@@ -61,31 +61,37 @@
 <input type="button" value="is Ayan and number > 10" onclick="checkConditions('Ayan', true, false, 10)"><br>
 <input type="button" value="is Ayan or number < 10" onclick="checkConditions('Ayan', false, false, 10)"><br>
 <input type="button" value="is not Ayan and number > 10" onclick="checkConditions('Ayan', false, true, 10)"><br>
-<input type="button" value="is Ayan or not number < 10" onclick="checkConditions('Ayan', false, false, 10, true)"><br>
-<input type="button" value="is Ayan and number > 10 or < 20" onclick="checkConditions('Ayan', true, false, 20, false)"><br>
+<input type="button" value="is Ayan or number < 10" onclick="checkConditions('Ayan', false, false, 10)"><br>
 <input type="button" value="complex decision" onclick="complexDecision()"><br>
+
+<!-- New Logical Operators Demonstration -->
+<input type="button" value="is Ayan AND number NOT > 10" onclick="checkConditions('Ayan', true, false, 10, true)"><br>
+<input type="button" value="is Ayan OR number < 5" onclick="checkConditions('Ayan', false, false, 5)"><br>
+<input type="button" value="NOT is Ayan or NOT number > 10" onclick="checkConditions('Ayan', true, true, 10, true)"><br>
+<input type="button" value="is Ayan AND (number < 20 OR number > 15)" onclick="checkComplexAndOr()"> <br>
 
 <script>
 function checkConditions(expectedName, isExact, isNot, comparisonValue, negateComparison = false) {
-    let myIn1 = document.getElementById('myText1').value; // Get input name
-    let myNum = parseInt(document.getElementById('myNum1').value, 10); // Get number input
+    let myIn1 = document.getElementById('myText1').value;
+    let myNum = parseInt(document.getElementById('myNum1').value, 10);
 
-    myIn1 = myIn1.toLowerCase(); // Make name input case insensitive
-    expectedName = expectedName.toLowerCase(); // Make expected name case insensitive
+    myIn1 = myIn1.toLowerCase();
+    expectedName = expectedName.toLowerCase();
+
     const nameMatches = isExact ? myIn1 === expectedName : isNot ? myIn1 !== expectedName : false;
     
     let comparisonResult = false;
     if (comparisonValue !== undefined) {
         comparisonResult = negateComparison ? myNum < comparisonValue : myNum > comparisonValue;
     }
-    
+
     let result;
     if (isExact) {
         result = nameMatches ? 'hi Ayan' : 'Was expecting Ayan <:';
     } else if (isNot) {
         result = nameMatches ? 'Unexpected name, did not want Ayan.' : 'All good, name is not Ayan.';
     } else {
-        result = nameMatches && comparisonResult ? 'Ayan and condition met' : !nameMatches && comparisonResult ? 'Not Ayan but condition met' : 'Both conditions not met';
+        result = nameMatches && comparisonResult ? 'Condition met' : !nameMatches && comparisonResult ? 'Not Ayan but condition met' : 'Both conditions not met';
     }
 
     document.getElementById('myDiv01').innerHTML = result;
@@ -99,6 +105,21 @@ function complexDecision() {
         document.getElementById('myDiv01').innerHTML = 'Complex Decision: True';
     } else {
         document.getElementById('myDiv01').innerHTML = 'Complex Decision: False';
+    }
+}
+
+// Function for new logical operator button 
+function checkComplexAndOr() {
+    let myIn1 = document.getElementById('myText1').value.toLowerCase();
+    let myNum = parseInt(document.getElementById('myNum1').value, 10);
+
+    const nameMatches = myIn1 === 'ayan';
+    const isInRange = myNum < 20 || myNum > 15;
+
+    if (nameMatches && isInRange) {
+        document.getElementById('myDiv01').innerHTML = 'Ayan and condition met (number < 20 or number > 15)';
+    } else {
+        document.getElementById('myDiv01').innerHTML = 'Condition not met';
     }
 }
 </script>
