@@ -4,25 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JavaScript Loops Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #444;
+            margin: 0;
+            padding: 20px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        a {
+            display: block;
+            text-align: center;
+            margin: 10px 0;
+            color: #007BFF;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        input[type="number"], input[type="button"] {
+            width: calc(100% - 10px);
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        #myDiv01 {
+            margin-top: 20px;
+            font-weight: bold;
+            text-align: center;
+            min-height: 50px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #e9ecef;
+        }
+    </style>
 </head>
 <body>
 
-<h2 align="center">T1a10-loop-by-ayan.html</h2>
+<div class="container">
+    <h2>JavaScript Loops Example</h2>
 
-<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Loops_and_iteration">Good reference to JavaScript Loops</a><br>
+    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Loops_and_iteration">Good reference to JavaScript Loops</a>
 
-<h4>Example input/output code</h4>
-<pre>
-    <!-- Code examples can go here -->
-</pre>
+    <h4>Enter the maximum number of loops:</h4>
+    <input id="myNum01" type="number" value="4" min="1" placeholder="Enter a positive integer">
+    
+    <input type="button" value="Run Loop" onclick="runLoop()">
+    <input type="button" value="Reset" onclick="resetFields()">
 
-<h4>Example working code</h4>
-
-Max loops: <input id="myNum01" type="number" value="4"><br>
-
-<input type="button" value="Basic For Loop with Decisions" onclick="runLoop()">
-
-<div id="myDiv01">. . .</div>
+    <div id="myDiv01">. . .</div>
+</div>
 
 <script>
 function runLoop() {
@@ -31,15 +71,38 @@ function runLoop() {
     
     let myMax = parseInt(document.getElementById('myNum01').value);
 
+    // Validate input
+    if (isNaN(myMax) || myMax < 1) {
+        document.getElementById('myDiv01').innerHTML = 'Please enter a positive integer.';
+        return;
+    }
+
+    // Loop through and display results
     for (let myLoop = 0; myLoop < myMax; myLoop++) {
+        myTemp += "Loop number: " + myLoop;
         if (myLoop * 2 > myMax) {
-            myTemp += ' cool ';
+            myTemp += ' (cool)';
         }
-        myTemp += " loop number: " + myLoop + "<br>";
+        myTemp += "<br>";
     }
 
     document.getElementById('myDiv01').innerHTML = myTemp;
 }
+
+function resetFields() {
+    document.getElementById('myNum01').value = 4; // Reset to initial value
+    document.getElementById('myDiv01').innerHTML = '. . .'; // Reset output
+}
+
+// Real-time validation for numeric input
+document.getElementById('myNum01').addEventListener('input', function() {
+    const value = parseInt(this.value);
+    if (isNaN(value) || value < 1) {
+        this.setCustomValidity('Must be a positive integer.');
+    } else {
+        this.setCustomValidity('');
+    }
+});
 </script>
 
 </body>
