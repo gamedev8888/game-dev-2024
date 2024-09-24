@@ -7,8 +7,10 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f8f8f8;
+            background: url('https://wallpapercave.com/wp/qFDbhtV.jpg') no-repeat center center fixed;
+            background-size: cover; /* Ensures the background covers the entire page */
             text-align: center;
+            color: white; /* Change text color to white for better visibility */
         }
 
         h1 {
@@ -26,7 +28,7 @@
         .card {
             width: 100px;
             height: 100px;
-            background-color: #4CAF50;
+            background-color: rgba(76, 175, 80, 0.8); /* Semi-transparent green */
             color: white;
             font-size: 24px;
             display: flex;
@@ -39,8 +41,8 @@
         }
 
         .card.flipped {
-            background-color: #fff;
-            color: #4CAF50;
+            background-color: rgba(255, 255, 255, 0.9); /* Light background for flipped cards */
+            color: #4CAF50; /* Change text color to green for flipped cards */
         }
 
         .restart-btn {
@@ -50,13 +52,13 @@
             cursor: pointer;
             border: none;
             border-radius: 5px;
-            background-color: #4CAF50;
+            background-color: rgba(76, 175, 80, 0.8);
             color: white;
             transition: background-color 0.3s;
         }
 
         .restart-btn:hover {
-            background-color: #45a049;
+            background-color: rgba(76, 175, 80, 1);
         }
     </style>
 </head>
