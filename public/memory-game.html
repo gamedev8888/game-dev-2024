@@ -8,11 +8,16 @@
         body {
             font-family: Avenir, Helvetica, sans-serif;
             text-align: center;
-            background-color: #f0f0f0;
+            /* Set the background image */
+            background-image: url('https://wallup.net/wp-content/uploads/2018/09/28/655980-wallpapers-colors-colorful-background-748x421.jpg');
+            background-size: cover; /* Cover the entire viewport */
+            background-repeat: no-repeat; /* Prevent repeating the image */
+            background-position: center; /* Center the image */
         }
 
         h1 {
             margin: 20px;
+            color: white; /* Change header color to ensure contrast */
         }
 
         .game-container {
@@ -27,7 +32,7 @@
         .card {
             width: 100px;
             height: 100px;
-            background-color: #4CAF50;
+            background-color: #4CAF50; /* This is the background color for the cards */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -52,6 +57,15 @@
             margin: 20px;
             padding: 10px 20px;
             font-size: 16px;
+            background-color: #4CAF50; /* Optional: Button color */
+            color: white; /* Button text color for contrast */
+            border: none; /* Remove default button borders */
+            border-radius: 5px; /* Round corners of the button */
+            cursor: pointer; /* Pointer cursor for button */
+        }
+
+        #restart-button:hover {
+            background-color: #45a049; /* Darken button on hover (optional) */
         }
     </style>
 </head>
