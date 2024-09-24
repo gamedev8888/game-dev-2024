@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loops</title>
+    <title>Loops and Guess the Number</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,7 +12,7 @@
             margin: 0;
             padding: 20px;
         }
-        h2 {
+        h2, h4 {
             text-align: center;
             color: #333;
         }
@@ -28,7 +28,7 @@
             background: white;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
         input[type="number"], input[type="button"] {
             width: calc(100% - 10px);
@@ -36,7 +36,7 @@
             margin: 10px 0;
             font-size: 16px;
         }
-        #myDiv01 {
+        #myDiv01, #guessFeedback {
             margin-top: 20px;
             font-weight: bold;
             text-align: center;
@@ -80,9 +80,18 @@
 
     <div id="myDiv01">. . .</div>
     <div class="error-message" id="errorMessage"></div>
+
+    <h2>Guess the Number!</h2>
+    <p>Guess a number between 1 and 10,000!</p>
+    <input id="guessInput" type="number" min="1" max="10000" placeholder="Enter your guess" />
+    <input type="button" value="Submit Guess" onclick="checkGuess()">
+    <div id="guessFeedback">. . .</div>
 </div>
 
 <script>
+let randomNumber = Math.floor(Math.random() * 10000) + 1;
+let attempts = 0;
+
 function runLoop() {
     document.getElementById('myDiv01').innerHTML = '';
     document.getElementById('errorMessage').innerHTML = '';
@@ -153,6 +162,43 @@ document.getElementById('myNum01').addEventListener('input', function() {
     const value = parseInt(this.value);
     if (isNaN(value) || value < 1) {
         this.setCustomValidity('Must be a positive integer.');
+    } else {
+        this.setCustomValidity('');
+    }
+});
+
+function checkGuess() {
+    const guess = parseInt(document.getElementById('guessInput').value);
+    const feedback = document.getElementById('guessFeedback');
+
+    attempts++;
+
+    if (isNaN(guess) || guess < 1 || guess > 10000) {
+        feedback.innerHTML = "Please enter a valid number between 1 and 10,000.";
+        return;
+    }
+
+    if (guess > randomNumber) {
+        feedback.innerHTML = "Too high! Try again.";
+    } else if (guess < randomNumber) {
+        feedback.innerHTML = "Too low! Try again.";
+    } else {
+        feedback.innerHTML = `Congratulations! You've guessed the number ${randomNumber} in ${attempts} attempts!`;
+        resetGame();
+    }
+}
+
+function resetGame() {
+    attempts = 0;
+    randomNumber = Math.floor(Math.random() * 10000) + 1; // Reset the random number
+    document.getElementById('guessInput').value = ''; // Clear input
+}
+
+// Real-time validation for the guess input
+document.getElementById('guessInput').addEventListener('input', function() {
+    const value = parseInt(this.value);
+    if (isNaN(value) || value < 1 || value > 10000) {
+        this.setCustomValidity('Must be a number between 1 and 10,000.');
     } else {
         this.setCustomValidity('');
     }
