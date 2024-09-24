@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Game</title>
+    <style>
+        body {
+            font-family: Avenir, Helvetica, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+        }
+
+        h1 {
+            margin: 20px;
+        }
+
+        .game-container {
+            display: grid;
+            grid-template-columns: repeat(4, 100px);
+            gap: 10px;
+            justify-content: center;
+            margin: 20px auto;
+            max-width: 450px;
+        }
+
+        .card {
+            width: 100px;
+            height: 100px;
+            background-color: #4CAF50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .card.flipped {
+            background-color: #ffffff;
+            color: #000;
+        }
+
+        .card.matched {
+            background-color: #4CAF50;
+            pointer-events: none;
+        }
+
+        #restart-button {
+            margin: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Memory Game</h1>
+    <div class="game-container" id="game-container"></div>
+    <button id="restart-button">Restart Game</button>
+    <script>
+        const gameContainer = document.getElementById('game-container');
+        const restartButton = document.getElementById('restart-button');
+        const colors = ['#ff5733', '#33ff57', '#3357ff', '#f3ff33', '#ff33a8', '#33eaff', '#b733ff', '#ffb733'];
+        let cardArray = [...colors, ...colors];
+        let firstCard, secondCard;
+        let lockBoard = false;
+        let matchedCards = 0;
+
+        function shuffle(array) {
+            array.sort(() => Math.random() - 0.5);
+        }
+
+        function createCard(cardColor) {
+            const card = document.createElement('div');
+            card.classList.add('card');
+            card.dataset.color = cardColor;
+            card.addEventListener('click', flipCard);
+            return card;
+        }
+
+        function flipCard() {
+            if (lockBoard) return;
+            if (this === firstCard) return;
+
+            this.style.backgroundColor = this.dataset.color;
+
+            if (!firstCard) {
+                firstCard = this;
+                return;
+            }
+
+            secondCard = this;
+
+            checkForMatch();
+        }
+
+        function checkForMatch() {
+            lockBoard = true;
+
+            if (firstCard.dataset.color === secondCard.dataset.color) {
+                matchedCards++;
+                firstCard.classList.add('matched');
+                secondCard.classList.add('matched');
+
+                resetBoard();
+            } else {
+                setTimeout(() => {
+                    firstCard.style.backgroundColor = '#4CAF50';
+                    secondCard.style.backgroundColor = '#4CAF50';
+                    resetBoard();
+                }, 1000);
+            }
+        }
+
+        function resetBoard() {
+            [firstCard, secondCard, lockBoard] = [null, null, false];
+
+            if (matchedCards === colors.length) {
+                setTimeout(() => alert('Congratulations! You found all matches!'), 100);
+            }
+        }
+
+        function startGame() {
+            shuffle(cardArray);
+            gameContainer.innerHTML = '';
+            matchedCards = 0;
+            firstCard = null;
+            secondCard = null;
+            lockBoard = false;
+
+            cardArray.forEach(color => {
+                const card = createCard(color);
+                gameContainer.appendChild(card);
+            });
+        }
+
+        restartButton.addEventListener('click', startGame);
+
+        startGame();
+    </script>
+</body>
+</html>
