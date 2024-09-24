@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Loops Example</title>
+</head>
+<body>
+
+<h2 align="center">T1a10-loop-by-ayan.html</h2>
+
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Loops_and_iteration">Good reference to JavaScript Loops</a><br>
+
+<h4>Example input/output code</h4>
+<pre>
+    <!-- Code examples can go here -->
+</pre>
+
+<h4>Example working code</h4>
+
+Max loops: <input id="myNum01" type="number" value="4"><br>
+
+<input type="button" value="Basic For Loop with Decisions" onclick="runLoop()">
+
+<div id="myDiv01">. . .</div>
+
+<script>
+function runLoop() {
+    document.getElementById('myDiv01').innerHTML = '';
+    let myTemp = '';
+    
+    let myMax = parseInt(document.getElementById('myNum01').value);
+
+    for (let myLoop = 0; myLoop < myMax; myLoop++) {
+        if (myLoop * 2 > myMax) {
+            myTemp += ' cool ';
+        }
+        myTemp += " loop number: " + myLoop + "<br>";
+    }
+
+    document.getElementById('myDiv01').innerHTML = myTemp;
+}
+</script>
+
+</body>
+</html>
