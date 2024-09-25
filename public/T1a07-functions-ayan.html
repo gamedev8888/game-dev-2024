@@ -15,7 +15,7 @@
             padding: 20px;
         }
 
-        h1 {
+        h1, h2 {
             color: #4CAF50;
         }
 
@@ -40,7 +40,7 @@
             background-color: #45a049;
         }
 
-        #myDiv01, #guessResult {
+        #myDiv01, #guessResult, #hangmanResult {
             margin-top: 20px;
             padding: 10px;
             border: 1px solid #ddd;
@@ -62,11 +62,12 @@
 <h1>T1a07-functions-ayan.html</h1>
 
 <script>
+// Utility function to get elements by ID
 function myVar(myIn) {
     return document.getElementById(myIn);
 }
 
-// Game variables
+// Game variables for Guess the Number
 let randomNumber = Math.floor(Math.random() * 100) + 1;
 let attempts = 0;
 
@@ -76,26 +77,69 @@ function guessNumber() {
     attempts++;
     let message = '';
 
-    if (userGuess > randomNumber) {
+    if (isNaN(userGuess) || userGuess < 1 || userGuess > 100) {
+        message = 'Please enter a valid number between 1 and 100.';
+    } else if (userGuess > randomNumber) {
         message = 'Your guess is too high!';
     } else if (userGuess < randomNumber) {
         message = 'Your guess is too low!';
-    } else if (userGuess === randomNumber) {
-        message = `Congratulations! You've guessed the number ${randomNumber} in ${attempts} attempts!`;
     } else {
-        message = 'Please enter a valid number.';
+        message = `Congratulations! You've guessed the number ${randomNumber} in ${attempts} attempts!`;
     }
     
     myVar('guessResult').innerHTML = message;
 }
 
-// Function to restart the game
+// Function to restart the guessing game
 function restartGame() {
     randomNumber = Math.floor(Math.random() * 100) + 1;
     attempts = 0;
     myVar('guessInput').value = '';
     myVar('guessResult').innerHTML = 'Guess a number between 1 and 100.';
 }
+
+// Game variables for Hangman
+const words = ["javascript", "html", "css", "computer", "programming", "hangman"];
+let selectedWord, guessedLetters, wrongGuesses;
+
+function startHangman() {
+    selectedWord = words[Math.floor(Math.random() * words.length)];
+    guessedLetters = [];
+    wrongGuesses = 0;
+    myVar('hangmanResult').innerHTML = `Word: ${"_ ".repeat(selectedWord.length)}`;
+    myVar('hangmanMessage').innerHTML = 'Enter a letter:';
+    myVar('hangmanInput').value = '';
+}
+
+function guessLetter() {
+    const letter = myVar('hangmanInput').value.toLowerCase();
+    myVar('hangmanInput').value = '';
+
+    if (!letter || guessedLetters.includes(letter) || letter.length > 1) {
+        myVar('hangmanMessage').innerHTML = 'Invalid guess! Try again.';
+        return;
+    }
+
+    guessedLetters.push(letter);
+    
+    if (selectedWord.includes(letter)) {
+        let displayWord = selectedWord.split('').map(l => (guessedLetters.includes(l) ? l : "_")).join(" ");
+        myVar('hangmanResult').innerHTML = `Word: ${displayWord}`;
+        if (!displayWord.includes("_")) {
+            myVar('hangmanMessage').innerHTML = 'Congratulations! You guessed the word!';
+        } else {
+            myVar('hangmanMessage').innerHTML = 'Good guess! Try again.';
+        }
+    } else {
+        wrongGuesses++;
+        if (wrongGuesses >= 6) {
+            myVar('hangmanMessage').innerHTML = `Game Over! The word was "${selectedWord}".`;
+        } else {
+            myVar('hangmanMessage').innerHTML = `Wrong guess! You have ${6 - wrongGuesses} guesses left.`;
+        }
+    }
+}
+
 </script>
 
 <!-- Input fields for name -->
@@ -117,6 +161,14 @@ Input: <input type="text" id="myFirstName" value="Ayan">
 <input type="button" value="Guess" onclick="guessNumber()">
 <input type="button" value="Restart" onclick="restartGame()">
 <div id="guessResult">Guess a number between 1 and 100.</div>
+
+<!-- Hangman game -->
+<h2>Hangman Game</h2>
+<input type="text" id="hangmanInput" placeholder="Enter a letter">
+<input type="button" value="Guess" onclick="guessLetter()">
+<input type="button" value="Start Game" onclick="startHangman()">
+<div id="hangmanResult"></div>
+<div id="hangmanMessage">Press "Start Game" to begin!</div>
 
 </body>
 </html>
