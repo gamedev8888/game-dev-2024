@@ -59,6 +59,9 @@
             margin-top: 20px;
             text-align: center;
         }
+        .difficulty-selection {
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -88,6 +91,17 @@
     <div class="error-message" id="errorMessage"></div>
 
     <h4>Guess the Number (1-10000)</h4>
+    
+    <h4>Select Difficulty Level:</h4>
+    <div class="difficulty-selection">
+        <input type="radio" id="easy" name="difficulty" value="easy" checked>
+        <label for="easy">Easy (1-100)</label><br>
+        <input type="radio" id="medium" name="difficulty" value="medium">
+        <label for="medium">Medium (1-1000)</label><br>
+        <input type="radio" id="hard" name="difficulty" value="hard">
+        <label for="hard">Hard (1-10000)</label>
+    </div>
+    
     <div class="guess-section">
         <input id="guessInput" type="number" min="1" max="10000" placeholder="Enter your guess" />
         <input type="button" value="Submit Guess" onclick="checkGuess()" />
@@ -97,7 +111,7 @@
 </div>
 
 <script>
-let targetNumber = Math.floor(Math.random() * 10000) + 1;  // Random number between 1 and 10000
+let targetNumber = 0;
 let guessAttempts = 0;
 
 function runLoop() {
@@ -166,12 +180,50 @@ function resetFields() {
 }
 
 // Guess the number game functions
+function resetGame() {
+    // Determine selected difficulty
+    const difficulty = document.querySelector('input[name="difficulty"]:checked').value;
+    switch (difficulty) {
+        case 'easy':
+            targetNumber = Math.floor(Math.random() * 100) + 1; // Reset target number for easy
+            break;
+        case 'medium':
+            targetNumber = Math.floor(Math.random() * 1000) + 1; // Reset target number for medium
+            break;
+        case 'hard':
+            targetNumber = Math.floor(Math.random() * 10000) + 1; // Reset target number for hard
+            break;
+        default:
+            targetNumber = Math.floor(Math.random() * 10000) + 1; // Default to hard
+            break;
+    }
+    guessAttempts = 0; // Reset attempts
+    document.getElementById('guessInput').value = ''; // Clear input
+    document.getElementById('guessResult').innerHTML = ''; // Clear result message
+}
+
 function checkGuess() {
     const guessValue = parseInt(document.getElementById('guessInput').value);
     guessAttempts++;
 
-    if (isNaN(guessValue) || guessValue < 1 || guessValue > 10000) {
-        document.getElementById('guessResult').innerHTML = 'Please enter a number between 1 and 10000.';
+    // Validate input
+    const difficulty = document.querySelector('input[name="difficulty"]:checked').value;
+    let maxRange;
+    
+    switch (difficulty) {
+        case 'easy':
+            maxRange = 100;
+            break;
+        case 'medium':
+            maxRange = 1000;
+            break;
+        case 'hard':
+            maxRange = 10000;
+            break;
+    }
+
+    if (isNaN(guessValue) || guessValue < 1 || guessValue > maxRange) {
+        document.getElementById('guessResult').innerHTML = `Please enter a number between 1 and ${maxRange}.`;
         return;
     }
 
@@ -184,13 +236,6 @@ function checkGuess() {
     }
 }
 
-function resetGame() {
-    targetNumber = Math.floor(Math.random() * 10000) + 1; // Reset the target number
-    guessAttempts = 0; // Reset attempts
-    document.getElementById('guessInput').value = ''; // Clear input
-    document.getElementById('guessResult').innerHTML = ''; // Clear result message
-}
-
 // Real-time validation for numeric input
 document.getElementById('myNum01').addEventListener('input', function() {
     const value = parseInt(this.value);
@@ -200,6 +245,9 @@ document.getElementById('myNum01').addEventListener('input', function() {
         this.setCustomValidity('');
     }
 });
+
+// Initialize the game when the page loads
+resetGame();
 </script>
 
 </body>
