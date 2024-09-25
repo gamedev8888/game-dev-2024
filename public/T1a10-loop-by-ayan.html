@@ -8,15 +8,15 @@
         body {
             font-family: Arial, sans-serif;
             background-image: url('https://wallpapercave.com/uwp/uwp4234460.jpeg');
-            background-size: cover; /* Fill the entire background */
-            background-position: center; /* Center the image */
+            background-size: cover;
+            background-position: center;
             color: red;
             margin: 0;
             padding: 20px;
         }
         h2 {
             text-align: center;
-            color: red; /* red color for better visibility */
+            color: red;
         }
         a {
             display: block;
@@ -27,7 +27,7 @@
         .container {
             max-width: 600px;
             margin: auto;
-            background: rgb(0 0 0 / 80%); /* Light background with transparency */
+            background: rgb(0 0 0 / 80%);
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
@@ -52,7 +52,7 @@
             color: red;
             text-align: center;
         }
-        .loop-selection {
+        .loop-selection, .calculator-section {
             text-align: center;
         }
         .guess-section {
@@ -67,8 +67,8 @@
 <body>
 
 <div class="container">
+    <!-- Existing Loop Interface -->
     <h2>Loops</h2>
-
     <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Loops_and_iteration">Good reference to JavaScript Loops</a>
 
     <h4>Choose a loop type:</h4>
@@ -83,15 +83,13 @@
 
     <h4>Enter the maximum number of loops:</h4>
     <input id="myNum01" type="number" value="4" min="1" placeholder="Enter a positive integer">
-    
     <input type="button" value="Run Loop" onclick="runLoop()">
     <input type="button" value="Reset" onclick="resetFields()">
-
     <div id="myDiv01">. . .</div>
     <div class="error-message" id="errorMessage"></div>
 
+    <!-- Existing Guess the Number Game -->
     <h4>Guess the Number (1-10000)</h4>
-    
     <h4>Select Difficulty Level:</h4>
     <div class="difficulty-selection">
         <input type="radio" id="easy" name="difficulty" value="easy" checked>
@@ -108,12 +106,26 @@
         <input type="button" value="Reset Game" onclick="resetGame()" />
         <div id="guessResult"></div>
     </div>
+
+    <!-- New Calculator Section -->
+    <h4>Basic Calculator</h4>
+    <div class="calculator-section">
+        <input type="number" id="num1" placeholder="Enter first number" />
+        <input type="number" id="num2" placeholder="Enter second number" />
+        <br />
+        <input type="button" value="Add" onclick="calculate('add')" />
+        <input type="button" value="Subtract" onclick="calculate('subtract')" />
+        <input type="button" value="Multiply" onclick="calculate('multiply')" />
+        <input type="button" value="Divide" onclick="calculate('divide')" />
+        <div id="calcResult" style="margin-top: 15px;"></div>
+    </div>
 </div>
 
 <script>
 let targetNumber = 0;
 let guessAttempts = 0;
 
+// Loop functionality
 function runLoop() {
     document.getElementById('myDiv01').innerHTML = '';
     document.getElementById('errorMessage').innerHTML = '';
@@ -173,40 +185,38 @@ function runLoop() {
 }
 
 function resetFields() {
-    document.getElementById('myNum01').value = 4; // Reset to initial value
-    document.getElementById('myDiv01').innerHTML = '. . .'; // Reset output
-    document.getElementById('errorMessage').innerHTML = ''; // Reset error message
-    document.getElementById('forLoop').checked = true; // Default to For Loop
+    document.getElementById('myNum01').value = 4;
+    document.getElementById('myDiv01').innerHTML = '. . .';
+    document.getElementById('errorMessage').innerHTML = '';
+    document.getElementById('forLoop').checked = true;
 }
 
 // Guess the number game functions
 function resetGame() {
-    // Determine selected difficulty
     const difficulty = document.querySelector('input[name="difficulty"]:checked').value;
     switch (difficulty) {
         case 'easy':
-            targetNumber = Math.floor(Math.random() * 100) + 1; // Reset target number for easy
+            targetNumber = Math.floor(Math.random() * 100) + 1;
             break;
         case 'medium':
-            targetNumber = Math.floor(Math.random() * 1000) + 1; // Reset target number for medium
+            targetNumber = Math.floor(Math.random() * 1000) + 1;
             break;
         case 'hard':
-            targetNumber = Math.floor(Math.random() * 10000) + 1; // Reset target number for hard
+            targetNumber = Math.floor(Math.random() * 10000) + 1;
             break;
         default:
-            targetNumber = Math.floor(Math.random() * 10000) + 1; // Default to hard
+            targetNumber = Math.floor(Math.random() * 10000) + 1;
             break;
     }
-    guessAttempts = 0; // Reset attempts
-    document.getElementById('guessInput').value = ''; // Clear input
-    document.getElementById('guessResult').innerHTML = ''; // Clear result message
+    guessAttempts = 0;
+    document.getElementById('guessInput').value = '';
+    document.getElementById('guessResult').innerHTML = '';
 }
 
 function checkGuess() {
     const guessValue = parseInt(document.getElementById('guessInput').value);
     guessAttempts++;
 
-    // Validate input
     const difficulty = document.querySelector('input[name="difficulty"]:checked').value;
     let maxRange;
     
@@ -248,6 +258,42 @@ document.getElementById('myNum01').addEventListener('input', function() {
 
 // Initialize the game when the page loads
 resetGame();
+
+// Calculator Functions
+function calculate(operation) {
+    const num1 = parseFloat(document.getElementById('num1').value);
+    const num2 = parseFloat(document.getElementById('num2').value);
+    let result;
+
+    if (isNaN(num1) || isNaN(num2)) {
+        document.getElementById('calcResult').innerHTML = 'Please enter valid numbers.';
+        return;
+    }
+
+    switch (operation) {
+        case 'add':
+            result = num1 + num2;
+            break;
+        case 'subtract':
+            result = num1 - num2;
+            break;
+        case 'multiply':
+            result = num1 * num2;
+            break;
+        case 'divide':
+            if (num2 === 0) {
+                document.getElementById('calcResult').innerHTML = 'Cannot divide by zero!';
+                return;
+            }
+            result = num1 / num2;
+            break;
+        default:
+            result = 'Invalid operation';
+            break;
+    }
+
+    document.getElementById('calcResult').innerHTML = `Result: ${result}`;
+}
 </script>
 
 </body>
