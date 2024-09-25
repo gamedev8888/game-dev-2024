@@ -59,11 +59,29 @@
             padding: 10px 20px;
             font-size: 1em;
         }
+
+        .input-area {
+            margin-bottom: 20px;
+        }
+
+        .highlight {
+            background-color: #4caf50 !important; /* Highlight color for winning cells */
+        }
+
+        input {
+            padding: 10px;
+            margin: 5px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Tic Tac Toe</h1>
+        <div class="input-area">
+            <input type="text" id="playerX" placeholder="Enter Player X's Name (X)" />
+            <input type="text" id="playerO" placeholder="Enter Player O's Name (O)" />
+            <button id="startGame">Start Game</button>
+        </div>
         <div class="board">
             <div class="cell" data-index="0"></div>
             <div class="cell" data-index="1"></div>
@@ -86,6 +104,8 @@
         let currentPlayer = 'X';
         let gameActive = true;
         let gameState = Array(9).fill('');
+        let playerX = 'X';
+        let playerO = 'O';
 
         const winningConditions = [
             [0, 1, 2],
@@ -110,6 +130,8 @@
 
         function checkResult() {
             let roundWon = false;
+            let winningCells = [];
+
             for (let i = 0; i < winningConditions.length; i++) {
                 const condition = winningConditions[i];
                 const a = gameState[condition[0]];
@@ -120,12 +142,16 @@
                 }
                 if (a === b && b === c) {
                     roundWon = true;
+                    winningCells = condition;  // Save the winning cells
                     break;
                 }
             }
 
             if (roundWon) {
-                statusDisplay.textContent = `Player ${currentPlayer} has won!`;
+                winningCells.forEach(index => {
+                    cells[index].classList.add('highlight'); // Highlight the winning cells
+                });
+                statusDisplay.textContent = `${currentPlayer === 'X' ? playerX : playerO} has won!`;
                 gameActive = false;
                 return;
             }
@@ -146,8 +172,15 @@
             statusDisplay.textContent = '';
             cells.forEach(cell => {
                 cell.textContent = '';
+                cell.classList.remove('highlight'); // Remove highlight from cells
             });
         }
+
+        document.getElementById('startGame').addEventListener('click', () => {
+            playerX = document.getElementById('playerX').value || 'X';
+            playerO = document.getElementById('playerO').value || 'O';
+            resetGame();
+        });
 
         cells.forEach((cell, index) => {
             cell.addEventListener('click', () => handleCellClick(cell, index));
