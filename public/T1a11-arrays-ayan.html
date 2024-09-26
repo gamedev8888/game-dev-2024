@@ -3,26 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arrays</title>
+    <title>Arrays - Enhanced</title>
     <style>
         body {
             font-family: Arial, sans-serif; 
             margin: 0; 
             padding: 0; 
-            background-color: #333; 
+            background: url('https://th.bing.com/th/id/R.e195c69227affe9c68db10bafc026964?rik=HI2O8IYi8XwTpg&riu=http%3a%2f%2fwww.designyourway.net%2fblog%2fwp-content%2fuploads%2f2018%2f01%2fHD-Awesome-High-Resolution-Wallpapers-Of-Antarctic-Ocean-Cool-Desktop-Background-Images-Widescreen.jpg&ehk=ePMSG1%2b2fEmlzyhJuKOjvMwOY6Od0uPZWh6hbl2%2bVws%3d&risl=&pid=ImgRaw&r=0') no-repeat center center fixed; 
+            background-size: cover; /* Ensures the image covers the entire background */
             color: #f5f5f5; 
             text-align: center;
         }
+
         input, button {
             padding: 10px;
             margin: 5px;
+            border-radius: 5px;
+            border: none;
+            background-color: rgba(255, 255, 255, 0.8); // Light background for inputs and buttons
+            color: #333; // Dark text color
+            transition: background-color 0.2s;
         }
-        #myDiv01 {
+
+        input:focus, button:hover {
+            background-color: rgba(200, 200, 200, 0.9);
+        }
+
+        #myDiv01, #historyLog {
             margin-top: 20px;
             padding: 10px;
-            background-color: #222;
+            background-color: rgba(0, 0, 0, 0.7); // Semi-transparent background for display areas
             color: white;
+            border-radius: 5px;
         }
+
         #toast {
             position: fixed;
             bottom: 20px;
@@ -33,15 +47,16 @@
             border-radius: 5px;
             display: none;
         }
+
         #instructions {
             margin-top: 20px;
             padding: 10px;
-            background-color: #444;
+            background-color: rgba(255, 255, 255, 0.8);
         }
     </style>
 </head>
 <body>
-    <h1>Arrays</h1>
+    <h1>Enhanced Arrays</h1>
 
     <select id="arrayIndex"></select>
 
@@ -51,6 +66,12 @@
     <button onclick="setArrayValue()">Set</button>
     <button onclick="showArray()">Show</button>
     <button onclick="resetArray()">Reset</button>
+    <button onclick="sortArray()">Sort</button>
+    <button onclick="showStatistics()">Show Stats</button>
+    <button onclick="fillArrayWithRandomValues()">Fill with Random Values</button>
+    <button onclick="filterArray()">Filter</button>
+    <button onclick="createMultiDimensionalArray()">Create 2D Array</button>
+    <button onclick="undoLastAction()">Undo</button>
 
     <input type="text" id="newArrayName" placeholder="New Array Name" />
     <button onclick="createArray()">Create Array</button>
@@ -61,14 +82,18 @@
     <div id="instructions">
         <h3>Instructions:</h3>
         <p>Select an array, enter a value, specify an index, and use the buttons to manipulate the arrays.</p>
-        <p>You can create new arrays, and remove existing ones as needed.</p>
+        <p>Trying out new features with arrays! You can create new arrays, and remove existing ones.</p>
+        <p>You can also fill arrays randomly, sort them, filter their contents, and even undo actions!</p>
     </div>
+    
+    <div id="historyLog">Action History:</div>
 
     <script>
         const MAX_ARRAY_SIZE = 10; 
         const MAX_ARRAYS = 10; 
         let arrays = {};
         let currentArrayCount = 0;
+        let lastAction = null;
 
         // Create initial arrays in case of a page load
         for (let i = 0; i < 5; i++) {
@@ -87,9 +112,10 @@
         function createArray() {
             const arrayName = document.getElementById('newArrayName').value.trim();
             if (arrayName && !(arrayName in arrays) && currentArrayCount < MAX_ARRAYS) {
-                arrays[arrayName] = new Array(MAX_ARRAY_SIZE); 
+                arrays[arrayName] = new Array(MAX_ARRAY_SIZE);
                 addArrayToDropdown(arrayName);
                 currentArrayCount++;
+                logAction(`Array '${arrayName}' created.`);
                 showToast(`Array '${arrayName}' created.`);
                 document.getElementById('newArrayName').value = '';
             } else {
@@ -102,8 +128,9 @@
             if (arrayName in arrays) {
                 delete arrays[arrayName];
                 const dropdown = document.getElementById('arrayIndex');
-                dropdown.remove(dropdown.selectedIndex); // Remove selected option
+                dropdown.remove(dropdown.selectedIndex);
                 currentArrayCount--;
+                logAction(`Array '${arrayName}' removed.`);
                 showToast(`Array '${arrayName}' removed.`);
                 document.getElementById('myDiv01').innerHTML = 'Array Contents will be displayed here.';
             } else {
@@ -126,7 +153,10 @@
                 return;
             }
 
+            const previousValue = arrays[arrayName][elementIndex]; // Store previous value for undo
             arrays[arrayName][elementIndex] = value;
+            lastAction = { arrayName, elementIndex, value: previousValue }; // Log last action
+            logAction(`Set ${arrayName}[${elementIndex}] = '${value}'`);
             showToast(`Set ${arrayName}[${elementIndex}] = '${value}'`);
             document.getElementById('myFirstName').value = '';
         }
@@ -140,11 +170,72 @@
             });
         }
 
-        function resetArray() {
+        function sortArray() {
             const arrayName = document.getElementById('arrayIndex').value;
-            arrays[arrayName].fill(undefined); // Fill the array with undefined
-            showToast(`${arrayName} has been reset.`);
+            if (arrays[arrayName]) {
+                arrays[arrayName].sort();
+                showToast(`Sorted ${arrayName}.`);
+                showArray();
+                logAction(`${arrayName} has been sorted.`);
+            }
+        }
+
+        function showStatistics() {
+            const arrayName = document.getElementById('arrayIndex').value;
+            const numericArray = arrays[arrayName].filter(item => typeof item === 'number');
+            const sum = numericArray.reduce((a, b) => a + b, 0);
+            const average = numericArray.length > 0 ? sum / numericArray.length : 0;
+
+            showToast(`Sum of ${arrayName} = ${sum}, Average = ${average}`);
+        }
+
+        function fillArrayWithRandomValues() {
+            const arrayName = document.getElementById('arrayIndex').value;
+            const randomStrings = ['apple', 'banana', 'cherry', 'date', 'fig', 'grape', 'kiwi'];
+            arrays[arrayName] = Array.from({ length: MAX_ARRAY_SIZE }, () => randomStrings[Math.floor(Math.random() * randomStrings.length)]);
+            logAction(`${arrayName} has been filled with random values.`);
+            showToast(`${arrayName} has been filled with random values.`);
             showArray();
+        }
+
+        function filterArray() {
+            const arrayName = document.getElementById('arrayIndex').value;
+            const filtered = arrays[arrayName].filter(item => item && item.length > 3);
+            const displayDiv = document.getElementById('myDiv01');
+            displayDiv.innerHTML = `<strong>Filtered ${arrayName} Contents:</strong><br>`;
+            filtered.forEach((val, i) => {
+                displayDiv.innerHTML += `${arrayName}[${i}] = '${val}'<br>`;
+            });
+            showToast(`Filtered ${arrayName} contents shown.`);
+        }
+
+        function createMultiDimensionalArray() {
+            const arrayName = document.getElementById('newArrayName').value.trim();
+            if (arrayName && !(arrayName in arrays) && currentArrayCount < MAX_ARRAYS) {
+                arrays[arrayName] = Array.from({ length: 3 }, () => new Array(3).fill(undefined)); // 3x3 matrix
+                addArrayToDropdown(arrayName);
+                currentArrayCount++;
+                logAction(`Multi-dimensional array '${arrayName}' created.`);
+                showToast(`Multi-dimensional array '${arrayName}' created.`);
+                document.getElementById('newArrayName').value = '';
+            }
+        }
+
+        function undoLastAction() {
+            if (lastAction) {
+                const { arrayName, elementIndex, value } = lastAction;
+                arrays[arrayName][elementIndex] = value; // Restore previous value
+                showToast(`Undid last action: ${arrayName}[${elementIndex}] restored to '${value}'`);
+                showArray(); // Show updated contents
+                logAction(`Undid last action on ${arrayName}[${elementIndex}].`);
+            } else {
+                showToast('No actions to undo.');
+            }
+        }
+
+        function logAction(action) {
+            const logDiv = document.getElementById('historyLog');
+            logDiv.innerHTML += `<p>${action}</p>`;
         }
 
         function showToast(message) {
@@ -152,6 +243,14 @@
             toast.innerHTML = message;
             toast.style.display = 'block';
             setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        }
+
+        function resetArray() {
+            const arrayName = document.getElementById('arrayIndex').value;
+            arrays[arrayName].fill(undefined); // Fill the array with undefined
+            logAction(`${arrayName} has been reset.`);
+            showToast(`${arrayName} has been reset.`);
+            showArray();
         }
     </script>
 </body>
