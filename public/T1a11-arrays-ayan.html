@@ -9,8 +9,8 @@
             font-family: 'Arial', sans-serif; 
             margin: 0; 
             padding: 0; 
-            background-color: #f5f5f5; 
-            color: #333;
+            background-color: #333; /* Dark background */
+            color: #f5f5f5; /* Light text color */
             transition: background-color 0.3s, color 0.3s;
         }
         h1 {
@@ -28,12 +28,14 @@
             padding: 10px;
             width: 200px;
             margin: 5px;
-            border: 2px solid #007BFF;
+            border: 2px solid #444; /* Darker border */
             border-radius: 5px;
+            background-color: #555; /* Dark input background */
+            color: white; /* Light input text */
             transition: border-color 0.3s;
         }
         input[type="text"]:focus {
-            border-color: #0056b3;
+            border-color: #007BFF; /* Highlight on focus */
             outline: none;
         }
         button {
@@ -41,23 +43,24 @@
             margin: 5px;
             border: none;
             border-radius: 5px;
-            background-color: #007BFF;
+            background-color: #444; /* Dark button background */
             color: white;
             cursor: pointer;
             transition: background-color 0.3s;
         }
         button:hover {
-            background-color: #0056b3;
+            background-color: #666; /* Darker hover effect */
         }
         #myDiv01 {
             margin-top: 20px;
             padding: 10px;
             border: 1px solid #ccc;
-            background-color: #000000;
+            background-color: #222; /* Slightly lighter background for the display div */
             border-radius: 5px;
             max-width: 400px;
             margin-left: auto;
             margin-right: auto;
+            color: white;
         }
         .toast {
             position: fixed;
@@ -78,22 +81,6 @@
             from { bottom: 20px; opacity: 1; }
             to { bottom: 0; opacity: 0; }
         }
-        /* Dark Mode Styles */
-        .dark-mode {
-            background-color: #333;
-            color: #f5f5f5;
-        }
-        .dark-mode input[type="text"] {
-            border-color: #444;
-            background-color: #555;
-            color: white;
-        }
-        .dark-mode button {
-            background-color: #444;
-        }
-        .dark-mode button:hover {
-            background-color: #666;
-        }
     </style>
 </head>
 <body>
@@ -107,7 +94,6 @@
         <button onclick="setArrayValue(2, 'Peter')">Set Array[2] to 'Peter'</button>
         <button onclick="showArray()">Show Array</button>
         <button onclick="resetArray()">Reset Array</button>
-        <button onclick="toggleTheme()">Toggle Dark/Light Theme</button>
     </div>
 
     <div id="myDiv01">Array Contents will be displayed here.</div>
@@ -116,7 +102,6 @@
     <script>
         const MAX_ARRAY_SIZE = 10; 
         let myArray = new Array(MAX_ARRAY_SIZE);
-        let darkMode = false;
 
         function setArrayValue(index, value) {
             if (index < 0 || index >= MAX_ARRAY_SIZE) {
@@ -152,11 +137,6 @@
             toast.innerHTML = message;
             toast.style.display = 'block';
             setTimeout(() => { toast.style.display = 'none'; }, 3000);
-        }
-
-        function toggleTheme() {
-            document.body.classList.toggle('dark-mode');
-            darkMode = !darkMode;
         }
     </script>
 </body>
