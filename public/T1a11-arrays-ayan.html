@@ -3,73 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>T1a11-arrays-ayan</title>
+    <title>Cool Array Manipulator</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        h1 { text-align: center; }
-        #myDiv01 { margin-top: 20px; }
+        body {
+            font-family: 'Arial', sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            background-color: #f5f5f5; 
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+        }
+        #controls {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            width: 200px;
+            margin: 5px;
+            border: 2px solid #007BFF;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #myDiv01 {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            border-radius: 5px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            display: none;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s forwards;
+        }
+        @keyframes fadein {
+            from { bottom: 0; opacity: 0; }
+            to { bottom: 20px; opacity: 1; }
+        }
+        @keyframes fadeout {
+            from { bottom: 20px; opacity: 1; }
+            to { bottom: 0; opacity: 0; }
+        }
+        /* Dark Mode Styles */
+        .dark-mode {
+            background-color: #333;
+            color: #f5f5f5;
+        }
+        .dark-mode input[type="text"] {
+            border-color: #444;
+            background-color: #555;
+            color: white;
+        }
+        .dark-mode button {
+            background-color: #444;
+        }
+        .dark-mode button:hover {
+            background-color: #666;
+        }
     </style>
 </head>
 <body>
-    <h1>T1a11-arrays-ayan.html</h1>
+    <h1>Cool Array Manipulator</h1>
 
-    Input: <input type="text" id="myFirstName" value="ayan"><br>
-
-    <!-- Button to set index 0 -->
-    <input type="button" value="Set Array[0]" onclick="{
-        myArray[0] = document.getElementById('myFirstName').value;
-        document.getElementById('myDiv01').innerHTML = 'You set myArray[0]';
-    }">
-
-    <!-- New buttons to set indices 1 to 5 -->
-    <input type="button" value="Set Array[1] to 'Mary'" onclick="{
-        myArray[1] = 'Mary';
-        document.getElementById('myDiv01').innerHTML = 'You set myArray[1]';
-    }">
-    <input type="button" value="Set Array[2] to 'Peter'" onclick="{
-        myArray[2] = 'Peter';
-        document.getElementById('myDiv01').innerHTML = 'You set myArray[2]';
-    }">
-    <input type="button" value="Set Array[3] to 'John'" onclick="{
-        myArray[3] = 'John';
-        document.getElementById('myDiv01').innerHTML = 'You set myArray[3]';
-    }">
-    <input type="button" value="Set Array[4] to 'Alice'" onclick="{
-        myArray[4] = 'Alice';
-        document.getElementById('myDiv01').innerHTML = 'You set myArray[4]';
-    }">
-    <input type="button" value="Set Array[5] to 'Bob'" onclick="{
-        myArray[5] = 'Bob';
-        document.getElementById('myDiv01').innerHTML = 'You set myArray[5]';
-    }">
-    <input type="button" value="Set Array[6] to 'Charlie'" onclick="{
-        myArray[6] = 'Charlie';
-        document.getElementById('myDiv01').innerHTML = 'You set myArray[6]';
-    }">
-    <input type="button" value="Set Array[7] to 'Diana'" onclick="{
-        myArray[7] = 'Diana';
-        document.getElementById('myDiv01').innerHTML = 'You set myArray[7]';
-    }">
-    <input type="button" value="Set Array[8] to 'Eve'" onclick="{
-        myArray[8] = 'Eve';
-        document.getElementById('myDiv01').innerHTML = 'You set myArray[8]';
-    }">
-
-    <!-- Button to show the array -->
-    <input type="button" value="Show Array" onclick="{
-        document.getElementById('myDiv01').innerHTML = '';
-        for (let myLoop = 0; myLoop < myArray.length; myLoop++) {
-            document.getElementById('myDiv01').innerHTML += 'myArray[' + myLoop + '] = ' +
-            myArray[myLoop] + ' <br>';
-        }
-    }"><br>
+    <div id="controls">
+        Input: <input type="text" id="myFirstName" value="ayan">
+        <button onclick="setArrayValue(0)">Set Array[0]</button>
+        <button onclick="setArrayValue(1, 'Mary')">Set Array[1] to 'Mary'</button>
+        <button onclick="setArrayValue(2, 'Peter')">Set Array[2] to 'Peter'</button>
+        <button onclick="toggleTheme()">Toggle Dark/Light Theme</button>
+        <button onclick="showArray()">Show Array</button>
+    </div>
 
     <div id="myDiv01">...</div>
 
+    <div id="toast" class="toast">...</div>
+
     <script>
-        // Set a few Global variables 
-        let myMax = 10; // Increased to 10 to accommodate additional indices
+        let myMax = 10; 
         let myArray = new Array(myMax);
+        let darkMode = false;
+
+        function setArrayValue(index, value = document.getElementById('myFirstName').value) {
+            if (index >= 0 && index < myMax) {
+                myArray[index] = value;
+                showToast(`You set myArray[${index}] = ${value}`);
+            } else {
+                showToast('Index out of bounds!');
+            }
+        }
+
+        function showArray() {
+            document.getElementById('myDiv01').innerHTML = '';
+            for (let myLoop = 0; myLoop < myArray.length; myLoop++) {
+                document.getElementById('myDiv01').innerHTML += `myArray[${myLoop}] = ${myArray[myLoop] !== undefined ? myArray[myLoop] : 'undefined'}<br>`;
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerHTML = message;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            darkMode = !darkMode;
+        }
     </script>
 </body>
 </html>
