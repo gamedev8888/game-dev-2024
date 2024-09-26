@@ -1,0 +1,27 @@
+<h1 align=center>T1a11-arrays-ayan.html</h1>
+
+<script>
+  // Set a few Clobal variables 
+  let myMax = 6
+  let myArray = new Array(myMax)
+</script>
+
+Input:<input type=text id="myFirstName" value="ayan"><br>
+
+<input type=button value="Set Array" onclick="{
+   myArray[0] = 'Fred'
+   myArray[1] = 'Mary'
+   myArray[2] = 'Peter'
+
+   document.getElementbyid('myDiv01').innerHTML = 'You set the array'
+}">
+
+<input type=button value="Show Array" onlick="{
+   document.getElementbyid('myDiv01').innerHTML = ''
+   for (myLoop=0;  myLoop < 3; myLoop++){
+     document.getElementbyid('myDiv01').innerHTML += 'myArray[' + myLoop + '] = ' = +
+        myArray[myLoop] + ' <br> '
+   }
+}"><br>
+
+<div id="myDiv01">...</div>
