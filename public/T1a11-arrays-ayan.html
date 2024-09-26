@@ -4,34 +4,72 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>T1a11-arrays-ayan</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1 { text-align: center; }
+        #myDiv01 { margin-top: 20px; }
+    </style>
 </head>
 <body>
-    <h1 align=center>T1a11-arrays-ayan.html</h1>
-
-    <script>
-        // Set a few Global variables 
-        let myMax = 6;
-        let myArray = new Array(myMax);
-    </script>
+    <h1>T1a11-arrays-ayan.html</h1>
 
     Input: <input type="text" id="myFirstName" value="ayan"><br>
 
-    <input type="button" value="Set Array" onclick="{
-       myArray[0] = 'ayan';
-       myArray[1] = 'Mary';
-       myArray[2] = 'Peter';
-
-       document.getElementById('myDiv01').innerHTML = 'You set the array';
+    <!-- Button to set index 0 -->
+    <input type="button" value="Set Array[0]" onclick="{
+        myArray[0] = document.getElementById('myFirstName').value;
+        document.getElementById('myDiv01').innerHTML = 'You set myArray[0]';
     }">
 
+    <!-- New buttons to set indices 1 to 5 -->
+    <input type="button" value="Set Array[1] to 'Mary'" onclick="{
+        myArray[1] = 'Mary';
+        document.getElementById('myDiv01').innerHTML = 'You set myArray[1]';
+    }">
+    <input type="button" value="Set Array[2] to 'Peter'" onclick="{
+        myArray[2] = 'Peter';
+        document.getElementById('myDiv01').innerHTML = 'You set myArray[2]';
+    }">
+    <input type="button" value="Set Array[3] to 'John'" onclick="{
+        myArray[3] = 'John';
+        document.getElementById('myDiv01').innerHTML = 'You set myArray[3]';
+    }">
+    <input type="button" value="Set Array[4] to 'Alice'" onclick="{
+        myArray[4] = 'Alice';
+        document.getElementById('myDiv01').innerHTML = 'You set myArray[4]';
+    }">
+    <input type="button" value="Set Array[5] to 'Bob'" onclick="{
+        myArray[5] = 'Bob';
+        document.getElementById('myDiv01').innerHTML = 'You set myArray[5]';
+    }">
+    <input type="button" value="Set Array[6] to 'Charlie'" onclick="{
+        myArray[6] = 'Charlie';
+        document.getElementById('myDiv01').innerHTML = 'You set myArray[6]';
+    }">
+    <input type="button" value="Set Array[7] to 'Diana'" onclick="{
+        myArray[7] = 'Diana';
+        document.getElementById('myDiv01').innerHTML = 'You set myArray[7]';
+    }">
+    <input type="button" value="Set Array[8] to 'Eve'" onclick="{
+        myArray[8] = 'Eve';
+        document.getElementById('myDiv01').innerHTML = 'You set myArray[8]';
+    }">
+
+    <!-- Button to show the array -->
     <input type="button" value="Show Array" onclick="{
-       document.getElementById('myDiv01').innerHTML = '';
-       for (myLoop = 0; myLoop < 3; myLoop++) {
-           document.getElementById('myDiv01').innerHTML += 'myArray[' + myLoop + '] = ' +
-           myArray[myLoop] + ' <br>';
-       }
+        document.getElementById('myDiv01').innerHTML = '';
+        for (let myLoop = 0; myLoop < myArray.length; myLoop++) {
+            document.getElementById('myDiv01').innerHTML += 'myArray[' + myLoop + '] = ' +
+            myArray[myLoop] + ' <br>';
+        }
     }"><br>
 
     <div id="myDiv01">...</div>
+
+    <script>
+        // Set a few Global variables 
+        let myMax = 10; // Increased to 10 to accommodate additional indices
+        let myArray = new Array(myMax);
+    </script>
 </body>
 </html>
