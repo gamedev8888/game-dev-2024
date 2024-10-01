@@ -9,7 +9,6 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background-image: url('https://wallpaperaccess.com/full/10803215.jpg');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -20,6 +19,7 @@
             justify-content: center;
             align-items: center;
             text-align: center;
+            transition: background-image 0.5s ease; /* Smooth transition for background change */
         }
         .container {
             background: rgba(73, 80, 87, 0.8);
@@ -47,15 +47,27 @@
         }
     </style>
 </head>
-<body>
+<body id="body">
     <div class="container">
         <h1 class="text-center">Cool Arrays</h1>
+        
+        <!-- Background Changer -->
+        <div class="mb-3">
+            <select id="backgroundSelect" class="form-select mb-3" onchange="changeBackground()">
+                <option value="default" selected>Default Background</option>
+                <option value="background1">Background 1</option>
+                <option value="background2">Background 2</option>
+                <option value="background3">Background 3</option>
+            </select>
+        </div>
+
         <div class="mb-3">
             <input type="text" id="arrayName" class="form-control" placeholder="Array Name" />
             <input type="number" id="sizeInput" class="form-control mt-2" placeholder="Array Size (1-10)" min="1" max="10" />
             <button class="btn btn-primary mt-2" onclick="createArray()">Create Array</button>
             <button class="btn btn-danger mt-2" onclick="removeArray()">Remove Array</button>
         </div>
+        
         <select id="arraySelect" class="form-select mb-3" onchange="showArray()"></select>
 
         <div class="row">
@@ -76,6 +88,19 @@
     <script>
         const MAX_ARRAY_SIZE = 10;
         let arrays = {};
+
+        // Background options
+        const backgrounds = {
+            default: 'url("https://wallpapercave.com/wp/aOf1LFU.jpg")',
+            background1: 'url("https://images.unsplash.com/photo-1475571962010-77d1ef62dd54?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&q=80&w=1080")',
+            background2: 'url("https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&q=80&w=1080")',
+            background3: 'url("https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&q=80&w=1080")',
+        };
+
+        function changeBackground() {
+            const selectedBackground = document.getElementById('backgroundSelect').value;
+            document.getElementById('body').style.backgroundImage = backgrounds[selectedBackground];
+        }
 
         function createArray() {
             const name = document.getElementById('arrayName').value.trim();
