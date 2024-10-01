@@ -3,272 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arrays - Enhanced</title>
+    <title>Arrays</title>
     <style>
         body {
             font-family: Arial, sans-serif; 
-            margin: 0; 
-            padding: 0; 
-            background-image: url('https://th.bing.com/th/id/R.1afb3001e5b6678cba39bb761a783ea2?rik=M%2bhwSO4QN7PgUQ&riu=http%3a%2f%2fwallpapercave.com%2fwp%2faOf1LFU.jpg&ehk=lggzCAzNaVbH52w7PHjhCyvRpNLIaXAUwVmBLyik930%3d&risl=&pid=ImgRaw&r=0'); 
-            background-size: cover; 
-            color: #f5f5f5; 
-            text-align: center;
-        }
-
-        input, button {
-            padding: 10px;
-            margin: 5px;
-            border-radius: 5px;
-            border: none;
-            background-color: rgba(255, 255, 255, 0.8);
+            background-color: #f4f4f4; 
             color: #333; 
-            transition: background-color 0.2s;
+            padding: 20px;
         }
-
-        input:focus, button:hover {
-            background-color: rgba(200, 200, 200, 0.9);
+        input, button {
+            padding: 10px; 
+            margin: 5px;
         }
-
-        #myDiv01, #historyLog {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            border-radius: 5px;
-        }
-
-        #toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #28a745;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            display: none;
-        }
-
-        #instructions {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: rgba(2, 11, 129, 0.8);
+        #output {
+            margin-top: 20px; 
+            padding: 10px; 
+            border: 1px solid #ccc;
         }
     </style>
 </head>
 <body>
-    <h1>Enhanced Arrays</h1>
+    <h1>Arrays</h1>
 
-    <select id="arrayIndex"></select>
-
-    <input type="text" id="myFirstName" placeholder="Enter a value..." />
-    <input type="number" id="arrayElement" min="0" max="9" placeholder="Index (0-9)" />
-
-    <button onclick="setArrayValue()">Set</button>
-    <button onclick="showArray()">Show</button>
-    <button onclick="resetArray()">Reset</button>
-    <button onclick="sortArray()">Sort</button>
-    <button onclick="showStatistics()">Show Stats</button>
-    <button onclick="fillArrayWithRandomValues()">Fill with Random Values</button>
-    <button onclick="filterArray()">Filter</button>
-    <button onclick="createMultiDimensionalArray()">Create 2D Array</button>
-    <button onclick="undoLastAction()">Undo</button>
-
-    <input type="text" id="newArrayName" placeholder="New Array Name" />
+    <input type="text" id="arrayName" placeholder="Array Name" />
     <button onclick="createArray()">Create Array</button>
     <button onclick="removeArray()">Remove Array</button>
 
-    <div id="myDiv01">Array Contents will be displayed here.</div>
-    <div id="toast"></div>
-    <div id="instructions">
-        <h3>Instructions:</h3>
-        <p>Select an array, enter a value, specify an index, and use the buttons to manipulate the arrays.</p>
-        <p>You can create new arrays, remove existing ones, fill arrays with random values, sort them, filter their contents, and even undo actions!</p>
-    </div>
-    
-    <div id="historyLog">Action History:</div>
+    <select id="arraySelect"></select>
+
+    <input type="text" id="valueInput" placeholder="Value" />
+    <input type="number" id="indexInput" placeholder="Index (0-9)" />
+    <button onclick="setValue()">Set Value</button>
+    <button onclick="showArray()">Show Array</button>
+
+    <div id="output">Array contents will appear here.</div>
 
     <script>
-        const MAX_ARRAY_SIZE = 10; 
-        const MAX_ARRAYS = 10; 
+        const MAX_ARRAY_SIZE = 10;
         let arrays = {};
-        let currentArrayCount = 0;
-        let lastAction = null;
-
-        // Initialize some arrays on load
-        for (let i = 0; i < 5; i++) {
-            arrays[`Array ${i}`] = new Array(MAX_ARRAY_SIZE);
-            addArrayToDropdown(`Array ${i}`);
-        }
-
-        function addArrayToDropdown(name) {
-            const dropdown = document.getElementById('arrayIndex');
-            const option = document.createElement('option');
-            option.value = name;
-            option.textContent = name;
-            dropdown.appendChild(option);
-        }
 
         function createArray() {
-            const arrayName = document.getElementById('newArrayName').value.trim();
-            if (!arrayName) {
-                showToast('Array name cannot be empty!');
-                return;
-            }
-            if (arrayName in arrays) {
-                showToast(`Array '${arrayName}' already exists!`);
-                return;
-            }
-            if (currentArrayCount < MAX_ARRAYS) {
-                arrays[arrayName] = new Array(MAX_ARRAY_SIZE);
-                addArrayToDropdown(arrayName);
-                currentArrayCount++;
-                logAction(`Array '${arrayName}' created.`);
-                showToast(`Array '${arrayName}' created.`);
-                document.getElementById('newArrayName').value = '';
-            } else {
-                showToast('Maximum number of arrays reached!');
-            }
+            const name = document.getElementById('arrayName').value.trim();
+            if (!name) return alert('Please enter a valid array name!');
+            if (arrays[name]) return alert('Array already exists!');
+            arrays[name] = new Array(MAX_ARRAY_SIZE).fill(null);
+            updateArraySelect();
+            document.getElementById('arrayName').value = '';
         }
 
         function removeArray() {
-            const arrayName = document.getElementById('arrayIndex').value;
-            if (arrayName in arrays) {
-                delete arrays[arrayName];
-                const dropdown = document.getElementById('arrayIndex');
-                dropdown.remove(dropdown.selectedIndex);
-                currentArrayCount--;
-                logAction(`Array '${arrayName}' removed.`);
-                showToast(`Array '${arrayName}' removed.`);
-                document.getElementById('myDiv01').innerHTML = 'Array Contents will be displayed here.';
-            } else {
-                showToast('Array not found!');
+            const name = document.getElementById('arraySelect').value;
+            if (arrays[name]) {
+                delete arrays[name];
+                updateArraySelect();
+                document.getElementById('output').innerHTML = 'Array removed.';
             }
         }
 
-        function setArrayValue() {
-            const arrayName = document.getElementById('arrayIndex').value;
-            const elementIndex = Number(document.getElementById('arrayElement').value);
-            const value = document.getElementById('myFirstName').value.trim();
-
-            if (elementIndex < 0 || elementIndex >= MAX_ARRAY_SIZE) {
-                showToast(`Index must be between 0 and ${MAX_ARRAY_SIZE - 1}!`);
-                return;
+        function setValue() {
+            const name = document.getElementById('arraySelect').value;
+            const index = Number(document.getElementById('indexInput').value);
+            const value = document.getElementById('valueInput').value.trim();
+            if (arrays[name] && index >= 0 && index < MAX_ARRAY_SIZE) {
+                arrays[name][index] = value;
+                alert(`Set ${name}[${index}] = '${value}'`);
+                document.getElementById('valueInput').value = '';
+                document.getElementById('indexInput').value = '';
             }
-
-            if (!value) {
-                showToast('Please enter a valid value!');
-                return;
-            }
-
-            const previousValue = arrays[arrayName][elementIndex] !== undefined ? arrays[arrayName][elementIndex] : null;
-            arrays[arrayName][elementIndex] = value;
-            lastAction = { arrayName, elementIndex, previousValue }; 
-            logAction(`Set ${arrayName}[${elementIndex}] = '${value}'`);
-            showToast(`Set ${arrayName}[${elementIndex}] = '${value}'`);
-            document.getElementById('myFirstName').value = '';
         }
 
         function showArray() {
-            const arrayName = document.getElementById('arrayIndex').value;
-            const displayDiv = document.getElementById('myDiv01');
-            displayDiv.innerHTML = `<strong>${arrayName} Contents:</strong><br>`;
-            arrays[arrayName].forEach((val, i) => {
-                displayDiv.innerHTML += `${arrayName}[${i}] = ${val !== undefined ? `'${val}'` : 'undefined'}<br>`;
-            });
-        }
-
-        function sortArray() {
-            const arrayName = document.getElementById('arrayIndex').value;
-            if (arrays[arrayName]) {
-                arrays[arrayName].sort();
-                showToast(`Sorted ${arrayName}.`);
-                logAction(`${arrayName} has been sorted.`);
-                showArray();
+            const name = document.getElementById('arraySelect').value;
+            if (arrays[name]) {
+                const contents = arrays[name].map((val, i) => `${name}[${i}] = ${val !== null ? `'${val}'` : 'null'}`).join('<br>');
+                document.getElementById('output').innerHTML = contents;
             }
         }
 
-        function showStatistics() {
-            const arrayName = document.getElementById('arrayIndex').value;
-            const numericArray = arrays[arrayName].filter(item => typeof item === 'number');
-            const sum = numericArray.reduce((a, b) => a + b, 0);
-            const average = numericArray.length > 0 ? sum / numericArray.length : 0;
-
-            showToast(`Sum of ${arrayName} = ${sum}, Average = ${average}`);
-        }
-
-        function fillArrayWithRandomValues() {
-            const arrayName = document.getElementById('arrayIndex').value;
-            const randomStrings = ['apple', 'banana', 'cherry', 'date', 'fig', 'grape', 'kiwi'];
-            arrays[arrayName] = Array.from({ length: MAX_ARRAY_SIZE }, () => randomStrings[Math.floor(Math.random() * randomStrings.length)]);
-            logAction(`${arrayName} has been filled with random values.`);
-            showToast(`${arrayName} has been filled with random values.`);
-            showArray();
-        }
-
-        function filterArray() {
-            const arrayName = document.getElementById('arrayIndex').value;
-            const filtered = arrays[arrayName].filter(item => item && item.length > 3);
-            const displayDiv = document.getElementById('myDiv01');
-            displayDiv.innerHTML = `<strong>Filtered ${arrayName} Contents:</strong><br>`;
-            filtered.forEach((val, i) => {
-                displayDiv.innerHTML += `${arrayName}[${i}] = '${val}'<br>`;
-            });
-            showToast(`Filtered ${arrayName} contents shown.`);
-        }
-
-        function createMultiDimensionalArray() {
-            const arrayName = document.getElementById('newArrayName').value.trim();
-            if (!arrayName) {
-                showToast('Array name cannot be empty!');
-                return;
-            }
-            if (arrayName in arrays) {
-                showToast(`Array '${arrayName}' already exists!`);
-                return;
-            }
-            if (currentArrayCount < MAX_ARRAYS) {
-                arrays[arrayName] = Array.from({ length: 3 }, () => new Array(3).fill(undefined));
-                addArrayToDropdown(arrayName);
-                currentArrayCount++;
-                logAction(`Multi-dimensional array '${arrayName}' created.`);
-                showToast(`Multi-dimensional array '${arrayName}' created.`);
-                document.getElementById('newArrayName').value = '';
-            } else {
-                showToast('Maximum number of arrays reached!');
-            }
-        }
-
-        function undoLastAction() {
-            if (lastAction) {
-                const { arrayName, elementIndex, previousValue } = lastAction;
-                arrays[arrayName][elementIndex] = previousValue; 
-                showToast(`Undid last action: ${arrayName}[${elementIndex}] restored to '${previousValue}'`);
-                showArray(); 
-                logAction(`Undid last action on ${arrayName}[${elementIndex}].`);
-            } else {
-                showToast('No actions to undo.');
-            }
-        }
-
-        function logAction(action) {
-            const logDiv = document.getElementById('historyLog');
-            logDiv.innerHTML += `<p>${action}</p>`;
-        }
-
-        function showToast(message) {
-            const toast = document.getElementById('toast');
-            toast.innerHTML = message;
-            toast.style.display = 'block';
-            setTimeout(() => { toast.style.display = 'none'; }, 3000);
-        }
-
-        function resetArray() {
-            const arrayName = document.getElementById('arrayIndex').value;
-            if (arrays[arrayName]) {
-                arrays[arrayName].fill(undefined);
-                logAction(`${arrayName} has been reset.`);
-                showToast(`${arrayName} has been reset.`);
-                showArray();
+        function updateArraySelect() {
+            const select = document.getElementById('arraySelect');
+            select.innerHTML = '';
+            for (let name in arrays) {
+                const option = document.createElement('option');
+                option.value = name;
+                option.textContent = name;
+                select.appendChild(option);
             }
         }
     </script>
