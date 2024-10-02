@@ -6,11 +6,12 @@
     <title>JavaScript Objects Example</title>
     <style>
         body {
-            background-color: #f4f4f4;
+            background-color: #f4f4f4; /* Initial background color */
             font-family: Arial, sans-serif;
             color: #333;
             text-align: center;
             margin: 20px;
+            transition: background-color 0.5s; /* Smooth transition for background color */
         }
 
         h2 {
@@ -54,6 +55,21 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
     </style>
+    <script>
+        function toggleBackgroundColor() {
+            const body = document.body;
+            const currentColor = body.style.backgroundColor;
+
+            // Toggle between white and black background color
+            if (currentColor === 'black') {
+                body.style.backgroundColor = 'white';
+                body.style.color = '#333'; // Reset text color for readability
+            } else {
+                body.style.backgroundColor = 'black';
+                body.style.color = 'white'; // Change text color for readability on dark background
+            }
+        }
+    </script>
 </head>
 <body>
 
@@ -91,6 +107,8 @@ let myPerson = {
    document.getElementById('myDiv01').innerHTML += 'age: ' + myPerson.age + '<br>';
    document.getElementById('myDiv01').innerHTML += 'eyeColor: ' + myPerson.eyeColor + '<br>';
 }">
+
+<input type="button" class="button" value="Toggle Background Color" onClick="toggleBackgroundColor()">
 
 <div id="myDiv01">...</div>
 
