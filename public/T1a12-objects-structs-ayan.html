@@ -6,12 +6,13 @@
     <title>JavaScript Objects Example</title>
     <style>
         body {
-            background-color: black; /* Set initial background color to black */
+            background-color: black;
             font-family: Arial, sans-serif;
-            color: blue; /* Set initial text color to white for readability */
+            color: blue;
             text-align: center;
             margin: 20px;
-            transition: background-color 0.5s, color 0.5s; /* Smooth transition for background and text color */
+            transition: background-color 0.5s, color 0.5s;
+            overflow: hidden; /* Prevent scrolling caused by the moving image */
         }
 
         h2 {
@@ -33,7 +34,6 @@
             color: white;
             padding: 10px 20px;
             text-align: center;
-            text-decoration: none;
             display: inline-block;
             font-size: 16px;
             margin: 10px 2px;
@@ -47,12 +47,25 @@
         }
 
         #myDiv01 {
-            background-color: #333; /* Darker area to improve contrast */
+            background-color: #333;
             border: 1px solid #ccc;
             border-radius: 4px;
             padding: 15px;
             margin-top: 20px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Move the image from left to right */
+        @keyframes move {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(100vw); } /* Move to the right edge of the viewport */
+        }
+
+        .moving-image {
+            position: absolute;
+            top: 20%; /* Adjust top position as necessary */
+            left: 0;
+            animation: move 10s linear infinite; /* Move every 10 seconds, looping infinitely */
         }
     </style>
     <script>
@@ -60,13 +73,12 @@
             const body = document.body;
             const currentColor = body.style.backgroundColor;
 
-            // Toggle between black and a lighter shade
-            if (currentColor === 'rgb(0, 0, 0)') { // Check for black
-                body.style.backgroundColor = '#333'; // Change to a lighter shade
-                body.style.color = 'white'; // Set text color to white
+            if (currentColor === 'rgb(0, 0, 0)') {
+                body.style.backgroundColor = '#333';
+                body.style.color = 'white';
             } else {
-                body.style.backgroundColor = 'black'; // Change back to black
-                body.style.color = 'white'; // Set text color to white
+                body.style.backgroundColor = 'black';
+                body.style.color = 'blue';
             }
         }
     </script>
@@ -75,7 +87,7 @@
 
 <h2 align=center>T1a12 - JavaScript Objects Example</h2>
 
-<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_Objects" target="_blank">Good reference to JavaScript Objects</a><br> 
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_Objects" target="_blank">Good reference for JavaScript Objects</a><br> 
 
 <p>Objects are stored named variables.</p>
 
@@ -108,8 +120,11 @@ let myPerson = {
    document.getElementById('myDiv01').innerHTML += 'eyeColor: ' + myPerson.eyeColor + '<br>';
 }">
 
+<input type="button" class="button" value="Toggle Background Color" onClick="toggleBackgroundColor()">
 
 <div id="myDiv01">...</div>
+
+<img src="https://wallpapercave.com/wp/wp2442976.jpg" alt="Moving Wallpaper" class="moving-image" />
 
 </body>
 </html>
