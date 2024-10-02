@@ -1,10 +1,69 @@
-<h2 align=center>T1a12-objects-structs-ayan.html</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Objects Example</title>
+    <style>
+        body {
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+            color: #333;
+            text-align: center;
+            margin: 20px;
+        }
 
-<a href="">Good reference to Javascript Objects</a><br> 
+        h2 {
+            color: #0056b3;
+        }
 
-Objects are stored named variables
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
 
-<h4> Example Objects code</h4>
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .button {
+            background-color: #007bff;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        #myDiv01 {
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 15px;
+            margin-top: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+<h2 align=center>T1a12 - JavaScript Objects Example</h2>
+
+<a href="#" target="_blank">Good reference to JavaScript Objects</a><br> 
+
+<p>Objects are stored named variables.</p>
+
+<h4>Example Objects code</h4>
 <pre>
 let myPerson = {
    "firstName": "John",
@@ -14,11 +73,11 @@ let myPerson = {
 }
 </pre>
 
-<h4> Example working Objects code</h4>
+<h4>Example working Objects code</h4>
 
-Nothing: <input type="text" id="myText01" value="Useless at the moment"><br>
+<p>Nothing: <input type="text" id="myText01" value="Useless at the moment" style="padding: 10px;"></p>
 
-<input type="button" value="Example Object Set and Show" onClick="{
+<input type="button" class="button" value="Example Object Set and Show" onClick="{
    let myPerson = {
       'firstName': 'John',
       'lastName': 'Doe',
@@ -34,3 +93,6 @@ Nothing: <input type="text" id="myText01" value="Useless at the moment"><br>
 }">
 
 <div id="myDiv01">...</div>
+
+</body>
+</html>
