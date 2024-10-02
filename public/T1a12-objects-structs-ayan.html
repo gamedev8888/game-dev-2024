@@ -6,12 +6,12 @@
     <title>JavaScript Objects Example</title>
     <style>
         body {
-            background-color: #f4f4f4; /* Initial background color */
+            background-color: black; /* Set initial background color to black */
             font-family: Arial, sans-serif;
-            color: #333;
+            color: white; /* Set initial text color to white for readability */
             text-align: center;
             margin: 20px;
-            transition: background-color 0.5s; /* Smooth transition for background color */
+            transition: background-color 0.5s, color 0.5s; /* Smooth transition for background and text color */
         }
 
         h2 {
@@ -47,8 +47,8 @@
         }
 
         #myDiv01 {
-            background-color: #20039d;
-            border: 1px solid #1900ff;
+            background-color: #333; /* Darker area to improve contrast */
+            border: 1px solid #ccc;
             border-radius: 4px;
             padding: 15px;
             margin-top: 20px;
@@ -60,13 +60,13 @@
             const body = document.body;
             const currentColor = body.style.backgroundColor;
 
-            // Toggle between white and black background color
-            if (currentColor === 'black') {
-                body.style.backgroundColor = 'white';
-                body.style.color = 'black'; // Reset text color for readability
+            // Toggle between black and a lighter shade
+            if (currentColor === 'rgb(0, 0, 0)') { // Check for black
+                body.style.backgroundColor = '#333'; // Change to a lighter shade
+                body.style.color = 'white'; // Set text color to white
             } else {
-                body.style.backgroundColor = 'black';
-                body.style.color = 'white'; // Change text color for readability on dark background
+                body.style.backgroundColor = 'black'; // Change back to black
+                body.style.color = 'white'; // Set text color to white
             }
         }
     </script>
