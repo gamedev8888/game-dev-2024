@@ -6,125 +6,176 @@
     <title>JavaScript Objects Example</title>
     <style>
         body {
-            background-color: black;
+            background: linear-gradient(to bottom right, #000, #333);
             font-family: Arial, sans-serif;
-            color: blue;
+            color: #00ffff; /* Bright cyan */
             text-align: center;
-            margin: 20px;
+            margin: 0;
             transition: background-color 0.5s, color 0.5s;
-            overflow: hidden; /* Prevent scrolling caused by the moving image */
+            overflow: hidden;
         }
 
         h2 {
-            color: #0056b3;
+            color: #ffcc00; /* Bright yellow */
         }
 
         a {
-            color: #007bff;
+            color: #05ff00; /* Lime green */
             text-decoration: none;
         }
 
         a:hover {
             text-decoration: underline;
+            color: #ff00ff; /* Magenta */
         }
 
         .button {
-            background-color: #007bff;
+            background-color: #0056b3;
             border: none;
             color: white;
-            padding: 10px 20px;
-            text-align: center;
-            display: inline-block;
-            font-size: 16px;
-            margin: 10px 2px;
+            padding: 12px 24px;
+            font-size: 18px;
+            margin: 10px 5px;
+            border-radius: 8px;
             cursor: pointer;
-            border-radius: 4px;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         .button:hover {
-            background-color: #0056b3;
+            background-color: #0056a1;
+            transform: scale(1.05);
         }
 
         #myDiv01 {
-            background-color: #333;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            background-color: rgba(51, 51, 51, 0.8);
+            border-radius: 8px;
             padding: 15px;
             margin-top: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            color: #ffffff; /* White text */
         }
 
-        /* Move the image from left to right */
-        @keyframes move {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(100vw); } /* Move to the right edge of the viewport */
+        #objectForm {
+            margin-top: 20px;
+            display: flex; /* Flexbox for better layout */
+            flex-direction: column; /* Stack items vertically */
+            align-items: center; /* Center items */
         }
 
-        .moving-image {
-            position: absolute;
-            top: 20%; /* Adjust top position as necessary */
-            left: 0;
-            width: 300px; /* Set a specific width */
-            height: auto; /* Maintain aspect ratio */
-            animation: move 10s linear infinite; /* Move every 10 seconds, looping infinitely */
+        input[type="text"] {
+            padding: 10px;
+            margin: 5px 0;
+            width: 200px; /* Set width */
+            border: 1px solid #0056b3;
+            border-radius: 4px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #ffcc00; /* Focus border color */
         }
     </style>
     <script>
+        const predefinedObjects = [
+            {
+                firstName: "John",
+                lastName: "Doe",
+                age: 50,
+                eyeColor: "blue"
+            },
+            {
+                firstName: "Jane",
+                lastName: "Smith",
+                age: 30,
+                eyeColor: "green"
+            },
+            {
+                firstName: "Michael",
+                lastName: "Brown",
+                age: 25,
+                eyeColor: "hazel"
+            },
+            {
+                firstName: "Emily",
+                lastName: "Davis",
+                age: 28,
+                eyeColor: "brown"
+            }
+        ];
+
         function toggleBackgroundColor() {
             const body = document.body;
             const currentColor = body.style.backgroundColor;
-
-            if (currentColor === 'rgb(0, 0, 0)') {
-                body.style.backgroundColor = '#333';
-                body.style.color = 'white';
+            if (currentColor === 'rgb(0, 0, 0)' || currentColor === '') {
+                body.style.background = 'linear-gradient(to bottom right, #333, #fff)';
+                body.style.color = '#000';
             } else {
-                body.style.backgroundColor = 'black';
-                body.style.color = 'blue';
+                body.style.background = 'linear-gradient(to bottom right, #000, #333)';
+                body.style.color = 'cyan';
             }
+        }
+
+        function createObject() {
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const age = document.getElementById('age').value;
+            const eyeColor = document.getElementById('eyeColor').value;
+
+            let myPerson = {
+                firstName: firstName,
+                lastName: lastName,
+                age: age,
+                eyeColor: eyeColor
+            };
+
+            displayObject(myPerson);
+        }
+
+        function displayObject(person) {
+            const output = document.getElementById('myDiv01');
+            output.innerHTML = `<strong>Object Properties:</strong><br>
+                                firstName: ${person.firstName}<br>
+                                lastName: ${person.lastName}<br>
+                                age: ${person.age}<br>
+                                eyeColor: ${person.eyeColor}<br>`;
+        }
+
+        function displayPredefinedObjects() {
+            const output = document.getElementById('myDiv01');
+            output.innerHTML = "<strong>Predefined Objects:</strong><br>";
+            predefinedObjects.forEach(person => {
+                output.innerHTML += `firstName: ${person.firstName}<br>
+                                     lastName: ${person.lastName}<br>
+                                     age: ${person.age}<br>
+                                     eyeColor: ${person.eyeColor}<br><br>`;
+            });
         }
     </script>
 </head>
 <body>
 
-<h2 align=center>T1a12 - JavaScript Objects Example</h2>
+<h2>T1a12 -  Objects</h2>
 
 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_Objects" target="_blank">Good reference for JavaScript Objects</a><br> 
 
 <p>Objects are stored named variables.</p>
 
-<h4>Example Objects code</h4>
-<pre>
-let myPerson = {
-   "firstName": "John",
-   "lastName": "Doe",
-   "age": 50,
-   "eyeColor": "blue"
-}
-</pre>
+<h4>Create Your Own Object</h4>
+<div id="objectForm">
+    <input type="text" id="firstName" placeholder="First Name" />
+    <input type="text" id="lastName" placeholder="Last Name" />
+    <input type="text" id="age" placeholder="Age" />
+    <input type="text" id="eyeColor" placeholder="Eye Color" />
+    <input type="button" class="button" value="Create Object" onClick="createObject()">
+</div>
 
-<h4>Example working Objects code</h4>
-
-<p>Nothing: <input type="text" id="myText01" value="Useless at the moment" style="padding: 10px;"></p>
-
-<input type="button" class="button" value="Example Object Set and Show" onClick="{
-   let myPerson = {
-      'firstName': 'John',
-      'lastName': 'Doe',
-      'age': 50,
-      'eyeColor': 'blue',
-   };
-
-   document.getElementById('myDiv01').innerHTML = '<br>myPerson object has properties: <br>';
-   document.getElementById('myDiv01').innerHTML += 'firstName: ' + myPerson.firstName + '<br>';
-   document.getElementById('myDiv01').innerHTML += 'lastName: ' + myPerson.lastName + '<br>';
-   document.getElementById('myDiv01').innerHTML += 'age: ' + myPerson.age + '<br>';
-   document.getElementById('myDiv01').innerHTML += 'eyeColor: ' + myPerson.eyeColor + '<br>';
-}">
+<h4>View Predefined Objects</h4>
+<input type="button" class="button" value="Show Predefined Objects" onClick="displayPredefinedObjects()">
 
 <div id="myDiv01">...</div>
 <br>
-<img src="https://wallpapercave.com/wp/wp2442976.jpg" alt="Moving Wallpaper" class="moving-image" />
+<input type="button" class="button" value="Toggle Background Color" onClick="toggleBackgroundColor()">
 
 </body>
 </html>
