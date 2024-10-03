@@ -6,12 +6,13 @@
     <title>JavaScript Objects Example</title>
     <style>
         body {
-            background: linear-gradient(to bottom right, #000, #333);
+            background: url('https://wallpapercave.com/wp/A9rkblk.jpg') no-repeat center center fixed; /* Replace with your desired background image */
+            background-size: cover; /* Make the background cover the entire viewport */
             font-family: Arial, sans-serif;
-            color: #00ffff; /* Bright cyan */
+            color: blue; /* Bright cyan */
             text-align: center;
             margin: 0;
-            transition: background-color 0.5s, color 0.5s;
+            transition: color 0.5s;
             overflow: hidden;
         }
 
@@ -104,18 +105,6 @@
             }
         ];
 
-        function toggleBackgroundColor() {
-            const body = document.body;
-            const currentColor = body.style.backgroundColor;
-            if (currentColor === 'rgb(0, 0, 0)' || currentColor === '') {
-                body.style.background = 'linear-gradient(to bottom right, #333, #fff)';
-                body.style.color = '#000';
-            } else {
-                body.style.background = 'linear-gradient(to bottom right, #000, #333)';
-                body.style.color = 'cyan';
-            }
-        }
-
         function createObject() {
             const firstName = document.getElementById('firstName').value;
             const lastName = document.getElementById('lastName').value;
@@ -155,7 +144,7 @@
 </head>
 <body>
 
-<h2>T1a12 -  Objects</h2>
+<h2>T1a12 - JavaScript Objects Example</h2>
 
 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_Objects" target="_blank">Good reference for JavaScript Objects</a><br> 
 
@@ -175,7 +164,6 @@
 
 <div id="myDiv01">...</div>
 <br>
-<input type="button" class="button" value="Toggle Background Color" onClick="toggleBackgroundColor()">
 
 </body>
 </html>
