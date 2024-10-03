@@ -4,25 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>T1a03-table-list-ayan</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Including Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
-            background-image: url('https://wallpapercave.com/wp/wp3237812.jpg'); /* Use your own image URL */
-            background-size: cover; /* Cover the entire viewport */
-            background-attachment: fixed; /* Keep it fixed on scroll */
-            color: #333; /* Text color for better readability */
-            font-family: Arial, sans-serif; /* Using a common sans-serif font */
+            background-image: url('https://wallpapercave.com/wp/wp3237812.jpg');
+            background-size: cover;
+            background-attachment: fixed;
+            color: #333;
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
         }
         header {
-            background-color: rgba(76, 175, 80, 0.8); /* Semi-transparent green for header */
+            background-color: rgba(76, 175, 80, 0.8);
             color: yellow;
             padding: 20px;
-            text-align: center;
-        }
-        nav {
-            margin: 10px 0; /* margin for navigation */
             text-align: center;
         }
         nav a {
@@ -32,61 +28,57 @@
             font-weight: bold;
         }
         nav a:hover {
-            text-decoration: underline; /* underline effect on hover */
+            text-decoration: underline;
         }
         table {
-            width: 80%; /* Adjusted width for better responsiveness */
+            width: 80%;
             border-collapse: collapse;
-            margin: 20px auto; /* Centers the table */
-            transition: transform 0.2s; /* Adding transition for table */
-            background-color:yellow;
+            margin: 20px auto;
+            transition: transform 0.2s;
+            background-color: yellow;
         }
         table:hover {
-            transform: scale(1.02); /* Slightly scale on hover */
+            transform: scale(1.02);
         }
         th, td {
-            border: 1px #ff0000;
+            border: 1px solid #ff0000;
             padding: 8px;
             text-align: center;
         }
         th {
-            background-color: e0ff09; /* Semi-transparent table headers */
+            background-color: #e0ff09;
         }
-        th:hover, td:hover { /* Adding hover effects */
-            background-color: light green; 
+        th:hover, td:hover {
+            background-color: lightgreen; 
         }
         h1, h2 {
-            text-align: center; /* Centering h1 and h2 headers */
+            text-align: center;
         }
         .list-container {
-            width: 60%; /* Adjusted width */
-            margin: 20px auto; /* Centers the lists */
-            text-align: left; /* Aligns text to the left for better readability */
-            background-color: #bcb254; /* Slightly transparent background */
-            padding: 15px; /* Add padding for better spacing */
-            border-radius: 5px; /* Round corners */
+            width: 60%;
+            margin: 20px auto;
+            text-align: left;
+            background-color: #bcb254;
+            padding: 15px;
+            border-radius: 5px;
         }
         footer {
             background-color: rgba(76, 175, 80, 0.8);
             color: light green;
             padding: 10px;
             text-align: center;
-            position: relative; /* to allow for positioning adjustments */
-            bottom: 0; /* stick to the bottom */
-            width: 100%; /* full width */
+            width: 100%;
         }
-        /* Responsive styles */
         @media (max-width: 768px) {
             table, .list-container {
                 width: 90%;
-                margin: 0 auto; /* Centers the elements */
             }
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>My Simple 2x2 Table</h1>
+        <h1>My Simple 2x2 Table with Images and Links</h1>
         <nav>
             <a href="#table">Table</a>
             <a href="#ordered">Ordered List</a>
@@ -99,16 +91,16 @@
             <h2>My Table</h2>
             <table>
                 <tr>
-                    <th>Column 1</th>
-                    <th>Column 2</th>
+                    <th>Image</th>
+                    <th>Description</th>
                 </tr>
                 <tr>
-                    <td>Row A, Cell B</td>
-                    <td>Row C, Cell D</td>
+                    <td><img src="https://via.placeholder.com/100" alt="Placeholder Image 1"></td>
+                    <td><a href="https://example.com/1" target="_blank">Link to Example 1</a></td>
                 </tr>
                 <tr>
-                    <td>Row E, Cell F</td>
-                    <td>Row G, Cell H</td>
+                    <td><img src="https://via.placeholder.com/100" alt="Placeholder Image 2"></td>
+                    <td><a href="https://example.com/2" target="_blank">Link to Example 2</a></td>
                 </tr>
             </table>
         </section>
@@ -118,7 +110,14 @@
             <ol>
                 <li>Jogging</li>
                 <li>Sleeping</li>
-                <li>Walking</li>
+                <li>
+                    Walking
+                    <ul>
+                        <li>Trail walking</li>
+                        <li>Pavement walking</li>
+                        <li>Hiking</li>
+                    </ul>
+                </li>
             </ol>
 
             <h2 id="unordered">Unordered List</h2>
@@ -132,8 +131,6 @@
 
     <footer>
         <p>© 2024 Your Name. All Rights Reserved.</p>
-        <p>
-        </p>
     </footer>
 </body>
 </html>
