@@ -107,6 +107,15 @@
         <label for="userEmail" style="color: orange;">Enter your email:</label>
         <input type="email" id="userEmail" placeholder="Your email" aria-required="true">
 
+        <label for="userPhone" style="color: orange;">Enter your phone number:</label>
+        <input type="tel" id="userPhone" placeholder="Your phone number" aria-required="true">
+
+        <label for="userAddress" style="color: orange;">Enter your address:</label>
+        <input type="text" id="userAddress" placeholder="Your address" aria-required="true">
+
+        <label for="userAge" style="color: orange;">Enter your age:</label>
+        <input type="number" id="userAge" placeholder="Your age" aria-required="true">
+
         <label for="userMessage" style="color: orange;">Enter a message:</label>
         <input type="text" id="userMessage" placeholder="Your message" aria-required="true">
         
@@ -124,6 +133,9 @@
         function displayOutput() {
             const userName = document.getElementById('userName').value.trim();
             const userEmail = document.getElementById('userEmail').value.trim();
+            const userPhone = document.getElementById('userPhone').value.trim();
+            const userAddress = document.getElementById('userAddress').value.trim();
+            const userAge = document.getElementById('userAge').value.trim();
             const userMessage = document.getElementById('userMessage').value.trim();
             const outputDiv = document.getElementById('output');
             const inputFeedback = document.getElementById('inputFeedback');
@@ -133,10 +145,10 @@
             inputFeedback.innerText = ''; // Reset feedback text
 
             setTimeout(() => {
-                if (userName === "" || userEmail === "" || userMessage === "") {
+                if (userName === "" || userEmail === "" || userPhone === "" || userAddress === "" || userAge === "" || userMessage === "") {
                     inputFeedback.innerText = "Please fill in all fields.";
                 } else {
-                    outputs.push({ name: userName, email: userEmail, message: userMessage });
+                    outputs.push({ name: userName, email: userEmail, phone: userPhone, address: userAddress, age: userAge, message: userMessage });
                     updateOutputDisplay();
                     notifyUser("Input submitted successfully!");
                 }
@@ -146,6 +158,9 @@
             // Clear inputs after submission
             document.getElementById('userName').value = "";
             document.getElementById('userEmail').value = "";
+            document.getElementById('userPhone').value = "";
+            document.getElementById('userAddress').value = "";
+            document.getElementById('userAge').value = "";
             document.getElementById('userMessage').value = "";
         }
 
@@ -162,7 +177,7 @@
         function updateOutputDisplay() {
             const outputDiv = document.getElementById('output');
             outputDiv.innerHTML = `<ul>${outputs.map(item => 
-                `<li><strong>Name:</strong> ${item.name}, <strong>Email:</strong> ${item.email}, <strong>Message:</strong> ${item.message}</li>`).join('')}</ul>`;
+                `<li><strong>Name:</strong> ${item.name}, <strong>Email:</strong> ${item.email}, <strong>Phone:</strong> ${item.phone}, <strong>Address:</strong> ${item.address}, <strong>Age:</strong> ${item.age}, <strong>Message:</strong> ${item.message}</li>`).join('')}</ul>`;
         }
 
         function clearOutput() {
