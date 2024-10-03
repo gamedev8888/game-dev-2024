@@ -30,9 +30,9 @@
             margin-bottom: 20px;
             width: 100%;
             max-width: 400px;
-            background: rgba(0, 0, 0, 0.7); /* Add semi-transparent background */
-            padding: 20px; /* Add padding */
-            border-radius: 10px; /* Round the corners */
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
         }
         label {
             margin-bottom: 5px;
@@ -145,17 +145,23 @@
             inputFeedback.innerText = ''; // Reset feedback text
 
             setTimeout(() => {
-                if (userName === "" || userEmail === "" || userPhone === "" || userAddress === "" || userAge === "" || userMessage === "") {
+                if ([userName, userEmail, userPhone, userAddress, userAge, userMessage].some(field => field === "")) {
                     inputFeedback.innerText = "Please fill in all fields.";
                 } else {
-                    outputs.push({ name: userName, email: userEmail, phone: userPhone, address: userAddress, age: userAge, message: userMessage });
+                    outputs.push({
+                        name: userName,
+                        email: userEmail,
+                        phone: userPhone,
+                        address: userAddress,
+                        age: userAge,
+                        message: userMessage
+                    });
                     updateOutputDisplay();
                     notifyUser("Input submitted successfully!");
                 }
                 outputDiv.classList.add('visible');
             }, 200); 
 
-            // Clear inputs after submission
             clearInputs();
         }
 
@@ -185,9 +191,9 @@
         }
 
         function clearOutput() {
-            outputs.length = 0;  // Clear the outputs array
-            document.getElementById('output').innerHTML = "";  // Clear the output display on the page
-            document.getElementById('inputFeedback').innerText = ''; // Clear any input feedback messages
+            outputs.length = 0;
+            document.getElementById('output').innerHTML = "";
+            document.getElementById('inputFeedback').innerText = '';
         }
     </script>
 
