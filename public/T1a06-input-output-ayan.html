@@ -156,12 +156,7 @@
             }, 200); 
 
             // Clear inputs after submission
-            document.getElementById('userName').value = "";
-            document.getElementById('userEmail').value = "";
-            document.getElementById('userPhone').value = "";
-            document.getElementById('userAddress').value = "";
-            document.getElementById('userAge').value = "";
-            document.getElementById('userMessage').value = "";
+            clearInputs();
         }
 
         function notifyUser(message) {
@@ -180,14 +175,19 @@
                 `<li><strong>Name:</strong> ${item.name}, <strong>Email:</strong> ${item.email}, <strong>Phone:</strong> ${item.phone}, <strong>Address:</strong> ${item.address}, <strong>Age:</strong> ${item.age}, <strong>Message:</strong> ${item.message}</li>`).join('')}</ul>`;
         }
 
+        function clearInputs() {
+            document.getElementById('userName').value = "";
+            document.getElementById('userEmail').value = "";
+            document.getElementById('userPhone').value = "";
+            document.getElementById('userAddress').value = "";
+            document.getElementById('userAge').value = "";
+            document.getElementById('userMessage').value = "";
+        }
+
         function clearOutput() {
-    outputs.length = 0;  // Clear the outputs array, removing all stored entries
-    document.getElementById('output').innerHTML = "";  // Clear the output display on the page
-    document.getElementById('inputFeedback').innerText = ''; // Clear any input feedback messages
-}
-   
-    }
-}r
+            outputs.length = 0;  // Clear the outputs array
+            document.getElementById('output').innerHTML = "";  // Clear the output display on the page
+            document.getElementById('inputFeedback').innerText = ''; // Clear any input feedback messages
         }
     </script>
 
