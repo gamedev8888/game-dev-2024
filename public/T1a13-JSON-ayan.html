@@ -1,8 +1,19 @@
-<h1 align=center>T1a13-JSON-ayan.html</a>
+<h1 align=center>T1a13-JSON-ayan.html</h1>
 
 <script>
-function  myShowJSON(){
+function  myShowJSON(myIn){
   document.getElementByid.innerHTML = `Sent: ${myIn} `
+}
+
+
+async function fetchdata() {
+   const response = await fetch('https://dog.ceo/api/breeds/image/random');
+   const data = await response.json();
+   console.log(data);
+   console.log`data.status: $}data.status}`)
+
+   const MyJson = await JSON.stringify(data, null, 2
+    document.getElementByid.innerHTML = myJson
 }
 
 </script>
@@ -23,7 +34,8 @@ Enter a json returning URL: <input type=text id="myText1" value=
 <option value="https://dog.ceo/api/breeds/image/random">god.ceo
 select><br><br>
 
-You make the JSON show up in the DIV<br><br>
+You make the select box JSON show up in the DIV,and include many more URL's in the 
+select box<br><br>
 
 <div id="myDiv01">...</div>
 
