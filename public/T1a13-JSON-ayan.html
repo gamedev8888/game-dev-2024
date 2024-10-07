@@ -5,10 +5,98 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>T1a13-JSON-ayan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #4a90e2;
+        }
+
+        p {
+            font-size: 1.2em;
+        }
+
+        textarea {
+            font-family: monospace;
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: calc(100% - 22px);
+            margin-bottom: 10px;
+        }
+
+        input[type="button"] {
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        input[type="button"]:hover {
+            background-color: #357ABD;
+        }
+
+        select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            margin: 10px 0;
+            background-color: #fff;
+        }
+
+        #myDiv01 {
+            background: white;
+            border-radius: 5px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+        
+        pre {
+            margin: 0;
+            white-space: pre-wrap;       /* Wrap long lines */
+            word-wrap: break-word;       /* Word wrap for long text */
+        }
+    </style>
 </head>
 
 <body>
     <h1 align="center">T1a13-JSON-ayan.html</h1>
+
+    <p>Use the input box below to enter a URL that returns JSON data.</p>
+    
+    <input type="text" id="myText1" value="https://randomfox.ca/floof/" placeholder="Enter JSON returning URL">
+
+    <input type="button" value="Show JSON" onclick="fetchData();"><br><br>
+
+    <p>Select a predefined URL to fetch JSON from:</p>
+    <select onchange="myShowJSON(this.value)">
+        <option value="https://randomfox.ca/floof/">Random Fox</option>
+        <option value="https://dog.ceo/api/breeds/image/random">Random Dog</option>
+        <option value="https://api.thecatapi.com/v1/images/search">Random Cat</option>
+    </select><br><br>
+
+    <div id="myDiv01">...</div>
 
     <script>
         function myShowJSON(myIn) {
@@ -17,30 +105,18 @@
 
         async function fetchData() {
             const url = document.getElementById("myText1").value;
-            const response = await fetch(url);
-            const data = await response.json();
-            console.log(data);
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                console.log(data);
 
-            const myJson = JSON.stringify(data, null, 2);
-            document.getElementById("myDiv01").innerHTML = `<pre>${myJson}</pre>`; // Display JSON in preformatted text
+                const myJson = JSON.stringify(data, null, 2);
+                document.getElementById("myDiv01").innerHTML = `<pre>${myJson}</pre>`;
+            } catch (error) {
+                document.getElementById("myDiv01").innerHTML = `<pre>Error: ${error.message}</pre>`;
+            }
         }
     </script>
-
-    <p>Explanation of JSON compared to JavaScript objects formatted for this text area.</p>
-    <textarea cols="70" rows="5"></textarea><br><br>
-
-    Enter a JSON returning URL: 
-    <input type="text" id="myText1" value="https://randomfox.ca/floof/">
-    <input type="button" value="Show JSON" onclick="fetchData();"><br><br>
-
-    <select size="1" onchange="myShowJSON(this.value)">
-        <option value="https://randomfox.ca/floof/">randomfox</option>
-        <option value="https://dog.ceo/api/breeds/image/random">dog.ceo</option>
-    </select><br><br>
-
-    You make the select box JSON show up in the DIV, and include many more URLs in the select box<br><br>
-
-    <div id="myDiv01">...</div>
 </body>
 
 </html>
