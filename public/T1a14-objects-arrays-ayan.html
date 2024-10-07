@@ -3,44 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Objects and Arrays Research</title>
+    <title>Fancy Objects and Arrays Research</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
             text-align: center;
+            padding: 20px;
+            margin: 0;
+        }
+        h1 {
+            color: #4A4A4A;
+            margin-bottom: 20px;
+        }
+        textarea {
+            width: 80%;
+            max-width: 600px;
+            padding: 10px;
+            border: 2px solid #4A90E2;
+            border-radius: 5px;
+            font-family: monospace;
+            background-color: #ffffff;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #4A90E2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        button:hover {
+            background-color: #357ABD;
+            transform: scale(1.05);
         }
         #result {
             margin-top: 20px;
-            padding: 10px;
+            padding: 15px;
             border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #ffffff;
             display: inline-block;
             white-space: pre-wrap; /* Preserve whitespace */
+            font-family: monospace;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            color: #333;
+            max-width: 80%;
+            overflow-x: auto; /* For overflow in case of long lines */
         }
     </style>
 </head>
 <body>
 
-<h1 align=center>T1a14-objects-arrays-ayan.html</h1>
+<h1>T1a14 - Objects and Arrays Research</h1>
 
 <p>Show your research about objects and arrays in the textarea below:</p>
-<textarea rows=8 cols=70>
-  let myArray1 = [
-      { name: 'Bob', age: 28 },
-      { name: 'Charlie', age: 32 }
-  ];
+<textarea rows="8" readonly>
+let myArray1 = [
+    { name: 'Bob', age: 28 },
+    { name: 'Charlie', age: 32 }
+];
 
-  let myArray2 = [
-      { title: 'Inception', year: 2010 },
-      { title: 'The Matrix', year: 1999 },
-      { title: 'Interstellar', year: 2014 }
-  ];
+let myArray2 = [
+    { title: 'Inception', year: 2010 },
+    { title: 'The Matrix', year: 1999 },
+    { title: 'Interstellar', year: 2014 }
+];
 
-  let myArray3 = [
-      { city: 'New York', country: 'USA' },
-      { city: 'Tokyo', country: 'Japan' },
-      { city: 'Paris', country: 'France' }
-  ];
-</textarea><br><br>
+let myArray3 = [
+    { city: 'New York', country: 'USA' },
+    { city: 'Tokyo', country: 'Japan' },
+    { city: 'Paris', country: 'France' }
+];
+</textarea><br>
 
 <button id="btnArray1">Show My Array 1</button>
 <button id="btnArray2">Show My Array 2</button>
