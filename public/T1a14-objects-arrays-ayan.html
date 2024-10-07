@@ -1,24 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Objects and Arrays Research</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            display: inline-block;
+            white-space: pre-wrap; /* Preserve whitespace */
+        }
+    </style>
+</head>
+<body>
+
 <h1 align=center>T1a14-objects-arrays-ayan.html</h1>
 
-Show your research about abjects and arrays in the textarea here<br>
-<textarea rows=4 cols=70>
-  let myArray = [5, 2, 8, 2, 1,];
-  let myoObjects = {name: 'john', age: 30, profession: 'developer'}:
+<p>Show your research about objects and arrays in the textarea below:</p>
+<textarea rows=8 cols=70>
+  let myArray1 = [
+      { name: 'Bob', age: 28 },
+      { name: 'Charlie', age: 32 }
+  ];
 
-let myObjects = {
-   name: 'Alice',
-   hobbies: ['reading', 'coding', 'hiking'],// Array inside object
-  age:25
-};
+  let myArray2 = [
+      { title: 'Inception', year: 2010 },
+      { title: 'The Matrix', year: 1999 },
+      { title: 'Interstellar', year: 2014 }
+  ];
 
-
-let myArray = [
-  { name: 'Bob', age:28 }, // object inside array
-  { name: 'Charlie', age:32 }
-]:
-
-
+  let myArray3 = [
+      { city: 'New York', country: 'USA' },
+      { city: 'Tokyo', country: 'Japan' },
+      { city: 'Paris', country: 'France' }
+  ];
 </textarea><br><br>
 
-Make 2 buttons and a div. The first button labelled "Array with Object in it" and
-the 2nd button labelled "Object with Array in it"<br><br>
+<button id="btnArray1">Show My Array 1</button>
+<button id="btnArray2">Show My Array 2</button>
+<button id="btnArray3">Show My Array 3</button>
+
+<div id="result"></div>
+
+<script>
+    const myArray1 = [
+        { name: 'Bob', age: 28 },
+        { name: 'Charlie', age: 32 }
+    ];
+
+    const myArray2 = [
+        { title: 'Inception', year: 2010 },
+        { title: 'The Matrix', year: 1999 },
+        { title: 'Interstellar', year: 2014 }
+    ];
+
+    const myArray3 = [
+        { city: 'New York', country: 'USA' },
+        { city: 'Tokyo', country: 'Japan' },
+        { city: 'Paris', country: 'France' }
+    ];
+
+    document.getElementById('btnArray1').addEventListener('click', () => {
+        document.getElementById('result').innerText = JSON.stringify(myArray1, null, 2);
+    });
+
+    document.getElementById('btnArray2').addEventListener('click', () => {
+        document.getElementById('result').innerText = JSON.stringify(myArray2, null, 2);
+    });
+
+    document.getElementById('btnArray3').addEventListener('click', () => {
+        document.getElementById('result').innerText = JSON.stringify(myArray3, null, 2);
+    });
+</script>
+
+</body>
+</html>
