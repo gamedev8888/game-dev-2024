@@ -56,6 +56,20 @@
             max-width: 80%;
             overflow-x: auto; /* For overflow in case of long lines */
         }
+        #imageContainer {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .image {
+            display: none; /* Hide images initially */
+            max-width: 300px;
+            margin: 10px;
+            border: 2px solid #4A90E2;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body>
@@ -80,42 +94,26 @@ let myArray3 = [
     { city: 'Tokyo', country: 'Japan' },
     { city: 'Paris', country: 'France' }
 ];
-</textarea><br>
+</textarea>
 
-<button id="btnArray1">Show My Array 1</button>
-<button id="btnArray2">Show My Array 2</button>
-<button id="btnArray3">Show My Array 3</button>
+<div>
+    <button id="showImages">Show Images</button>
+</div>
+
+<div id="imageContainer">
+    <img id="image1" class="image" src="https://images.wallpapersden.com/image/download/the-andromeda-galaxy_bGZlbWyUmZqaraWkpJRmZ21lrWZlZ2k.jpg" alt="Image 1">
+    <img id="image2" class="image" src="https://th.bing.com/th/id/R.3547808858f03ed2f4b07e8277f22d9c?rik=qOL5z35IPxHoFQ&riu=http%3a%2f%2fpm1.narvii.com%2f5848%2ffef0c553d9a70692a8d37b3bdea357dc4ed71bf9_00.jpg&ehk=3BA9xWvmiMdmJJw3umf5Q7L7%2bP1QQFt1sLsqGIG9qEU%3d&risl=&pid=ImgRaw&r=0" alt="Image 2">
+    <img id="image3" class="image" src="https://i1.sndcdn.com/artworks-liGYNM5INPxB7LCu-5VAVwQ-t500x500.jpg" alt="Image 3">
+</div>
 
 <div id="result"></div>
 
 <script>
-    const myArray1 = [
-        { name: 'Bob', age: 28 },
-        { name: 'Charlie', age: 32 }
-    ];
-
-    const myArray2 = [
-        { title: 'Inception', year: 2010 },
-        { title: 'The Matrix', year: 1999 },
-        { title: 'Interstellar', year: 2014 }
-    ];
-
-    const myArray3 = [
-        { city: 'New York', country: 'USA' },
-        { city: 'Tokyo', country: 'Japan' },
-        { city: 'Paris', country: 'France' }
-    ];
-
-    document.getElementById('btnArray1').addEventListener('click', () => {
-        document.getElementById('result').innerText = JSON.stringify(myArray1, null, 2);
-    });
-
-    document.getElementById('btnArray2').addEventListener('click', () => {
-        document.getElementById('result').innerText = JSON.stringify(myArray2, null, 2);
-    });
-
-    document.getElementById('btnArray3').addEventListener('click', () => {
-        document.getElementById('result').innerText = JSON.stringify(myArray3, null, 2);
+    document.getElementById('showImages').addEventListener('click', function() {
+        const images = document.querySelectorAll('.image');
+        images.forEach((img, index) => {
+            img.style.display = img.style.display === 'none' ? 'block' : 'none';
+        });
     });
 </script>
 
