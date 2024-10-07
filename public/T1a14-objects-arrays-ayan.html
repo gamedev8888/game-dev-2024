@@ -95,27 +95,5 @@ let myArray3 = [
     { city: 'Paris', country: 'France' }
 ];
 </textarea>
-
-<div>
-    <button id="showImages">Show Images</button>
-</div>
-
-<div id="imageContainer">
-    <img id="image1" class="image" src="https://images.wallpapersden.com/image/download/the-andromeda-galaxy_bGZlbWyUmZqaraWkpJRmZ21lrWZlZ2k.jpg" alt="Image 1">
-    <img id="image2" class="image" src="https://th.bing.com/th/id/R.3547808858f03ed2f4b07e8277f22d9c?rik=qOL5z35IPxHoFQ&riu=http%3a%2f%2fpm1.narvii.com%2f5848%2ffef0c553d9a70692a8d37b3bdea357dc4ed71bf9_00.jpg&ehk=3BA9xWvmiMdmJJw3umf5Q7L7%2bP1QQFt1sLsqGIG9qEU%3d&risl=&pid=ImgRaw&r=0" alt="Image 2">
-    <img id="image3" class="image" src="https://i1.sndcdn.com/artworks-liGYNM5INPxB7LCu-5VAVwQ-t500x500.jpg" alt="Image 3">
-</div>
-
-<div id="result"></div>
-
-<script>
-    document.getElementById('showImages').addEventListener('click', function() {
-        const images = document.querySelectorAll('.image');
-        images.forEach((img, index) => {
-            img.style.display = img.style.display === 'none' ? 'block' : 'none';
-        });
-    });
-</script>
-
 </body>
 </html>
