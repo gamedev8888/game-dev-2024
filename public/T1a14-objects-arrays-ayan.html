@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Objects and Arrays by ayan</title>
+    <title>Objects and Arrays by Ayan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Roboto', sans-serif;
             background-color: #f4f4f4;
             text-align: center;
             padding: 20px;
@@ -15,6 +16,7 @@
         h1 {
             color: #4A4A4A;
             margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
         textarea {
             width: 80%;
@@ -26,6 +28,7 @@
             background-color: #ffffff;
             color: #333;
             margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
         button {
             background-color: #4A90E2;
@@ -36,11 +39,12 @@
             cursor: pointer;
             margin: 5px;
             font-size: 16px;
-            transition: background-color 0.3s, transform 0.2s;
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
         }
         button:hover {
             background-color: #357ABD;
             transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
         #result {
             margin-top: 20px;
@@ -54,7 +58,7 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             color: #333;
             max-width: 80%;
-            overflow-x: auto; /* For overflow in case of long lines */
+            overflow-x: auto;
         }
         #imageContainer {
             display: flex;
@@ -69,12 +73,21 @@
             border: 2px solid #4A90E2;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .image.show {
+            display: block;
+            animation: fadeIn 0.5s forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
     </style>
 </head>
 <body>
 
-<h1>T1a14 - Objects and Arrays by ayan</h1>
+<h1>T1a14 - Objects and Arrays by Ayan</h1>
 
 <p>Show your research about objects and arrays in the textarea below:</p>
 <textarea rows="8" readonly>
@@ -95,6 +108,42 @@ let myArray3 = [
     { city: 'Paris', country: 'France' }
 ];
 </textarea>
+
+<button id="showResults">Show Results</button>
+
+<div id="result"></div>
+
+<div id="imageContainer">
+    <img class="image" src="https://via.placeholder.com/300x150?text=Bob" alt="Bob">
+    <img class="image" src="https://via.placeholder.com/300x150?text=Charlie" alt="Charlie">
+    <img class="image" src="https://via.placeholder.com/300x150?text=Inception" alt="Inception">
+    <img class="image" src="https://via.placeholder.com/300x150?text=The+Matrix" alt="The Matrix">
+    <img class="image" src="https://via.placeholder.com/300x150?text=Interstellar" alt="Interstellar">
+    <img class="image" src="https://via.placeholder.com/300x150?text=New+York" alt="New York">
+    <img class="image" src="https://via.placeholder.com/300x150?text=Tokyo" alt="Tokyo">
+    <img class="image" src="https://via.placeholder.com/300x150?text=Paris" alt="Paris">
+</div>
+
+<script>
+    document.getElementById('showResults').addEventListener('click', function() {
+        const myArray1 = [
+            { name: 'Bob', age: 28 },
+            { name: 'Charlie', age: 32 }
+        ];
+
+        const output = myArray1.map(person => `${person.name} is ${person.age} years old`).join('\n');
+        document.getElementById('result').textContent = output;
+
+        // Show images related to the results
+        const images = document.querySelectorAll('.image');
+        images.forEach((img, index) => {
+            img.classList.remove('show'); // Hide all images first
+            if (index < myArray1.length) {
+                img.classList.add('show'); // Show relevant images
+            }
+        });
+    });
 </script>
+
 </body>
 </html>
