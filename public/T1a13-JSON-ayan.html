@@ -8,17 +8,23 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
             color: #333;
             padding: 20px;
+            /* Background image settings */
+            background-image: url('https://wallpapercave.com/wp/96dmf4c.jpg');
+            background-size: cover; /* Cover the whole background */
+            background-repeat: no-repeat; /* Do not repeat the image */
+            background-position: center; /* Center the image */
+            background-attachment: fixed; /* Make background fixed */
         }
 
         h1 {
-            color: #4a90e2;
+            color: #fff; /* White text color for contrast */
         }
 
         p {
             font-size: 1.2em;
+            color: #fff; /* White text color for contrast */
         }
 
         textarea {
@@ -28,15 +34,16 @@
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
-            background-color: #fff;
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
         }
 
-        input[type="text"] {
+        input[type="text"], select {
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
             width: calc(100% - 22px);
             margin-bottom: 10px;
+            background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
         }
 
         input[type="button"] {
@@ -53,17 +60,8 @@
             background-color: #357ABD;
         }
 
-        select {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            width: 100%;
-            margin: 10px 0;
-            background-color: #fff;
-        }
-
         #myDiv01 {
-            background: white;
+            background: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
             border-radius: 5px;
             padding: 15px;
             border: 1px solid #ccc;
@@ -71,11 +69,11 @@
             margin-top: 20px;
             overflow-x: auto;
         }
-        
+
         pre {
             margin: 0;
-            white-space: pre-wrap;       /* Wrap long lines */
-            word-wrap: break-word;       /* Word wrap for long text */
+            white-space: pre-wrap; /* Wrap long lines */
+            word-wrap: break-word; /* Word wrap for long text */
         }
     </style>
 </head>
