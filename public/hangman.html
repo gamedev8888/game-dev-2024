@@ -41,6 +41,15 @@
         .alphabet:hover {
             color: blue;
         }
+
+        @keyframes reveal {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        span.revealed {
+            animation: reveal 0.5s ease;
+        }
     </style>
 </head>
 <body>
@@ -50,27 +59,54 @@
         <div id="word-container"></div>
         <div id="alphabet-container"></div>
         <p>Attempts Left: <span id="attempts-left"></span></p>
+        <p>Score: <span id="score-display"></span></p>
         <button id="restart-button" style="display: none;">Restart Game</button>
     </div>
 
     <script>
-        const words = ['javascript', 'hangman', 'coding', 'development', 'programming'];
+        // Word categories
+        const categories = {
+            animals: ['dog', 'cat', 'elephant', 'giraffe'],
+            countries: ['france', 'germany', 'canada', 'brazil'],
+            cities: ['paris', 'berlin', 'toronto', 'tokyo']
+        };
+
+        const hangmanStages = [
+            '', // Initial stage (no parts)
+            'O', // head
+            'O\n |', // head + body
+            'O\n/|', // head + one arm
+            'O\n/|\\', // head + two arms
+            'O\n/|\\\n/', // head + one leg
+            'O\n/|\\\n/ \\', // full hangman
+        ];
+
         let selectedWord = '';
         let attemptsLeft = 6;
         let guessedLetters = [];
-        let wordContainer = document.getElementById('word-container');
-        let hangmanDrawing = document.getElementById('hangman');
-        let attemptsDisplay = document.getElementById('attempts-left');
-        let alphabetContainer = document.getElementById('alphabet-container');
-        let restartButton = document.getElementById('restart-button');
+        let score = 0;
+
+        const wordContainer = document.getElementById('word-container');
+        const hangmanDrawing = document.getElementById('hangman');
+        const attemptsDisplay = document.getElementById('attempts-left');
+        const scoreDisplay = document.getElementById('score-display');
+        const alphabetContainer = document.getElementById('alphabet-container');
+        const restartButton = document.getElementById('restart-button');
+
+        const correctSound = new Audio('correct.mp3'); // Add your sound file path
+        const wrongSound = new Audio('wrong.mp3'); // Add your sound file path
 
         function setupGame() {
-            selectedWord = words[Math.floor(Math.random() * words.length)];
+            const selectedCategory = prompt("Choose a category: animals, countries, cities");
+            const words = categories[selectedCategory] || [];
+            selectedWord = words[Math.floor(Math.random() * words.length)] || 'javascript'; // Default word if category invalid
+
             attemptsLeft = 6;
             guessedLetters = [];
             wordContainer.textContent = '';
             hangmanDrawing.textContent = '';
             attemptsDisplay.textContent = attemptsLeft;
+            scoreDisplay.textContent = score;
             alphabetContainer.innerHTML = '';
             restartButton.style.display = 'none';
 
@@ -99,8 +135,11 @@
 
             guessedLetters.push(letter);
             if (!selectedWord.includes(letter)) {
+                wrongSound.play();
                 attemptsLeft--;
                 drawHangman();
+            } else {
+                correctSound.play();
             }
 
             updateWordDisplay();
@@ -110,7 +149,8 @@
                 alert(`Game Over! The word was "${selectedWord}".`);
                 restartButton.style.display = 'block';
             } else if (isWordGuessed()) {
-                alert('Congratulations! You guessed the word!');
+                score += attemptsLeft * 10; // Example scoring system
+                alert(`Congratulations! You guessed the word! Your score: ${score}`);
                 restartButton.style.display = 'block';
             }
         }
@@ -120,6 +160,7 @@
             for (let letter of selectedWord) {
                 const span = document.createElement('span');
                 span.textContent = guessedLetters.includes(letter) ? letter + ' ' : '_ ';
+                if (guessedLetters.includes(letter)) span.classList.add('revealed');
                 wordContainer.appendChild(span);
             }
         }
@@ -129,7 +170,7 @@
         }
 
         function drawHangman() {
-            hangmanDrawing.textContent += '❌';
+            hangmanDrawing.textContent = hangmanStages[6 - attemptsLeft];
         }
 
         restartButton.addEventListener('click', setupGame);
