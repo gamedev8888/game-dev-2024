@@ -1,4 +1,4 @@
-llo<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -10,58 +10,24 @@ llo<!DOCTYPE html>
             font-family: Arial, sans-serif;
             color: #333;
             padding: 20px;
-            /* Background image settings */
             background-image: url('https://wallpapercave.com/wp/96dmf4c.jpg');
-            background-size: cover; /* Cover the whole background */
-            background-repeat: no-repeat; /* Do not repeat the image */
-            background-position: center; /* Center the image */
-            background-attachment: fixed; /* Make background fixed */
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-attachment: fixed;
         }
 
         h1 {
-            color: yellow; /* yellow text color for contrast */
+            color: yellow;
         }
 
         p {
             font-size: 1.2em;
-            color: yellow; /* yellow text color for contrast */
-        }
-
-        textarea {
-            font-family: monospace;
-            width: 100%;
-            margin: 10px 0;
-            padding: 10px;
-            border: 1px solid yellow;
-            border-radius: 5px;
-            background-color: yellow; /* Semi-transparent background */
-        }
-
-        input[type="text"], select {
-            padding: 10px;
-            border: 1px solid yellow;
-            border-radius: 5px;
-            width: calc(100% - 22px);
-            margin-bottom: 10px;
-            background-color: yellow; /* Semi-transparent background */
-        }
-
-        input[type="button"] {
-            background-color: yellow;
-            color: black;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1em;
-        }
-
-        input[type="button"]:hover {
-            background-color: #357ABD;
+            color: yellow;
         }
 
         #myDiv01 {
-            background: yellow; /* Semi-transparent background */
+            background: yellow;
             border-radius: 5px;
             padding: 15px;
             border: 1px solid yellow;
@@ -70,10 +36,10 @@ llo<!DOCTYPE html>
             overflow-x: auto;
         }
 
-        pre {
-            margin: 0;
-            white-space: pre-wrap; /* Wrap long lines */
-            word-wrap: break-word; /* Word wrap for long text */
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -82,37 +48,58 @@ llo<!DOCTYPE html>
     <h1 align="center">T1a13-JSON-ayan.html</h1>
 
     <p>Use the input box below to enter a URL that returns JSON data.</p>
-    
     <input type="text" id="myText1" value="https://randomfox.ca/floof/" placeholder="Enter JSON returning URL">
-
     <input type="button" value="Show JSON" onclick="fetchData();"><br><br>
 
     <p>Select a predefined URL to fetch JSON from:</p>
-    <select onchange="myShowJSON(this.value)">
+    <select id="jsonSelect" onchange="fetchSelectedJSON()">
         <option value="https://randomfox.ca/floof/">Random Fox</option>
         <option value="https://dog.ceo/api/breeds/image/random">Random Dog</option>
         <option value="https://api.thecatapi.com/v1/images/search">Random Cat</option>
     </select><br><br>
 
     <div id="myDiv01">...</div>
-
+    <div id="loading"></div>
+    
     <script>
-        function myShowJSON(myIn) {
-            document.getElementById("myDiv01").innerHTML = `Sent: ${myIn}`;
+        function fetchSelectedJSON() {
+            const selectedUrl = document.getElementById("jsonSelect").value;
+            fetchData(selectedUrl); // Fetch data automatically when selecting
         }
 
-        async function fetchData() {
-            const url = document.getElementById("myText1").value;
+        async function fetchData(url = document.getElementById("myText1").value) {
+            document.getElementById("myDiv01").innerHTML = ""; // Clear previous output
+            const loading = document.createElement("div");
+            loading.innerHTML = "Loading...";
+            document.getElementById("myDiv01").appendChild(loading);
+
             try {
                 const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const data = await response.json();
                 console.log(data);
 
-                const myJson = JSON.stringify(data, null, 2);
-                document.getElementById("myDiv01").innerHTML = `<pre>${myJson}</pre>`;
+                // This will vary based on the API structure
+                let imageUrl;
+                if (url.includes("randomfox")) {
+                    imageUrl = data.image; // For Random Fox
+                } else if (url.includes("dog.ceo")) {
+                    imageUrl = data.message; // For Random Dog
+                } else if (url.includes("thecatapi")) {
+                    imageUrl = data[0].url; // For Random Cat
+                }
+
+                // Display image if URL is found
+                if (imageUrl) {
+                    const img = document.createElement("img");
+                    img.src = imageUrl;
+                    img.alt = "Fetched Image";
+                    document.getElementById("myDiv01").innerHTML = ""; // Clear loading text
+                    document.getElementById("myDiv01").appendChild(img);
+                }
             } catch (error) {
                 document.getElementById("myDiv01").innerHTML = `<pre>Error: ${error.message}</pre>`;
-            }
+            } 
         }
     </script>
 </body>
