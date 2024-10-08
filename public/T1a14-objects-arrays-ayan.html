@@ -10,7 +10,7 @@
             font-family: 'Roboto', sans-serif;
             background-color: #f4f4f4;
             text-align: center;
-            padding: 20px;
+            padding: 40px;
             margin: 0;
         }
         h1 {
@@ -18,8 +18,11 @@
             margin-bottom: 20px;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
         }
+        p {
+            color: #666;
+        }
         textarea {
-            width: 80%;
+            width: 90%;
             max-width: 600px;
             padding: 10px;
             border: 2px solid #4A90E2;
@@ -29,6 +32,7 @@
             color: #333;
             margin-bottom: 20px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            resize: none;
         }
         button {
             background-color: #4A90E2;
@@ -53,7 +57,7 @@
             border-radius: 5px;
             background-color: #ffffff;
             display: inline-block;
-            white-space: pre-wrap; /* Preserve whitespace */
+            white-space: pre-wrap;
             font-family: monospace;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             color: #333;
@@ -67,8 +71,8 @@
             margin-top: 20px;
         }
         .image {
-            display: none; /* Hide images initially */
-            max-width: 300px;
+            display: none;
+            max-width: 200px;
             margin: 10px;
             border: 2px solid #4A90E2;
             border-radius: 5px;
@@ -88,7 +92,6 @@
 <body>
 
 <h1>T1a14 - Objects and Arrays by Ayan</h1>
-
 <p>Show your research about objects and arrays in the textarea below:</p>
 <textarea rows="8" readonly>
 let myArray1 = [
@@ -109,40 +112,48 @@ let myArray3 = [
 ];
 </textarea>
 
-<button id="showResults">Show Results</button>
-
-<div id="result"></div>
-
-<div id="imageContainer">
-    <img class="image" src="https://via.placeholder.com/300x150?text=Bob" alt="Bob">
-    <img class="image" src="https://via.placeholder.com/300x150?text=Charlie" alt="Charlie">
-    <img class="image" src="https://via.placeholder.com/300x150?text=Inception" alt="Inception">
-    <img class="image" src="https://via.placeholder.com/300x150?text=The+Matrix" alt="The Matrix">
-    <img class="image" src="https://via.placeholder.com/300x150?text=Interstellar" alt="Interstellar">
-    <img class="image" src="https://via.placeholder.com/300x150?text=New+York" alt="New York">
-    <img class="image" src="https://via.placeholder.com/300x150?text=Tokyo" alt="Tokyo">
-    <img class="image" src="https://via.placeholder.com/300x150?text=Paris" alt="Paris">
+<button id="showResults" aria-label="Show results of the research">Show Results</button>
+<div id="result" aria-live="polite"></div>
+<div id="imageContainer" aria-hidden="true">
+    <img class="image" src="https://via.placeholder.com/200x100?text=Bob" alt="Bob">
+    <img class="image" src="https://via.placeholder.com/200x100?text=Charlie" alt="Charlie">
+    <img class="image" src="https://via.placeholder.com/200x100?text=Inception" alt="Inception Movie">
+    <img class="image" src="https://via.placeholder.com/200x100?text=The Matrix" alt="The Matrix Movie">
+    <img class="image" src="https://via.placeholder.com/200x100?text=Interstellar" alt="Interstellar Movie">
+    <img class="image" src="https://via.placeholder.com/200x100?text=New York" alt="New York City">
+    <img class="image" src="https://via.placeholder.com/200x100?text=Tokyo" alt="Tokyo City">
+    <img class="image" src="https://via.placeholder.com/200x100?text=Paris" alt="Paris City">
 </div>
 
 <script>
-    document.getElementById('showResults').addEventListener('click', function() {
-        const myArray1 = [
-            { name: 'Bob', age: 28 },
-            { name: 'Charlie', age: 32 }
-        ];
+document.getElementById('showResults').addEventListener('click', function() {
+    const myArray1 = [
+        { name: 'Bob', age: 28 },
+        { name: 'Charlie', age: 32 }
+    ];
 
-        const output = myArray1.map(person => `${person.name} is ${person.age} years old`).join('\n');
-        document.getElementById('result').textContent = output;
+    const output = myArray1.map(person => `${person.name} is ${person.age} years old`).join('\n');
+    document.getElementById('result').textContent = output;
 
-        // Show images related to the results
-        const images = document.querySelectorAll('.image');
-        images.forEach((img, index) => {
-            img.classList.remove('show'); // Hide all images first
-            if (index < myArray1.length) {
-                img.classList.add('show'); // Show relevant images
-            }
-        });
+    // Show images related to the results
+    const images = document.querySelectorAll('.image');
+    images.forEach((img, index) => {
+        img.classList.remove('show'); // Hide all images first
+        if (index < myArray1.length) {
+            img.classList.add('show'); // Show relevant images
+        }
     });
+
+    // Additional functionality to show city and movie images
+    const movieImages = myArray2.map((movie, index) => images[index + 2]);  // Starts showing images from index 2
+    movieImages.forEach(img => img.classList.remove('show')); // Hide movie images initially
+
+    const cityImages = myArray3.map((city, index) => images[index + 5]); // Starts showing images from index 5
+    cityImages.forEach(img => img.classList.remove('show')); // Hide city images initially
+
+    // Setting the correct aria-hidden state
+    document.getElementById('imageContainer').setAttribute('aria-hidden', 'false');
+});
 </script>
 
 </body>
