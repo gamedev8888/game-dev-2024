@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Objects and Arrays by Ayan</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -12,6 +13,7 @@
             text-align: center;
             padding: 40px;
             margin: 0;
+            transition: background-color 0.3s, color 0.3s;
         }
         h1 {
             color: #4A4A4A;
@@ -24,7 +26,7 @@
         textarea {
             width: 90%;
             max-width: 600px;
-            padding: 10px;
+            padding: 15px;
             border: 2px solid #4A90E2;
             border-radius: 5px;
             font-family: monospace;
@@ -33,6 +35,11 @@
             margin-bottom: 20px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             resize: none;
+            transition: border-color 0.3s;
+        }
+        textarea:focus {
+            border-color: #357ABD;
+            outline: none;
         }
         button {
             background-color: #4A90E2;
@@ -63,6 +70,7 @@
             color: #333;
             max-width: 80%;
             overflow-x: auto;
+            transition: background-color 0.3s, color 0.3s;
         }
         #imageContainer {
             display: flex;
@@ -83,9 +91,32 @@
             display: block;
             animation: fadeIn 0.5s forwards;
         }
+        #darkModeButton {
+            background-color: #333;
+            color: #fff;
+            border: none;
+        }
+        #darkModeButton:hover {
+            background-color: #555;
+        }
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
+        }
+        /* Dark mode styles */
+        body.dark {
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+        textarea.dark {
+            background-color: #333;
+            color: #fff;
+            border-color: #666;
+        }
+        #result.dark {
+            background-color: #333;
+            color: #fff;
+            border-color: #666;
         }
     </style>
 </head>
@@ -112,7 +143,8 @@ let myArray3 = [
 ];
 </textarea>
 
-<button id="showResults" aria-label="Show results of the research">Show Results</button>
+<button id="showResults" aria-label="Show results of the research"><i class="fas fa-eye"></i> Show Results</button>
+<button id="darkModeButton" aria-label="Toggle dark mode"><i class="fas fa-moon"></i> Toggle Dark Mode</button>
 <div id="result" aria-live="polite"></div>
 <div id="imageContainer" aria-hidden="true">
     <img class="image" src="https://via.placeholder.com/200x100?text=Bob" alt="Bob">
@@ -153,6 +185,16 @@ document.getElementById('showResults').addEventListener('click', function() {
 
     // Setting the correct aria-hidden state
     document.getElementById('imageContainer').setAttribute('aria-hidden', 'false');
+});
+
+// Dark Mode Toggle
+const darkModeButton = document.getElementById('darkModeButton');
+darkModeButton.addEventListener('click', () => {
+    document.body.classList.toggle('dark');
+    document.querySelectorAll('textarea').forEach(textarea => {
+        textarea.classList.toggle('dark');
+    });
+    document.getElementById('result').classList.toggle('dark');
 });
 </script>
 
