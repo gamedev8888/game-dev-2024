@@ -34,7 +34,7 @@
             color: #333;
             margin-bottom: 20px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            resize: none; /* Change to 'both' if you want to allow resizing */
+            resize: none;
             transition: border-color 0.3s;
         }
         textarea:focus, input[type="text"]:focus {
@@ -72,15 +72,11 @@
             overflow-x: auto;
             transition: background-color 0.3s, color 0.3s;
         }
-        /* Additional styles */
-        #inputSection {
-            margin-top: 20px;
-        }
         .error {
             color: red;
             font-size: 14px;
+            margin-top: 10px;
         }
-
         #imageContainer {
             display: flex;
             justify-content: center;
@@ -112,7 +108,6 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        /* Dark mode styles */
         body.dark {
             background-color: #1a1a1a;
             color: #ffffff;
@@ -127,7 +122,6 @@
             color: #fff;
             border-color: #666;
         }
-        /* Media queries for responsiveness */
         @media (max-width: 600px) {
             h1 {
                 font-size: 24px;
@@ -163,80 +157,65 @@ let myArray3 = [
 ];
 </textarea>
 
-<!-- New input section for user input -->
+<p>Example Input: <code>[{"name": "Alice", "age": 25}, {"name": "Tom", "age": 30}]</code></p>
 <div id="inputSection">
-    <h2>Input Your Own Object and Array:</h2>
-    <input type="text" id="userInput" placeholder="Enter a JavaScript array like: [{name: 'John', age: 30}, ...]" />
-    <button id="submitButton">Submit</button>
-    <p id="errorMessage" class="error"></p>
+    <input type="text" id="userInput" aria-label="Input your objects and arrays here" placeholder='Enter your array of objects... e.g. [{"name": "John", "age": 30}]'>
+    <button onclick="processInput()">Submit</button>
+    <div class="error" id="errorMessage"></div>
 </div>
 
-<button id="darkModeButton">Toggle Dark Mode</button>
-
-<div id="result"></div>
-
+<div id="result" aria-live="polite"></div>
 <div id="imageContainer"></div>
+<button id="darkModeButton" onclick="toggleDarkMode()">Toggle Dark Mode</button>
 
 <script>
-    // Toggle Dark Mode
-    const darkModeButton = document.getElementById('darkModeButton');
-    darkModeButton.addEventListener('click', () => {
+    // Function to toggle dark mode
+    function toggleDarkMode() {
         document.body.classList.toggle('dark');
-        const isDarkMode = document.body.classList.contains('dark');
-        document.querySelectorAll('textarea, input[type="text"]').forEach(el => {
-            el.classList.toggle('dark', isDarkMode);
-        });
-        document.getElementById('result').classList.toggle('dark', isDarkMode);
-    });
+    }
 
-    // Handle User Input
-    const userInput = document.getElementById('userInput');
-    const submitButton = document.getElementById('submitButton');
-    const errorMessage = document.getElementById('errorMessage');
-    const resultArea = document.getElementById('result');
-    const imageContainer = document.getElementById('imageContainer');
+    // Function to process user input
+    function processInput() {
+        const input = document.getElementById('userInput').value;
+        const errorMessage = document.getElementById('errorMessage');
+        const result = document.getElementById('result');
+        const imageContainer = document.getElementById('imageContainer');
+        imageContainer.innerHTML = ''; // Clear previous images
+        result.textContent = '';
+        errorMessage.textContent = '';
 
-    submitButton.addEventListener('click', () => {
-        const input = userInput.value.trim();
-        errorMessage.textContent = ''; // Clear previous error messages
-
-        // Simple validation: Check if input is not empty and if it starts with `[` and ends with `]`
-        if (!input || !input.startsWith('[') || !input.endsWith(']')) {
-            errorMessage.textContent = 'Please enter a valid JavaScript array.';
-            resultArea.textContent = '';
-            imageContainer.innerHTML = '';
+        // Basic validation for array structure
+        if (!input.trim().startsWith('[') || !input.trim().endsWith(']')) {
+            errorMessage.textContent = "Input should start with '[' and end with ']'. Please enter a valid array.";
             return;
         }
 
+        // Try to parse JSON
         try {
-            // Parse the user input
-            const userArray = JSON.parse(input);
-            
-            // Validate that it is an array
-            if (!Array.isArray(userArray)) {
-                throw new Error('Input is not an array');
+            const parsedInput = JSON.parse(input);
+            if (!Array.isArray(parsedInput)) {
+                throw new Error("Parsed input is not an array.");
             }
-
-            // Update Result
-            resultArea.textContent = JSON.stringify(userArray, null, 2);
-            imageContainer.innerHTML = ''; // Clear previous images
-
-            // Show associated images if available (custom logic can be added here)
-            userArray.forEach(item => {
-                if (item.name) {
-                    const img = document.createElement('img');
-                    img.src = `https://via.placeholder.com/150?text=${item.name}`;
-                    img.alt = item.name;
-                    img.classList.add('image', 'show');
-                    imageContainer.appendChild(img);
-                }
-            });
+            result.textContent = JSON.stringify(parsedInput, null, 2);
+            showImages(parsedInput);
         } catch (error) {
-            errorMessage.textContent = 'Invalid JSON format. Please correct your input.';
-            resultArea.textContent = '';
-            imageContainer.innerHTML = '';
+            errorMessage.textContent = "Invalid JSON format: " + error.message;
         }
-    });
+    }
+
+    // Function to show images based on input data
+    function showImages(data) {
+        data.forEach(item => {
+            if (item.name) {
+                const img = document.createElement('img');
+                img.src = `https://via.placeholder.com/150?text=${encodeURIComponent(item.name)}`;
+                img.alt = `Image related to ${item.name}`;
+                img.className = 'image show';
+                document.getElementById('imageContainer').appendChild(img);
+            }
+        });
+    }
 </script>
+
 </body>
 </html>
