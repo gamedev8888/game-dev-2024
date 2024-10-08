@@ -23,7 +23,7 @@
         p {
             color: #666;
         }
-        textarea {
+        textarea, input[type="text"] {
             width: 90%;
             max-width: 600px;
             padding: 15px;
@@ -34,10 +34,10 @@
             color: #333;
             margin-bottom: 20px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            resize: none;
+            resize: none; /* Change to 'both' if you want to allow resizing */
             transition: border-color 0.3s;
         }
-        textarea:focus {
+        textarea:focus, input[type="text"]:focus {
             border-color: #357ABD;
             outline: none;
         }
@@ -72,6 +72,15 @@
             overflow-x: auto;
             transition: background-color 0.3s, color 0.3s;
         }
+        /* Additional styles */
+        #inputSection {
+            margin-top: 20px;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+        }
+
         #imageContainer {
             display: flex;
             justify-content: center;
@@ -108,7 +117,7 @@
             background-color: #1a1a1a;
             color: #ffffff;
         }
-        textarea.dark {
+        textarea.dark, input[type="text"].dark {
             background-color: #333;
             color: #fff;
             border-color: #666;
@@ -118,12 +127,23 @@
             color: #fff;
             border-color: #666;
         }
+        /* Media queries for responsiveness */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 24px;
+            }
+            textarea, input[type="text"], button {
+                width: 95%;
+            }
+        }
     </style>
 </head>
 <body>
 
 <h1>T1a14 - Objects and Arrays by Ayan</h1>
 <p>Show your research about objects and arrays in the textarea below:</p>
+
+<!-- Existing textarea for default research -->
 <textarea rows="8" readonly>
 let myArray1 = [
     { name: 'Bob', age: 28 },
@@ -143,60 +163,80 @@ let myArray3 = [
 ];
 </textarea>
 
-<button id="showResults" aria-label="Show results of the research"><i class="fas fa-eye"></i> Show Results</button>
-<button id="darkModeButton" aria-label="Toggle dark mode"><i class="fas fa-moon"></i> Toggle Dark Mode</button>
-<div id="result" aria-live="polite"></div>
-<div id="imageContainer" aria-hidden="true">
-    <img class="image" src="https://via.placeholder.com/200x100?text=Bob" alt="Bob">
-    <img class="image" src="https://via.placeholder.com/200x100?text=Charlie" alt="Charlie">
-    <img class="image" src="https://via.placeholder.com/200x100?text=Inception" alt="Inception Movie">
-    <img class="image" src="https://via.placeholder.com/200x100?text=The Matrix" alt="The Matrix Movie">
-    <img class="image" src="https://via.placeholder.com/200x100?text=Interstellar" alt="Interstellar Movie">
-    <img class="image" src="https://via.placeholder.com/200x100?text=New York" alt="New York City">
-    <img class="image" src="https://via.placeholder.com/200x100?text=Tokyo" alt="Tokyo City">
-    <img class="image" src="https://via.placeholder.com/200x100?text=Paris" alt="Paris City">
+<!-- New input section for user input -->
+<div id="inputSection">
+    <h2>Input Your Own Object and Array:</h2>
+    <input type="text" id="userInput" placeholder="Enter a JavaScript array like: [{name: 'John', age: 30}, ...]" />
+    <button id="submitButton">Submit</button>
+    <p id="errorMessage" class="error"></p>
 </div>
 
+<button id="darkModeButton">Toggle Dark Mode</button>
+
+<div id="result"></div>
+
+<div id="imageContainer"></div>
+
 <script>
-document.getElementById('showResults').addEventListener('click', function() {
-    const myArray1 = [
-        { name: 'Bob', age: 28 },
-        { name: 'Charlie', age: 32 }
-    ];
+    // Toggle Dark Mode
+    const darkModeButton = document.getElementById('darkModeButton');
+    darkModeButton.addEventListener('click', () => {
+        document.body.classList.toggle('dark');
+        const isDarkMode = document.body.classList.contains('dark');
+        document.querySelectorAll('textarea, input[type="text"]').forEach(el => {
+            el.classList.toggle('dark', isDarkMode);
+        });
+        document.getElementById('result').classList.toggle('dark', isDarkMode);
+    });
 
-    const output = myArray1.map(person => `${person.name} is ${person.age} years old`).join('\n');
-    document.getElementById('result').textContent = output;
+    // Handle User Input
+    const userInput = document.getElementById('userInput');
+    const submitButton = document.getElementById('submitButton');
+    const errorMessage = document.getElementById('errorMessage');
+    const resultArea = document.getElementById('result');
+    const imageContainer = document.getElementById('imageContainer');
 
-    // Show images related to the results
-    const images = document.querySelectorAll('.image');
-    images.forEach((img, index) => {
-        img.classList.remove('show'); // Hide all images first
-        if (index < myArray1.length) {
-            img.classList.add('show'); // Show relevant images
+    submitButton.addEventListener('click', () => {
+        const input = userInput.value.trim();
+        errorMessage.textContent = ''; // Clear previous error messages
+
+        // Simple validation: Check if input is not empty and if it starts with `[` and ends with `]`
+        if (!input || !input.startsWith('[') || !input.endsWith(']')) {
+            errorMessage.textContent = 'Please enter a valid JavaScript array.';
+            resultArea.textContent = '';
+            imageContainer.innerHTML = '';
+            return;
+        }
+
+        try {
+            // Parse the user input
+            const userArray = JSON.parse(input);
+            
+            // Validate that it is an array
+            if (!Array.isArray(userArray)) {
+                throw new Error('Input is not an array');
+            }
+
+            // Update Result
+            resultArea.textContent = JSON.stringify(userArray, null, 2);
+            imageContainer.innerHTML = ''; // Clear previous images
+
+            // Show associated images if available (custom logic can be added here)
+            userArray.forEach(item => {
+                if (item.name) {
+                    const img = document.createElement('img');
+                    img.src = `https://via.placeholder.com/150?text=${item.name}`;
+                    img.alt = item.name;
+                    img.classList.add('image', 'show');
+                    imageContainer.appendChild(img);
+                }
+            });
+        } catch (error) {
+            errorMessage.textContent = 'Invalid JSON format. Please correct your input.';
+            resultArea.textContent = '';
+            imageContainer.innerHTML = '';
         }
     });
-
-    // Additional functionality to show city and movie images
-    const movieImages = myArray2.map((movie, index) => images[index + 2]);  // Starts showing images from index 2
-    movieImages.forEach(img => img.classList.remove('show')); // Hide movie images initially
-
-    const cityImages = myArray3.map((city, index) => images[index + 5]); // Starts showing images from index 5
-    cityImages.forEach(img => img.classList.remove('show')); // Hide city images initially
-
-    // Setting the correct aria-hidden state
-    document.getElementById('imageContainer').setAttribute('aria-hidden', 'false');
-});
-
-// Dark Mode Toggle
-const darkModeButton = document.getElementById('darkModeButton');
-darkModeButton.addEventListener('click', () => {
-    document.body.classList.toggle('dark');
-    document.querySelectorAll('textarea').forEach(textarea => {
-        textarea.classList.toggle('dark');
-    });
-    document.getElementById('result').classList.toggle('dark');
-});
 </script>
-
 </body>
 </html>
