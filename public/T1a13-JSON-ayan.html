@@ -47,6 +47,8 @@
 <body>
     <h1 align="center">T1a13-JSON-ayan.html</h1>
 
+    <p id="joke" style="color: yellow; font-size: 1.2em;"></p> <!-- Joke will be displayed here -->
+
     <p>Use the input box below to enter a URL that returns JSON data.</p>
     <input type="text" id="myText1" value="https://randomfox.ca/floof/" placeholder="Enter JSON returning URL">
     <input type="button" value="Show JSON" onclick="fetchData();"><br><br>
@@ -62,6 +64,18 @@
     <div id="loading"></div>
     
     <script>
+        // Function to display a random joke
+        function displayJoke() {
+            const jokes = [
+                "Why do programmers prefer dark mode? Because light attracts bugs!",
+                "How many programmers does it take to change a light bulb? None, that's a hardware problem!",
+                "Why do Java developers wear glasses? Because they don't see sharp!",
+                "Why was the developer unhappy at their job? They wanted arrays (a raise)!"
+            ];
+            const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
+            document.getElementById("joke").innerText = randomJoke;
+        }
+
         function fetchSelectedJSON() {
             const selectedUrl = document.getElementById("jsonSelect").value;
             fetchData(selectedUrl); // Fetch data automatically when selecting
@@ -86,7 +100,7 @@
                 } else if (url.includes("dog.ceo")) {
                     imageUrl = data.message; // For Random Dog
                 } else if (url.includes("thecatapi")) {
-                    imageUrl = data[0].url; // For Random Cat
+                    imageUrl = data[0]?.url; // For Random Cat
                 }
 
                 // Display image if URL is found
@@ -101,7 +115,9 @@
                 document.getElementById("myDiv01").innerHTML = `<pre>Error: ${error.message}</pre>`;
             } 
         }
+
+        // Display a random joke when the page loads
+        window.onload = displayJoke;
     </script>
 </body>
-
 </html>
