@@ -36,7 +36,7 @@
             box-sizing: border-box; /* Ensures padding is included */
         }
 
-        #myDiv01, #marvelCharacter {
+        #marvelCharacter {
             background: yellow;
             border-radius: 5px;
             padding: 15px;
@@ -74,26 +74,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Media Queries for Responsive Design */
-        @media (max-width: 768px) {
-            body {
-                padding: 10px; /* Reduce padding for smaller screens */
-            }
-
-            h1 {
-                font-size: 24px; /* Smaller font size */
-            }
-
-            #calculator {
-                padding: 10px; /* Reduce padding */
-            }
-
-            .loader {
-                width: 20px; /* Smaller loader */
-                height: 20px; /* Smaller loader */
-            }
-        }
-
         button {
             transition: background-color 0.3s, transform 0.3s; /* Transition for background color and scale */
         }
@@ -107,172 +87,18 @@
 
 <body>
     <h1>T1a13-JSON-ayan.html</h1>
-    
-    <p id="joke"></p>
-    <button onclick="displayJoke()">Get Random Joke</button>
-    
-    <p>Use the input box below to enter a URL that returns JSON data.</p>
-    <input type="text" id="myText1" value="https://randomfox.ca/floof/" aria-label="Enter JSON returning URL" placeholder="Enter JSON returning URL">
-    <input type="button" value="Show JSON" onclick="fetchData();" aria-label="Show JSON data"><br><br>
 
-    <p>Select a predefined URL to fetch JSON from:</p>
-    <select id="jsonSelect" onchange="fetchSelectedJSON()">
-        <option value="https://randomfox.ca/floof/">Random Fox</option>
-        <option value="https://dog.ceo/api/breeds/image/random">Random Dog</option>
-        <option value="https://api.thecatapi.com/v1/images/search">Random Cat</option>
-    </select><br><br>
-
-    <div id="myDiv01"></div>
-
-    <div id="calculator">
-        <h2>Simple Calculator</h2>
-        <label for="num1">Number 1:</label>
-        <input type="number" id="num1" placeholder="First number">
-        <label for="num2">Number 2:</label>
-        <input type="number" id="num2" placeholder="Second number">
-        
-        <label for="operation">Operation:</label>
-        <select id="operation">
-            <option value="add">Add</option>
-            <option value="subtract">Subtract</option>
-            <option value="multiply">Multiply</option>
-            <option value="divide">Divide</option>
-        </select>
-        
-        <input type="button" value="Calculate" onclick="calculate();">
-        <p id="calculationResult"></p>
-    </div>
-
-    <p><strong>Search Marvel Character:</strong></p>
+    <p>Search for a Marvel Character:</p>
     <input type="text" id="characterInput" placeholder="Enter Marvel character name" aria-label="Marvel character name">
     <button onclick="fetchMarvelCharacterByName()">Search</button>
+    
     <div id="marvelCharacter"></div>
 
-    <p><strong>Marvel API Key:</strong></p>
-    <input type="text" id="apiKeyInput" placeholder="Enter your Marvel API Key" aria-label="Input your Marvel API key">
-    <p>Click the button below to get a random Marvel character:</p>
-    <button onclick="fetchRandomMarvelCharacter()">Get Random Marvel Character</button>
-    <p><small>Note: Replace 'YOUR_API_KEY' in the fetchRandomMarvelCharacter function with your actual Marvel API key.</small></p>
-
     <script>
-        const jokesData = {
-            "jokes": [
-                { "setup": "Why don’t scientists trust atoms?", "punchline": "Because they make up everything!" },
-                { "setup": "What do you call fake spaghetti?", "punchline": "An impasta!" },
-                { "setup": "Why did the scarecrow win an award?", "punchline": "Because he was outstanding in his field!" },
-                { "setup": "Why don’t skeletons fight each other?", "punchline": "They don’t have the guts!" },
-                { "setup": "What do you call a bear with no teeth?", "punchline": "A gummy bear!" },
-                { "setup": "Why can’t you give Elsa a balloon?", "punchline": "Because she will let it go!" },
-                { "setup": "What do you call cheese that isn’t yours?", "punchline": "Nacho cheese!" },
-                { "setup": "Why couldn’t the bicycle stand up by itself?", "punchline": "It was two-tired!" },
-                { "setup": "What do you get when you cross a snowman and a vampire?", "punchline": "Frostbite!" },
-                { "setup": "How does a penguin build its house?", "punchline": "Igloos it together!" }
-            ]
-        };
-
-        function displayJoke() {
-            const jokes = jokesData.jokes;
-            const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
-            document.getElementById("joke").innerText = `${randomJoke.setup} - ${randomJoke.punchline}`;
-        }
-
-        function fetchSelectedJSON() {
-            const selectedUrl = document.getElementById("jsonSelect").value;
-            fetchData(selectedUrl);
-        }
-
-        async function fetchData(url = document.getElementById("myText1").value) {
-            document.getElementById("myDiv01").innerHTML = ""; // Clear previous output
-            const loader = document.createElement("div");
-            loader.className = "loader"; // Loading spinner
-            document.getElementById("myDiv01").appendChild(loader);
-
-            try {
-                const response = await fetch(url);
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                const data = await response.json();
-                console.log(data);
-
-                let imageUrl;
-                if (url.includes("randomfox")) {
-                    imageUrl = data.image; // For Random Fox
-                } else if (url.includes("dog.ceo")) {
-                    imageUrl = data.message; // For Random Dog
-                } else if (url.includes("thecatapi")) {
-                    imageUrl = data[0]?.url; // For Random Cat
-                }
-
-                if (imageUrl) {
-                    const img = document.createElement("img");
-                    img.src = imageUrl;
-                    img.alt = "Fetched Image"; // Add alt text for accessibility
-
-                    img.onload = function() {
-                        img.classList.add('loaded'); // Add class on load for fade-in effect
-                    }
-
-                    // Clear loading spinner and show image
-                    document.getElementById("myDiv01").innerHTML = ""; 
-                    document.getElementById("myDiv01").appendChild(img);
-                } else {
-                    document.getElementById("myDiv01").innerHTML = "No image found.";
-                }
-            } catch (error) {
-                document.getElementById("myDiv01").innerHTML = `<pre>Error: ${error.message}</pre>`;
-            }
-        }
-
-        async function fetchRandomMarvelCharacter() {
-            const apiKey = document.getElementById("apiKeyInput").value;
-            const url = `https://gateway.marvel.com/v1/public/characters?apikey=${apiKey}`;
-
-            if (!apiKey) {
-                document.getElementById("marvelCharacter").innerHTML = `<pre>Error: Please enter your API key.</pre>`;
-                return; // Exit the function if the key is empty
-            }
-
-            document.getElementById("marvelCharacter").innerHTML = ""; // Clear previous output
-            const loader = document.createElement("div");
-            loader.className = "loader"; // Loading spinner
-            document.getElementById("marvelCharacter").appendChild(loader);
-
-            try {
-               const response = await fetch(url);
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                const data = await response.json();
-                
-                // Pick a random character
-                const characters = data.data.results;
-                if (characters.length === 0) {
-                    throw new Error("No Marvel characters found.");
-                }
-                const randomCharacter = characters[Math.floor(Math.random() * characters.length)];
-
-                const characterName = randomCharacter.name || 'Unknown Character';
-                const characterImage = `${randomCharacter.thumbnail.path}.${randomCharacter.thumbnail.extension}`;
-                const characterDescription = randomCharacter.description || 'No description available.';
-                const comics = randomCharacter.comics.items.map(item => item.name).join(', ') || 'None';
-
-                // Display character information
-                document.getElementById("marvelCharacter").innerHTML = `
-                    <h3>${characterName}</h3>
-                    <img src="${characterImage}" alt="${characterName}" class="loaded">
-                    <p><strong>Description:</strong> ${characterDescription}</p>
-                    <p><strong>Comics:</strong> ${comics}</p>
-                `;
-            } catch (error) {
-                document.getElementById("marvelCharacter").innerHTML = `<pre>Error: ${error.message}</pre>`;
-            }
-        }
+        const apiKey = 'YOUR_API_KEY'; // Replace with your actual Marvel API key
 
         async function fetchMarvelCharacterByName() {
-            const apiKey = document.getElementById("apiKeyInput").value;
             const characterName = document.getElementById("characterInput").value.trim();
-
-            if (!apiKey) {
-                document.getElementById("marvelCharacter").innerHTML = `<pre>Error: Please enter your API key.</pre>`;
-                return; // Exit if the API key is empty
-            }
 
             if (!characterName) {
                 document.getElementById("marvelCharacter").innerHTML = `<pre>Error: Please enter a character name.</pre>`;
@@ -315,40 +141,6 @@
                 document.getElementById("marvelCharacter").innerHTML = `<pre>Error: ${error.message}</pre>`;
             }
         }
-
-        function calculate() {
-            const num1 = parseFloat(document.getElementById("num1").value);
-            const num2 = parseFloat(document.getElementById("num2").value);
-            const operation = document.getElementById("operation").value;
-            let result;
-
-            switch (operation) {
-                case "add":
-                    result = num1 + num2;
-                    break;
-                case "subtract":
-                    result = num1 - num2;
-                    break;
-                case "multiply":
-                    result = num1 * num2;
-                    break;
-                case "divide":
-                    if (num2 === 0) {
-                        result = "Error: Cannot divide by zero.";
-                    } else {
-                        result = num1 / num2;
-                    }
-                    break;
-                default:
-                    result = "Invalid operation.";
-            }
-
-            document.getElementById("calculationResult").innerText = `Result: ${result}`;
-        }
-
-        window.onload = () => {
-            displayJoke(); // Display a random joke when the page loads
-        };
     </script>
 </body>
 </html>
