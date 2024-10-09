@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,9 +20,17 @@
             color: yellow;
         }
 
-        p {
-            font-size: 1.2em;
-            color: yellow;
+        #calculator {
+            background: yellow;
+            border-radius: 5px;
+            padding: 15px;
+            border: 1px solid yellow;
+            margin: 20px 0;
+        }
+
+        input {
+            margin: 5px;
+            padding: 5px;
         }
 
         #myDiv01 {
@@ -41,14 +48,31 @@
             height: auto;
             margin-top: 10px;
         }
+
+        .loader {
+            border: 4px solid yellow;
+            border-top: 4px solid transparent;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 
 <body>
     <h1 align="center">T1a13-JSON-ayan.html</h1>
 
-    <p id="joke" style="color: yellow; font-size: 1.2em;"></p> <!-- Joke will be displayed here -->
-
+    <p id="joke"></p>
+    <button onclick="displayJoke()">Get Random Joke</button>
+    
     <p>Use the input box below to enter a URL that returns JSON data.</p>
     <input type="text" id="myText1" value="https://randomfox.ca/floof/" placeholder="Enter JSON returning URL">
     <input type="button" value="Show JSON" onclick="fetchData();"><br><br>
@@ -60,57 +84,43 @@
         <option value="https://api.thecatapi.com/v1/images/search">Random Cat</option>
     </select><br><br>
 
-    <div id="myDiv01">...</div>
-    <div id="loading"></div>
-    
+    <div id="myDiv01"></div>
+  
+    <div id="calculator">
+        <h2>Simple Calculator</h2>
+        <label for="num1">Number 1:</label>
+        <input type="number" id="num1" placeholder="First number">
+        <label for="num2">Number 2:</label>
+        <input type="number" id="num2" placeholder="Second number">
+        
+        <label for="operation">Operation:</label>
+        <select id="operation">
+            <option value="add">Add</option>
+            <option value="subtract">Subtract</option>
+            <option value="multiply">Multiply</option>
+            <option value="divide">Divide</option>
+        </select>
+        
+        <input type="button" value="Calculate" onclick="calculate();">
+        <p id="calculationResult"></p>
+    </div>
+
     <script>
-        // JSON data containing hilarious jokes
         const jokesData = {
             "jokes": [
-                {
-                    "setup": "Why don’t scientists trust atoms?",
-                    "punchline": "Because they make up everything!"
-                },
-                {
-                    "setup": "What do you call fake spaghetti?",
-                    "punchline": "An impasta!"
-                },
-                {
-                    "setup": "Why did the scarecrow win an award?",
-                    "punchline": "Because he was outstanding in his field!"
-                },
-                {
-                    "setup": "Why don’t skeletons fight each other?",
-                    "punchline": "They don’t have the guts!"
-                },
-                {
-                    "setup": "What do you call a bear with no teeth?",
-                    "punchline": "A gummy bear!"
-                },
-                {
-                    "setup": "Why can’t you give Elsa a balloon?",
-                    "punchline": "Because she will let it go!"
-                },
-                {
-                    "setup": "What do you call cheese that isn’t yours?",
-                    "punchline": "Nacho cheese!"
-                },
-                {
-                    "setup": "Why couldn’t the bicycle stand up by itself?",
-                    "punchline": "It was two-tired!"
-                },
-                {
-                    "setup": "What do you get when you cross a snowman and a vampire?",
-                    "punchline": "Frostbite!"
-                },
-                {
-                    "setup": "How does a penguin build its house?",
-                    "punchline": "Igloos it together!"
-                }
+                { "setup": "Why don’t scientists trust atoms?", "punchline": "Because they make up everything!" },
+                { "setup": "What do you call fake spaghetti?", "punchline": "An impasta!" },
+                { "setup": "Why did the scarecrow win an award?", "punchline": "Because he was outstanding in his field!" },
+                { "setup": "Why don’t skeletons fight each other?", "punchline": "They don’t have the guts!" },
+                { "setup": "What do you call a bear with no teeth?", "punchline": "A gummy bear!" },
+                { "setup": "Why can’t you give Elsa a balloon?", "punchline": "Because she will let it go!" },
+                { "setup": "What do you call cheese that isn’t yours?", "punchline": "Nacho cheese!" },
+                { "setup": "Why couldn’t the bicycle stand up by itself?", "punchline": "It was two-tired!" },
+                { "setup": "What do you get when you cross a snowman and a vampire?", "punchline": "Frostbite!" },
+                { "setup": "How does a penguin build its house?", "punchline": "Igloos it together!" }
             ]
         };
 
-        // Function to display a random joke from the JSON data
         function displayJoke() {
             const jokes = jokesData.jokes;
             const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
@@ -119,14 +129,14 @@
 
         function fetchSelectedJSON() {
             const selectedUrl = document.getElementById("jsonSelect").value;
-            fetchData(selectedUrl); // Fetch data automatically when selecting
+            fetchData(selectedUrl);
         }
 
         async function fetchData(url = document.getElementById("myText1").value) {
             document.getElementById("myDiv01").innerHTML = ""; // Clear previous output
-            const loading = document.createElement("div");
-            loading.innerHTML = "Loading...";
-            document.getElementById("myDiv01").appendChild(loading);
+            const loader = document.createElement("div");
+            loader.className = "loader"; // Loading spinner
+            document.getElementById("myDiv01").appendChild(loader);
 
             try {
                 const response = await fetch(url);
@@ -134,7 +144,6 @@
                 const data = await response.json();
                 console.log(data);
 
-                // This will vary based on the API structure
                 let imageUrl;
                 if (url.includes("randomfox")) {
                     imageUrl = data.image; // For Random Fox
@@ -144,21 +153,53 @@
                     imageUrl = data[0]?.url; // For Random Cat
                 }
 
-                // Display image if URL is found
                 if (imageUrl) {
                     const img = document.createElement("img");
                     img.src = imageUrl;
-                    img.alt = "Fetched Image";
+                    img.alt = "Fetched Image"; // Add alt text for accessibility
                     document.getElementById("myDiv01").innerHTML = ""; // Clear loading text
                     document.getElementById("myDiv01").appendChild(img);
+                } else {
+                    document.getElementById("myDiv01").innerHTML = "No image found.";
                 }
             } catch (error) {
                 document.getElementById("myDiv01").innerHTML = `<pre>Error: ${error.message}</pre>`;
-            } 
+            }
         }
 
-        // Display a random joke when the page loads
-        window.onload = displayJoke;
+        function calculate() {
+            const num1 = parseFloat(document.getElementById("num1").value);
+            const num2 = parseFloat(document.getElementById("num2").value);
+            const operation = document.getElementById("operation").value;
+            let result;
+
+            switch (operation) {
+                case "add":
+                    result = num1 + num2;
+                    break;
+                case "subtract":
+                    result = num1 - num2;
+                    break;
+                case "multiply":
+                    result = num1 * num2;
+                    break;
+                case "divide":
+                    if (num2 === 0) {
+                        result = "Error: Cannot divide by zero.";
+                    } else {
+                        result = num1 / num2;
+                    }
+                    break;
+                default:
+                    result = "Invalid operation.";
+            }
+
+            document.getElementById("calculationResult").innerText = `Result: ${result}`;
+        }
+
+        window.onload = () => {
+            displayJoke(); // Display a random joke when the page loads
+        };
     </script>
 </body>
 </html>
