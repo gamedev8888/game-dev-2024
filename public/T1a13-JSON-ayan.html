@@ -18,6 +18,7 @@
 
         h1 {
             color: yellow;
+            text-align: center; /* Centered heading */
         }
 
         #calculator {
@@ -28,9 +29,11 @@
             margin: 20px 0;
         }
 
-        input {
+        input, select {
             margin: 5px;
             padding: 5px;
+            width: calc(100% - 12px); /* Full width minus padding */
+            box-sizing: border-box; /* Ensures padding is included */
         }
 
         #myDiv01 {
@@ -47,6 +50,12 @@
             max-width: 100%;
             height: auto;
             margin-top: 10px;
+            opacity: 0; /* Start invisible */
+            transition: opacity 0.5s; /* Fade in effect */
+        }
+
+        img.loaded {
+            opacity: 1; /* Fully visible */
         }
 
         .loader {
@@ -64,18 +73,47 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* Media Queries for Responsive Design */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px; /* Reduce padding for smaller screens */
+            }
+
+            h1 {
+                font-size: 24px; /* Smaller font size */
+            }
+
+            #calculator {
+                padding: 10px; /* Reduce padding */
+            }
+
+            .loader {
+                width: 20px; /* Smaller loader */
+                height: 20px; /* Smaller loader */
+            }
+        }
+
+        button {
+            transition: background-color 0.3s, transform 0.3s; /* Transition for background color and scale */
+        }
+
+        button:hover {
+            background-color: orange; /* Change background color on hover */
+            transform: scale(1.05); /* Slightly enlarge the button */
+        }
     </style>
 </head>
 
 <body>
-    <h1 align="center">T1a13-JSON-ayan.html</h1>
+    <h1>T1a13-JSON-ayan.html</h1>
 
     <p id="joke"></p>
     <button onclick="displayJoke()">Get Random Joke</button>
     
     <p>Use the input box below to enter a URL that returns JSON data.</p>
-    <input type="text" id="myText1" value="https://randomfox.ca/floof/" placeholder="Enter JSON returning URL">
-    <input type="button" value="Show JSON" onclick="fetchData();"><br><br>
+    <input type="text" id="myText1" value="https://randomfox.ca/floof/" aria-label="Enter JSON returning URL" placeholder="Enter JSON returning URL">
+    <input type="button" value="Show JSON" onclick="fetchData();" aria-label="Show JSON data"><br><br>
 
     <p>Select a predefined URL to fetch JSON from:</p>
     <select id="jsonSelect" onchange="fetchSelectedJSON()">
@@ -105,6 +143,8 @@
         <p id="calculationResult"></p>
     </div>
 
+    <p><strong>Marvel API Key:</strong></p>
+    <input type="text" id="apiKeyInput" placeholder="Enter your Marvel API Key" aria-label="Input your Marvel API key">
     <p>Click the button below to get a random Marvel character:</p>
     <button onclick="fetchRandomMarvelCharacter()">Get Random Marvel Character</button>
     <div id="marvelCharacter"></div>
@@ -162,6 +202,11 @@
                     const img = document.createElement("img");
                     img.src = imageUrl;
                     img.alt = "Fetched Image"; // Add alt text for accessibility
+
+                    img.onload = function() {
+                        img.classList.add('loaded'); // Add class on load for fade-in effect
+                    }
+
                     // Clear loading spinner and show image
                     document.getElementById("myDiv01").innerHTML = ""; 
                     document.getElementById("myDiv01").appendChild(img);
@@ -174,7 +219,13 @@
         }
 
         async function fetchRandomMarvelCharacter() {
-            const url = 'https://gateway.marvel.com/v1/public/characters?apikey=YOUR_API_KEY'; // Replace with your Marvel API key
+            const apiKey = document.getElementById("apiKeyInput").value;
+            const url = `https://gateway.marvel.com/v1/public/characters?apikey=${apiKey}`;
+
+            if (!apiKey) {
+                document.getElementById("marvelCharacter").innerHTML = `<pre>Error: Please enter your API key.</pre>`;
+                return; // Exit the function if the key is empty
+            }
 
             document.getElementById("marvelCharacter").innerHTML = ""; // Clear previous output
             const loader = document.createElement("div");
@@ -182,7 +233,7 @@
             document.getElementById("marvelCharacter").appendChild(loader);
 
             try {
-                const response = await fetch(url);
+               const response = await fetch(url);
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 const data = await response.json();
                 
@@ -201,7 +252,7 @@
                 // Display character information
                 document.getElementById("marvelCharacter").innerHTML = `
                     <h3>${characterName}</h3>
-                    <img src="${characterImage}" alt="${characterName}">
+                    <img src="${characterImage}" alt="${characterName}" class="loaded">
                     <p><strong>Description:</strong> ${characterDescription}</p>
                     <p><strong>Comics:</strong> ${comics}</p>
                 `;
