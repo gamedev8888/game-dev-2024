@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,14 +30,16 @@
             margin: 20px 0;
         }
 
-        input, select {
+        input,
+        select {
             margin: 5px;
             padding: 5px;
             width: calc(100% - 12px); /* Full width minus padding */
             box-sizing: border-box; /* Ensures padding is included */
         }
 
-        #myDiv01, #marvelCharacter {
+        #myDiv01,
+        #marvelCharacter {
             background: yellow;
             border-radius: 5px;
             padding: 15px;
@@ -70,8 +73,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         /* Media Queries for Responsive Design */
@@ -107,12 +115,13 @@
 
 <body>
     <h1>T1a13-JSON-ayan.html</h1>
-    
+
     <p id="joke"></p>
     <button onclick="displayJoke()">Get Random Joke</button>
-    
+
     <p>Use the input box below to enter a URL that returns JSON data.</p>
-    <input type="text" id="myText1" value="https://randomfox.ca/floof/" aria-label="Enter JSON returning URL" placeholder="Enter JSON returning URL">
+    <input type="text" id="myText1" value="https://randomfox.ca/floof/" aria-label="Enter JSON returning URL"
+        placeholder="Enter JSON returning URL">
     <input type="button" value="Show JSON" onclick="fetchData();" aria-label="Show JSON data"><br><br>
 
     <p>Select a predefined URL to fetch JSON from:</p>
@@ -130,7 +139,7 @@
         <input type="number" id="num1" placeholder="First number">
         <label for="num2">Number 2:</label>
         <input type="number" id="num2" placeholder="Second number">
-        
+
         <label for="operation">Operation:</label>
         <select id="operation">
             <option value="add">Add</option>
@@ -138,7 +147,7 @@
             <option value="multiply">Multiply</option>
             <option value="divide">Divide</option>
         </select>
-        
+
         <input type="button" value="Calculate" onclick="calculate();">
         <p id="calculationResult"></p>
     </div>
@@ -157,7 +166,7 @@
         <option value="antman">Ant-Man</option>
         <option value="scarletwitch">Scarlet Witch</option>
     </select>
-    
+
     <div id="marvelCharacter"></div>
 
     <script>
@@ -179,52 +188,52 @@
         const marvelCharacters = {
             spiderman: {
                 name: "Spider-Man",
-                image: "https://example.com/spiderman.jpg", // Replace with actual URL
+                image: "https://upload.wikimedia.org/wikipedia/en/0/0c/Spider-Man_%22Miles_Morales%22.png", // Spider-Man
                 description: "A superhero with spider-like abilities."
             },
             ironman: {
                 name: "Iron Man",
-                image: "https://example.com/ironman.jpg", // Replace with actual URL
+                image: "https://upload.wikimedia.org/wikipedia/en/d/dc/Iron_Man_2_poster.jpg", // Iron Man
                 description: "A billionaire playboy who builds a suit of armor."
             },
             thor: {
                 name: "Thor",
-                image: "https://example.com/thor.jpg", // Replace with actual URL
+                image: "https://upload.wikimedia.org/wikipedia/en/3/3b/Thor_Ragnarok.png", // Thor
                 description: "The God of Thunder, wielder of Mjölnir."
             },
             captainamerica: {
                 name: "Captain America",
-                image: "https://example.com/captainamerica.jpg", // Replace with actual URL
+                image: "https://upload.wikimedia.org/wikipedia/en/7/70/Captain_America_%28Steve_Rogers%29.png", // Captain America
                 description: "A super-soldier who fights for justice."
             },
             hulk: {
                 name: "Hulk",
-                image: "https://example.com/hulk.jpg", // Replace with actual URL
+                image: "https://upload.wikimedia.org/wikipedia/en/0/0e/Hulk_%28Marvel_Comics_character%29.png", // Hulk
                 description: "A scientist who transforms into a gigantic green monster."
             },
             blackwidow: {
                 name: "Black Widow",
-                image: "https://example.com/blackwidow.jpg", // Replace with actual URL
+                image: "https://upload.wikimedia.org/wikipedia/en/2/29/Black_Widow_%28Natasha_Romanoff%29.png", // Black Widow
                 description: "A skilled spy and fighter, former member of S.H.I.E.L.D."
             },
             doctorstrange: {
                 name: "Doctor Strange",
-                image: "https://example.com/doctorstrange.jpg", // Replace with actual URL
+                image: "https://upload.wikimedia.org/wikipedia/en/c/c7/Doctor_Strange_poster.jpg", // Doctor Strange
                 description: "A former neurosurgeon who becomes the Sorcerer Supreme."
             },
             blackpanther: {
                 name: "Black Panther",
-                image: "https://example.com/blackpanther.jpg", // Replace with actual URL
+                image: "https://upload.wikimedia.org/wikipedia/en/4/42/Black_Panther_%28film%29.png", // Black Panther
                 description: "The king of Wakanda and a skilled warrior."
             },
             antman: {
                 name: "Ant-Man",
-                image: "https://example.com/antman.jpg", // Replace with actual URL
+                image: "https://upload.wikimedia.org/wikipedia/en/c/cd/Ant-Man_poster.jpg", // Ant-Man
                 description: "A superhero who can shrink in size while increasing in strength."
             },
             scarletwitch: {
                 name: "Scarlet Witch",
-                image: "https://example.com/scarletwitch.jpg", // Replace with actual URL
+                image: "https://upload.wikimedia.org/wikipedia/en/4/4f/WandaMaximoff.png", // Scarlet Witch
                 description: "A powerful sorceress with telekinetic abilities."
             }
         };
@@ -271,7 +280,7 @@
                     }
 
                     // Clear loading spinner and show image
-                    document.getElementById("myDiv01").innerHTML = ""; 
+                    document.getElementById("myDiv01").innerHTML = "";
                     document.getElementById("myDiv01").appendChild(img);
                 } else {
                     document.getElementById("myDiv01").innerHTML = "No image found.";
@@ -290,15 +299,19 @@
             }
 
             const character = marvelCharacters[selectedCharacterKey];
-            const characterImage = character.image;
-            const characterName = character.name;
-            const characterDescription = character.description;
 
-            document.getElementById("marvelCharacter").innerHTML = `
-                <h3>${characterName}</h3>
-                <img src="${characterImage}" alt="${characterName}" class="loaded">
-                <p><strong>Description:</strong> ${characterDescription}</p>
-            `;
+            // Check if the character exists
+            if (character) {
+                const characterImage = character.image;
+                const characterName = character.name;
+                const characterDescription = character.description;
+
+                document.getElementById("marvelCharacter").innerHTML = `
+                    <h3>${characterName}</h3>
+                    <img src="${characterImage}" alt="${characterName}" class="loaded">
+                    <p><strong>Description:</strong> ${characterDescription}</p>
+                `;
+            }
         }
 
         function calculate() {
@@ -336,4 +349,5 @@
         };
     </script>
 </body>
+
 </html>
