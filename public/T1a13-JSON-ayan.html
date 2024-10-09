@@ -143,16 +143,22 @@
         <p id="calculationResult"></p>
     </div>
 
-    <p><strong>Search Marvel Character:</strong></p>
-    <input type="text" id="characterInput" placeholder="Enter Marvel character name" aria-label="Marvel character name">
-    <button onclick="fetchMarvelCharacterByName()">Search</button>
+    <p><strong>Select a Marvel Character:</strong></p>
+    <select id="characterSelect" onchange="displayMarvelCharacter()">
+        <option value="">Choose a character</option>
+        <option value="spiderman">Spider-Man</option>
+        <option value="ironman">Iron Man</option>
+        <option value="thor">Thor</option>
+        <option value="captainamerica">Captain America</option>
+        <option value="hulk">Hulk</option>
+        <option value="blackwidow">Black Widow</option>
+        <option value="doctorstrange">Doctor Strange</option>
+        <option value="blackpanther">Black Panther</option>
+        <option value="antman">Ant-Man</option>
+        <option value="scarletwitch">Scarlet Witch</option>
+    </select>
+    
     <div id="marvelCharacter"></div>
-
-    <p><strong>Marvel API Key:</strong></p>
-    <input type="text" id="apiKeyInput" placeholder="Enter your Marvel API Key" aria-label="Input your Marvel API key">
-    <p>Click the button below to get a random Marvel character:</p>
-    <button onclick="fetchRandomMarvelCharacter()">Get Random Marvel Character</button>
-    <p><small>Note: Replace 'YOUR_API_KEY' in the fetchRandomMarvelCharacter function with your actual Marvel API key.</small></p>
 
     <script>
         const jokesData = {
@@ -168,6 +174,59 @@
                 { "setup": "What do you get when you cross a snowman and a vampire?", "punchline": "Frostbite!" },
                 { "setup": "How does a penguin build its house?", "punchline": "Igloos it together!" }
             ]
+        };
+
+        const marvelCharacters = {
+            spiderman: {
+                name: "Spider-Man",
+                image: "https://example.com/spiderman.jpg", // Replace with actual URL
+                description: "A superhero with spider-like abilities."
+            },
+            ironman: {
+                name: "Iron Man",
+                image: "https://example.com/ironman.jpg", // Replace with actual URL
+                description: "A billionaire playboy who builds a suit of armor."
+            },
+            thor: {
+                name: "Thor",
+                image: "https://example.com/thor.jpg", // Replace with actual URL
+                description: "The God of Thunder, wielder of Mjölnir."
+            },
+            captainamerica: {
+                name: "Captain America",
+                image: "https://example.com/captainamerica.jpg", // Replace with actual URL
+                description: "A super-soldier who fights for justice."
+            },
+            hulk: {
+                name: "Hulk",
+                image: "https://example.com/hulk.jpg", // Replace with actual URL
+                description: "A scientist who transforms into a gigantic green monster."
+            },
+            blackwidow: {
+                name: "Black Widow",
+                image: "https://example.com/blackwidow.jpg", // Replace with actual URL
+                description: "A skilled spy and fighter, former member of S.H.I.E.L.D."
+            },
+            doctorstrange: {
+                name: "Doctor Strange",
+                image: "https://example.com/doctorstrange.jpg", // Replace with actual URL
+                description: "A former neurosurgeon who becomes the Sorcerer Supreme."
+            },
+            blackpanther: {
+                name: "Black Panther",
+                image: "https://example.com/blackpanther.jpg", // Replace with actual URL
+                description: "The king of Wakanda and a skilled warrior."
+            },
+            antman: {
+                name: "Ant-Man",
+                image: "https://example.com/antman.jpg", // Replace with actual URL
+                description: "A superhero who can shrink in size while increasing in strength."
+            },
+            scarletwitch: {
+                name: "Scarlet Witch",
+                image: "https://example.com/scarletwitch.jpg", // Replace with actual URL
+                description: "A powerful sorceress with telekinetic abilities."
+            }
         };
 
         function displayJoke() {
@@ -222,98 +281,24 @@
             }
         }
 
-        async function fetchRandomMarvelCharacter() {
-            const apiKey = document.getElementById("apiKeyInput").value;
-            const url = `https://gateway.marvel.com/v1/public/characters?apikey=${apiKey}`;
+        function displayMarvelCharacter() {
+            const selectedCharacterKey = document.getElementById("characterSelect").value;
 
-            if (!apiKey) {
-                document.getElementById("marvelCharacter").innerHTML = `<pre>Error: Please enter your API key.</pre>`;
-                return; // Exit the function if the key is empty
+            if (!selectedCharacterKey) {
+                document.getElementById("marvelCharacter").innerHTML = ""; // Clear previous output
+                return;
             }
 
-            document.getElementById("marvelCharacter").innerHTML = ""; // Clear previous output
-            const loader = document.createElement("div");
-            loader.className = "loader"; // Loading spinner
-            document.getElementById("marvelCharacter").appendChild(loader);
+            const character = marvelCharacters[selectedCharacterKey];
+            const characterImage = character.image;
+            const characterName = character.name;
+            const characterDescription = character.description;
 
-            try {
-                const response = await fetch(url);
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                const data = await response.json();
-                
-                // Pick a random character
-                const characters = data.data.results;
-                if (characters.length === 0) {
-                    throw new Error("No Marvel characters found.");
-                }
-                const randomCharacter = characters[Math.floor(Math.random() * characters.length)];
-
-                const characterName = randomCharacter.name || 'Unknown Character';
-                const characterImage = `${randomCharacter.thumbnail.path}.${randomCharacter.thumbnail.extension}`;
-                const characterDescription = randomCharacter.description || 'No description available.';
-                const comics = randomCharacter.comics.items.map(item => item.name).join(', ') || 'None';
-
-                // Display character information
-                document.getElementById("marvelCharacter").innerHTML = `
-                    <h3>${characterName}</h3>
-                    <img src="${characterImage}" alt="${characterName}" class="loaded">
-                    <p><strong>Description:</strong> ${characterDescription}</p>
-                    <p><strong>Comics:</strong> ${comics}</p>
-                `;
-            } catch (error) {
-                document.getElementById("marvelCharacter").innerHTML = `<pre>Error: ${error.message}</pre>`;
-            }
-        }
-
-        async function fetchMarvelCharacterByName() {
-            const apiKey = document.getElementById("apiKeyInput").value;
-            const characterName = document.getElementById("characterInput").value.trim();
-
-            if (!apiKey) {
-                document.getElementById("marvelCharacter").innerHTML = `<pre>Error: Please enter your API key.</pre>`;
-                return; // Exit if the API key is empty
-            }
-
-            if (!characterName) {
-                document.getElementById("marvelCharacter").innerHTML = `<pre>Error: Please enter a character name.</pre>`;
-                return; // Exit if no character name is provided
-            }
-
-            const url = `https://gateway.marvel.com/v1/public/characters?name=${encodeURIComponent(characterName)}&apikey=${apiKey}`;
-
-            document.getElementById("marvelCharacter").innerHTML = ""; // Clear previous output
-            const loader = document.createElement("div");
-            loader.className = "loader"; // Loading spinner
-            document.getElementById("marvelCharacter").appendChild(loader);
-
-            try {
-                const response = await fetch(url);
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                const data = await response.json();
-                
-                const characters = data.data.results;
-
-                if (characters.length === 0) {
-                    throw new Error("No characters found with that name.");
-                }
-
-                const character = characters[0]; // Get the first matching character
-
-                const characterNameDisplay = character.name || 'Unknown Character';
-                const characterImage = `${character.thumbnail.path}.${character.thumbnail.extension}`;
-                const characterDescription = character.description || 'No description available.';
-                const comics = character.comics.items.map(item => item.name).join(', ') || 'None';
-
-                // Display character information
-                document.getElementById("marvelCharacter").innerHTML = `
-                    <h3>${characterNameDisplay}</h3>
-                    <img src="${characterImage}" alt="${characterNameDisplay}" class="loaded">
-                    <p><strong>Description:</strong> ${characterDescription}</p>
-                    <p><strong>Comics:</strong> ${comics}</p>
-                `;
-            } catch (error) {
-                document.getElementById("marvelCharacter").innerHTML = `<pre>Error: ${error.message}</pre>`;
-            }
+            document.getElementById("marvelCharacter").innerHTML = `
+                <h3>${characterName}</h3>
+                <img src="${characterImage}" alt="${characterName}" class="loaded">
+                <p><strong>Description:</strong> ${characterDescription}</p>
+            `;
         }
 
         function calculate() {
