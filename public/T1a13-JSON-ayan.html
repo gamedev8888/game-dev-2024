@@ -36,7 +36,7 @@
             box-sizing: border-box; /* Ensures padding is included */
         }
 
-        #myDiv01 {
+        #myDiv01, #marvelCharacter {
             background: yellow;
             border-radius: 5px;
             padding: 15px;
@@ -107,7 +107,7 @@
 
 <body>
     <h1>T1a13-JSON-ayan.html</h1>
-
+    
     <p id="joke"></p>
     <button onclick="displayJoke()">Get Random Joke</button>
     
@@ -123,7 +123,7 @@
     </select><br><br>
 
     <div id="myDiv01"></div>
-  
+
     <div id="calculator">
         <h2>Simple Calculator</h2>
         <label for="num1">Number 1:</label>
@@ -143,11 +143,15 @@
         <p id="calculationResult"></p>
     </div>
 
+    <p><strong>Search Marvel Character:</strong></p>
+    <input type="text" id="characterInput" placeholder="Enter Marvel character name" aria-label="Marvel character name">
+    <button onclick="fetchMarvelCharacterByName()">Search</button>
+    <div id="marvelCharacter"></div>
+
     <p><strong>Marvel API Key:</strong></p>
     <input type="text" id="apiKeyInput" placeholder="Enter your Marvel API Key" aria-label="Input your Marvel API key">
     <p>Click the button below to get a random Marvel character:</p>
     <button onclick="fetchRandomMarvelCharacter()">Get Random Marvel Character</button>
-    <div id="marvelCharacter"></div>
     <p><small>Note: Replace 'YOUR_API_KEY' in the fetchRandomMarvelCharacter function with your actual Marvel API key.</small></p>
 
     <script>
@@ -253,6 +257,57 @@
                 document.getElementById("marvelCharacter").innerHTML = `
                     <h3>${characterName}</h3>
                     <img src="${characterImage}" alt="${characterName}" class="loaded">
+                    <p><strong>Description:</strong> ${characterDescription}</p>
+                    <p><strong>Comics:</strong> ${comics}</p>
+                `;
+            } catch (error) {
+                document.getElementById("marvelCharacter").innerHTML = `<pre>Error: ${error.message}</pre>`;
+            }
+        }
+
+        async function fetchMarvelCharacterByName() {
+            const apiKey = document.getElementById("apiKeyInput").value;
+            const characterName = document.getElementById("characterInput").value.trim();
+
+            if (!apiKey) {
+                document.getElementById("marvelCharacter").innerHTML = `<pre>Error: Please enter your API key.</pre>`;
+                return; // Exit if the API key is empty
+            }
+
+            if (!characterName) {
+                document.getElementById("marvelCharacter").innerHTML = `<pre>Error: Please enter a character name.</pre>`;
+                return; // Exit if no character name is provided
+            }
+
+            const url = `https://gateway.marvel.com/v1/public/characters?name=${encodeURIComponent(characterName)}&apikey=${apiKey}`;
+
+            document.getElementById("marvelCharacter").innerHTML = ""; // Clear previous output
+            const loader = document.createElement("div");
+            loader.className = "loader"; // Loading spinner
+            document.getElementById("marvelCharacter").appendChild(loader);
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+                
+                const characters = data.data.results;
+
+                if (characters.length === 0) {
+                    throw new Error("No characters found with that name.");
+                }
+
+                const character = characters[0]; // Get the first matching character
+
+                const characterNameDisplay = character.name || 'Unknown Character';
+                const characterImage = `${character.thumbnail.path}.${character.thumbnail.extension}`;
+                const characterDescription = character.description || 'No description available.';
+                const comics = character.comics.items.map(item => item.name).join(', ') || 'None';
+
+                // Display character information
+                document.getElementById("marvelCharacter").innerHTML = `
+                    <h3>${characterNameDisplay}</h3>
+                    <img src="${characterImage}" alt="${characterNameDisplay}" class="loaded">
                     <p><strong>Description:</strong> ${characterDescription}</p>
                     <p><strong>Comics:</strong> ${comics}</p>
                 `;
