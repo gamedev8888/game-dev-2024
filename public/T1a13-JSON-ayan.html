@@ -105,6 +105,10 @@
         <p id="calculationResult"></p>
     </div>
 
+    <p>Click the button below to get a random Marvel character:</p>
+    <button onclick="fetchRandomMarvelCharacter()">Get Random Marvel Character</button>
+    <div id="marvelCharacter"></div>
+
     <script>
         const jokesData = {
             "jokes": [
@@ -164,6 +168,40 @@
                 }
             } catch (error) {
                 document.getElementById("myDiv01").innerHTML = `<pre>Error: ${error.message}</pre>`;
+            }
+        }
+
+        async function fetchRandomMarvelCharacter() {
+            const url = 'https://gateway.marvel.com/v1/public/characters?apikey=YOUR_API_KEY'; // Replace with your Marvel API key
+
+            document.getElementById("marvelCharacter").innerHTML = ""; // Clear previous output
+            const loader = document.createElement("div");
+            loader.className = "loader"; // Loading spinner
+            document.getElementById("marvelCharacter").appendChild(loader);
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+                
+                // Pick a random character
+                const characters = data.data.results;
+                const randomCharacter = characters[Math.floor(Math.random() * characters.length)];
+
+                const characterName = randomCharacter.name || 'Unknown Character';
+                const characterImage = `${randomCharacter.thumbnail.path}.${randomCharacter.thumbnail.extension}`;
+                const characterDescription = randomCharacter.description || 'No description available.';
+                const comics = randomCharacter.comics.items.map(item => item.name).join(', ') || 'None';
+
+                // Display character information
+                document.getElementById("marvelCharacter").innerHTML = `
+                    <h3>${characterName}</h3>
+                    <img src="${characterImage}" alt="${characterName}">
+                    <p><strong>Description:</strong> ${characterDescription}</p>
+                    <p><strong>Comics:</strong> ${comics}</p>
+                `;
+            } catch (error) {
+                document.getElementById("marvelCharacter").innerHTML = `<pre>Error: ${error.message}</pre>`;
             }
         }
 
