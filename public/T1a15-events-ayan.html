@@ -5,20 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>T1a15-events-ayan</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        input[type="text"], input[type="button"], button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        input[type="button"], button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        input[type="button"]:hover, button:hover {
+            background-color: #45a049;
+        }
         #eventLog {
             margin-top: 20px;
             border: 1px solid #ccc;
             padding: 10px;
-            width: 300px;
-            height: 150px;
+            border-radius: 4px;
+            background-color: #fafafa;
+            max-height: 150px;
             overflow-y: auto;
+        }
+        #myDiv01 {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e7f3fe;
+            border-left: 6px solid #2196F3;
+            border-radius: 4px;
+        }
+        .event-input {
+            margin: 0;
         }
     </style>
     <script>
         function logEvent(event) {
             const eventLog = document.getElementById('eventLog');
             const newEvent = document.createElement('div');
-            newEvent.textContent = event.type + ' event triggered';
+            newEvent.textContent = `${event.type.charAt(0).toUpperCase() + event.type.slice(1)} event triggered`;
             eventLog.appendChild(newEvent);
         }
 
@@ -35,36 +82,29 @@
 </head>
 <body>
 
-<h1 align="center">T1a15-events-ayan.html</h1>
+<h1>T1a15-events-ayan.html</h1>
 
-<b>input:</b><br>
-<input type="text" id="myFirstName" value="ayan"
-       onblur="logEvent(event)">
-<br><br>
+<div class="container">
+    <label for="myFirstName"><b>Input:</b></label><br>
+    <input type="text" id="myFirstName" value="ayan" onblur="logEvent(event)" placeholder="Your Name">
+    
+    <input type="button" value="Show on page" onclick="showMessage()">
+    <input type="button" value="Clear output" onclick="clearOutput()">
+    
+    <div id="myDiv01" onmouseover="logEvent(event)">...</div>
+    
+    <div id="eventLog"></div>
 
-<input type="button" value="Show on page" onclick="showMessage()"><br><br>
-<input type="button" value="Clear output" onclick="clearOutput()"><br><br>
-
-<div id="myDiv01" onmouseover="logEvent(event)">...</div><br><br>
-
-<div id="eventLog"></div>
-
-<!-- Additional events -->
-<input type="text" onfocus="logEvent(event)" placeholder="Focus here">
-<br><br>
-<input type="text" onchange="logEvent(event)" placeholder="Change me">
-<br><br>
-<input type="text" oninput="logEvent(event)" placeholder="Input something">
-<br><br>
-<button onmousedown="logEvent(event)">Mouse Down</button>
-<br><br>
-<button onmouseup="logEvent(event)">Mouse Up</button>
-<br><br>
-<button onmouseenter="logEvent(event)">Mouse Enter</button>
-<br><br>
-<button onmouseleave="logEvent(event)">Mouse Leave</button>
-<br><br>
-<button ondblclick="logEvent(event)">Double Click Me</button>
+    <!-- Additional events -->
+    <input type="text" class="event-input" onfocus="logEvent(event)" placeholder="Focus here">
+    <input type="text" class="event-input" onchange="logEvent(event)" placeholder="Change me">
+    <input type="text" class="event-input" oninput="logEvent(event)" placeholder="Input something">
+    <button class="event-input" onmousedown="logEvent(event)">Mouse Down</button>
+    <button class="event-input" onmouseup="logEvent(event)">Mouse Up</button>
+    <button class="event-input" onmouseenter="logEvent(event)">Mouse Enter</button>
+    <button class="event-input" onmouseleave="logEvent(event)">Mouse Leave</button>
+    <button class="event-input" ondblclick="logEvent(event)">Double Click Me</button>
+</div>
 
 </body>
 </html>
