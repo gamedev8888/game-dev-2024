@@ -6,9 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>T1a13-JSON-ayan</title>
     <style>
+        :root {
+            --primary-color: yellow;
+            --background-color: rgba(255, 0, 0, 0.8);
+            --text-color: white;
+            --error-color: red;
+            --loader-color: orange;
+        }
+
         body {
             font-family: Arial, sans-serif;
-            color: red;
+            color: var(--text-color);
             padding: 20px;
             background-image: url('https://wallpapercave.com/wp/96dmf4c.jpg');
             background-size: cover;
@@ -18,33 +26,33 @@
         }
 
         h1 {
-            color: yellow;
-            text-align: center; /* Centered heading */
+            color: var(--primary-color);
+            text-align: center;
         }
 
         #calculator {
-            background: yellow;
+            background: var(--primary-color);
             border-radius: 5px;
             padding: 15px;
-            border: 1px solid yellow;
+            border: 1px solid var(--primary-color);
             margin: 20px 0;
         }
 
         input,
         select {
             margin: 5px;
-            padding: 5px;
-            width: calc(100% - 12px); /* Full width minus padding */
-            box-sizing: border-box; /* Ensures padding is included */
+            padding: 10px;
+            width: calc(100% - 12px);
+            box-sizing: border-box;
         }
 
         #myDiv01,
         #marvelCharacter {
-            background: yellow;
+            background: var(--primary-color);
             border-radius: 5px;
             padding: 15px;
-            border: 1px solid yellow;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--primary-color);
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
             margin-top: 20px;
             overflow-x: auto;
         }
@@ -53,24 +61,16 @@
             max-width: 100%;
             height: auto;
             margin-top: 10px;
-            opacity: 0; /* Start invisible */
-            transition: opacity 0.5s; /* Fade in effect */
-        }
-
-        #marvelCharacter img {
-            width: 100px; /* Set the desired width */
-            height: auto; /* Maintain aspect ratio */
-            margin-top: 10px;
-            opacity: 0; /* Start invisible */
-            transition: opacity 0.5s; /* Fade in effect */
+            opacity: 0;
+            transition: opacity 0.5s;
         }
 
         img.loaded {
-            opacity: 1; /* Fully visible */
+            opacity: 1;
         }
 
         .loader {
-            border: 4px solid yellow;
+            border: 4px solid var(--loader-color);
             border-top: 4px solid transparent;
             border-radius: 50%;
             width: 30px;
@@ -84,39 +84,34 @@
             0% {
                 transform: rotate(0deg);
             }
-
             100% {
                 transform: rotate(360deg);
             }
         }
 
-        /* Media Queries for Responsive Design */
         @media (max-width: 768px) {
             body {
-                padding: 10px; /* Reduce padding for smaller screens */
+                padding: 10px;
             }
-
             h1 {
-                font-size: 24px; /* Smaller font size */
+                font-size: 24px;
             }
-
             #calculator {
-                padding: 10px; /* Reduce padding */
+                padding: 10px;
             }
-
             .loader {
-                width: 20px; /* Smaller loader */
-                height: 20px; /* Smaller loader */
+                width: 20px;
+                height: 20px;
             }
         }
 
         button {
-            transition: background-color 0.3s, transform 0.3s; /* Transition for background color and scale */
+            transition: background-color 0.3s, transform 0.3s;
         }
 
         button:hover {
-            background-color: orange; /* Change background color on hover */
-            transform: scale(1.05); /* Slightly enlarge the button */
+            background-color: orange;
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -124,12 +119,11 @@
 <body>
     <h1>T1a13-JSON-ayan.html</h1>
 
-    <p id="joke"></p>
+    <p id="joke" aria-live="polite"></p>
     <button onclick="displayJoke()">Get Random Joke</button>
 
     <p>Use the input box below to enter a URL that returns JSON data.</p>
-    <input type="url" id="myText1" value="https://randomfox.ca/floof/" aria-label="Enter JSON returning URL"
-        placeholder="Enter JSON returning URL">
+    <input type="url" id="myText1" placeholder="Enter JSON returning URL" aria-label="Enter JSON returning URL">
     <input type="button" value="Show JSON" onclick="fetchData();" aria-label="Show JSON data"><br><br>
 
     <p>Select a predefined URL to fetch JSON from:</p>
@@ -139,17 +133,17 @@
         <option value="https://api.thecatapi.com/v1/images/search">Random Cat</option>
     </select><br><br>
 
-    <div id="myDiv01"></div>
+    <div id="myDiv01" role="alert" aria-live="polite"></div>
 
     <div id="calculator">
         <h2>Simple Calculator</h2>
         <label for="num1">Number 1:</label>
-        <input type="number" id="num1" placeholder="First number">
+        <input type="number" id="num1" placeholder="First number" aria-label="First number">
         <label for="num2">Number 2:</label>
-        <input type="number" id="num2" placeholder="Second number">
+        <input type="number" id="num2" placeholder="Second number" aria-label="Second number">
 
         <label for="operation">Operation:</label>
-        <select id="operation">
+        <select id="operation" aria-label="Select operation">
             <option value="add">Add</option>
             <option value="subtract">Subtract</option>
             <option value="multiply">Multiply</option>
@@ -196,52 +190,52 @@
         const marvelCharacters = {
             spiderman: {
                 name: "Spider-Man",
-                image: "https://pngimg.com/uploads/spider_man/spider_man_PNG50.png", // Spider-Man
+                image: "https://pngimg.com/uploads/spider_man/spider_man_PNG50.png",
                 description: "A superhero with spider-like abilities."
             },
             ironman: {
                 name: "Iron Man",
-                image: "https://th.bing.com/th/id/OIP.PSr6Fj4w-443kkSSwYePMgHaM5?rs=1&pid=ImgDetMain", // Iron Man
+                image: "https://th.bing.com/th/id/OIP.PSr6Fj4w-443kkSSwYePMgHaM5?rs=1&pid=ImgDetMain",
                 description: "A billionaire playboy who builds a suit of armor."
             },
             thor: {
                 name: "Thor",
-                image: "https://pngfre.com/wp-content/uploads/Thor-23-1-695x1024.png", // Thor
+                image: "https://pngfre.com/wp-content/uploads/Thor-23-1-695x1024.png",
                 description: "The God of Thunder, wielder of Mjölnir."
             },
             captainamerica: {
                 name: "Captain America",
-                image: "https://pngimg.com/uploads/captain_america/captain_america_PNG76.png", // Captain America
+                image: "https://pngimg.com/uploads/captain_america/captain_america_PNG76.png",
                 description: "A super-soldier who fights for justice."
             },
             hulk: {
                 name: "Hulk",
-                image: "https://clipart.info/images/ccovers/1516942387Hulk-Png-Cartoon.png", // Hulk
+                image: "https://clipart.info/images/ccovers/1516942387Hulk-Png-Cartoon.png",
                 description: "A scientist who transforms into a gigantic green monster."
             },
             blackwidow: {
                 name: "Black Widow",
-                image: "https://www.pinclipart.com/picdir/big/108-1087287_stock-black-widow-pinterest-marvel-avengers-alliance-artwork.png", // Black Widow
+                image: "https://www.pinclipart.com/picdir/big/108-1087287_stock-black-widow-pinterest-marvel-avengers-alliance-artwork.png",
                 description: "A skilled spy and fighter, former member of S.H.I.E.L.D."
             },
             doctorstrange: {
                 name: "Doctor Strange",
-                image: "https://vignette.wikia.nocookie.net/avengersalliance/images/b/b8/Dr._Strange_Portrait_Art.png/revision/latest?cb=20130209170800", // Doctor Strange
+                image: "https://vignette.wikia.nocookie.net/avengersalliance/images/b/b8/Dr._Strange_Portrait_Art.png/revision/latest?cb=20130209170800",
                 description: "A former neurosurgeon who becomes the Sorcerer Supreme."
             },
             blackpanther: {
                 name: "Black Panther",
-                image: "https://www.pngarts.com/files/9/Marvel-Black-Panther-PNG-Transparent-Images.png", // Black Panther
+                image: "https://www.pngarts.com/files/9/Marvel-Black-Panther-PNG-Transparent-Images.png",
                 description: "The king of Wakanda and a skilled warrior."
             },
             antman: {
                 name: "Ant-Man",
-                image: "https://www.pngall.com/wp-content/uploads/2016/05/Ant-Man-Free-PNG-Image.png", // Ant-Man
+                image: "https://www.pngall.com/wp-content/uploads/2016/05/Ant-Man-Free-PNG-Image.png",
                 description: "A superhero who can shrink in size while increasing in strength."
             },
             scarletwitch: {
                 name: "Scarlet Witch",
-                image: "https://i.pinimg.com/originals/64/de/63/64de631d029123063b70c23ab9e8abdb.png", // Scarlet Witch
+                image: "https://i.pinimg.com/originals/64/de/63/64de631d029123063b70c23ab9e8abdb.png",
                 description: "A powerful sorceress with telekinetic abilities."
             }
         };
@@ -262,6 +256,7 @@
             const loader = document.createElement("div");
             loader.className = "loader"; // Loading spinner
             document.getElementById("myDiv01").appendChild(loader);
+            document.getElementById("myDiv01").setAttribute("aria-live", "assertive");
 
             try {
                 const response = await fetch(url);
@@ -280,22 +275,22 @@
                 if (imageUrl) {
                     const img = document.createElement("img");
                     img.src = imageUrl;
-                    img.alt = "Fetched Image"; // Add alt text for accessibility
-
+                    img.alt = "Fetched Image"; // Add alt text for non-accessible content
                     img.onload = function () {
-                        img.classList.add('loaded'); // Add class on load for fade-in effect
+                        img.classList.add('loaded'); // Fade-in effect
                         document.getElementById("myDiv01").innerHTML = ""; // Clear loader
                         document.getElementById("myDiv01").appendChild(img);
-                    }
-
+                    };
                     img.onerror = function () {
                         document.getElementById("myDiv01").innerHTML = "Error loading image.";
-                    }
+                    };
                 } else {
                     document.getElementById("myDiv01").innerHTML = "No image found.";
                 }
             } catch (error) {
-                document.getElementById("myDiv01").innerHTML = `<pre>Error: ${error.message}</pre>`;
+                document.getElementById("myDiv01").innerHTML = `<pre style="color: ${errorColor};">Error: ${error.message}</pre>`;
+            } finally {
+                loader.remove();  // Remove loader whether successful or not
             }
         }
 
@@ -309,7 +304,6 @@
 
             const character = marvelCharacters[selectedCharacterKey];
 
-            // Check if the character exists
             if (character) {
                 const characterImage = character.image;
                 const characterName = character.name;
@@ -319,8 +313,8 @@
                 img.src = characterImage;
                 img.alt = characterName;
 
-                img.onload = function() {
-                    img.classList.add('loaded'); // Add class on load for fade-in effect
+                img.onload = function () {
+                    img.classList.add('loaded'); // Fade-in effect
                 };
 
                 document.getElementById("marvelCharacter").innerHTML = `
@@ -334,8 +328,8 @@
         }
 
         function calculate() {
-            const num1 = parseFloat(document.getElementById("num1").value);
-            const num2 = parseFloat(document.getElementById("num2").value);
+            const num1 = parseFloat(document.getElementById("num1").value) || 0;
+            const num2 = parseFloat(document.getElementById("num2").value) || 0;
             const operation = document.getElementById("operation").value;
             let result;
 
