@@ -57,7 +57,6 @@
             transition: opacity 0.5s; /* Fade in effect */
         }
 
-        /* Updated CSS for Marvel character images */
         #marvelCharacter img {
             width: 100px; /* Set the desired width */
             height: auto; /* Maintain aspect ratio */
@@ -129,7 +128,7 @@
     <button onclick="displayJoke()">Get Random Joke</button>
 
     <p>Use the input box below to enter a URL that returns JSON data.</p>
-    <input type="text" id="myText1" value="https://randomfox.ca/floof/" aria-label="Enter JSON returning URL"
+    <input type="url" id="myText1" value="https://randomfox.ca/floof/" aria-label="Enter JSON returning URL"
         placeholder="Enter JSON returning URL">
     <input type="button" value="Show JSON" onclick="fetchData();" aria-label="Show JSON data"><br><br>
 
@@ -267,9 +266,8 @@
             try {
                 const response = await fetch(url);
                 if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                const data = await response.json();
-                console.log(data);
 
+                const data = await response.json();
                 let imageUrl;
                 if (url.includes("randomfox")) {
                     imageUrl = data.image; // For Random Fox
@@ -284,13 +282,15 @@
                     img.src = imageUrl;
                     img.alt = "Fetched Image"; // Add alt text for accessibility
 
-                    img.onload = function() {
+                    img.onload = function () {
                         img.classList.add('loaded'); // Add class on load for fade-in effect
+                        document.getElementById("myDiv01").innerHTML = ""; // Clear loader
+                        document.getElementById("myDiv01").appendChild(img);
                     }
 
-                    // Clear loading spinner and show image
-                    document.getElementById("myDiv01").innerHTML = "";
-                    document.getElementById("myDiv01").appendChild(img);
+                    img.onerror = function () {
+                        document.getElementById("myDiv01").innerHTML = "Error loading image.";
+                    }
                 } else {
                     document.getElementById("myDiv01").innerHTML = "No image found.";
                 }
@@ -315,9 +315,19 @@
                 const characterName = character.name;
                 const characterDescription = character.description;
 
+                const img = document.createElement("img");
+                img.src = characterImage;
+                img.alt = characterName;
+
+                img.onload = function() {
+                    img.classList.add('loaded'); // Add class on load for fade-in effect
+                };
+
                 document.getElementById("marvelCharacter").innerHTML = `
                     <h3>${characterName}</h3>
-                    <img src="${characterImage}" alt="${characterName}" class="loaded">
+                `;
+                document.getElementById("marvelCharacter").appendChild(img);
+                document.getElementById("marvelCharacter").innerHTML += `
                     <p><strong>Description:</strong> ${characterDescription}</p>
                 `;
             }
