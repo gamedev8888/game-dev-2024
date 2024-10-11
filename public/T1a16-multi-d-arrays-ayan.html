@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
+            background-color: #f9f9f9; /* Default background color */
             margin: 0;
             padding: 20px;
         }
@@ -23,7 +23,7 @@
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
-        input[type="text"], input[type="number"] {
+        input[type="text"], input[type="number"], input[type="color"] {
             width: calc(100% - 22px);
             padding: 10px;
             margin: 10px 0;
@@ -70,12 +70,15 @@
     
     <input type="button" value="Set Auto Array" onclick="setAutoArray()">
     <input type="button" value="Show Auto Array" onclick="showAutoArray()">
-    
+
     <label for="minRange">Min Range:</label>
     <input type="number" id="minRange" value="0">
     
     <label for="maxRange">Max Range:</label>
     <input type="number" id="maxRange" value="100">
+
+    <label for="bgColor">Background Color:</label>
+    <input type="color" id="bgColor" value="#f9f9f9" onchange="changeBackgroundColor()">
 
     <input type="button" value="Clear" onclick="clearArrays()">
     
@@ -140,11 +143,20 @@ function displayMessage(msg) {
     document.getElementById('myDiv01').innerHTML = msg;
 }
 
+// Function to change background color
+function changeBackgroundColor() {
+    const color = document.getElementById('bgColor').value;
+    document.body.style.backgroundColor = color;
+}
+
 // Function to clear arrays and output
 function clearArrays() {
     myArrayManual = [];
     myArrayAuto = [];
     document.getElementById('myDiv01').innerHTML = 'Arrays cleared.';
+
+    // Reset the background to the default when cleared
+    document.body.style.backgroundColor = '#f9f9f9';
 }
 </script>
 
