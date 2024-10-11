@@ -1,60 +1,127 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Multi-Dimensional Arrays Example</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="button"] {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin: 5px 0;
+        }
+        input[type="button"]:hover {
+            background-color: #0056b3;
+        }
+        #myDiv01 {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f4f4f4;
+            border-left: 5px solid #007BFF;
+        }
+    </style>
 </head>
 <body>
 
-<h1 align="center">T1a16-multi-d-arrays-ayan.html</h1>
+<div class="container">
+    <h1>Multi-Dimensional Arrays Example</h1>
+
+    <label for="manualArrayValues">Enter 9 numbers (separated by commas):</label>
+    <input type="text" id="manualArrayValues" placeholder="e.g. 3, 4, 2, 1, 2, 3, 5, 6, 7">
+
+    <input type="button" value="Set Manual Array" onclick="setManualArray()">
+    <input type="button" value="Show Manual Array" onclick="showManualArray()">
+    
+    <input type="button" value="Set Auto Array" onclick="setAutoArray()">
+    <input type="button" value="Show Auto Array" onclick="showAutoArray()">
+
+    <div id="myDiv01"></div>
+</div>
 
 <script>
 // Set a few global Variables
 let myMax = 3;
 let myArrayManual = Array(myMax);
 let myArrayAuto = new Array(myMax).fill().map(() => new Array(myMax));
+
+// Function to set manual array from input
+function setManualArray() {
+    const values = document.getElementById('manualArrayValues').value.split(',').map(Number);
+    if (values.length !== 9) {
+        document.getElementById('myDiv01').innerHTML = 'Please enter exactly 9 numbers.';
+        return;
+    }
+    myArrayManual = [];
+    for (let i = 0; i < myMax; i++) {
+        myArrayManual[i] = values.slice(i * myMax, (i + 1) * myMax);
+    }
+    document.getElementById('myDiv01').innerHTML = 'You set the manual array.';
+}
+
+// Function to show manual array
+function showManualArray() {
+    document.getElementById('myDiv01').innerHTML = '<strong>Manual Array:</strong><br>';
+    for (let myLoop0 = 0; myLoop0 < myMax; myLoop0++) {
+        for (let myLoop1 = 0; myLoop1 < myMax; myLoop1++) {
+            document.getElementById('myDiv01').innerHTML +=
+            `myArrayManual[${myLoop0},${myLoop1}] = ${myArrayManual[myLoop0][myLoop1]}<br>`;
+        }
+    }
+}
+
+// Function to set auto array
+function setAutoArray() {
+    for (let i = 0; i < myMax; i++) {
+        for (let j = 0; j < myMax; j++) {
+            myArrayAuto[i][j] = Math.floor(Math.random() * 100); // Correctly randomizing and assigning
+        }
+    }
+    document.getElementById('myDiv01').innerHTML = 'Auto array has been set.';
+}
+
+// Function to show auto array
+function showAutoArray() {
+    document.getElementById('myDiv01').innerHTML += '<br><strong>Auto Array Contents:</strong><br>';
+    for (let myLoop0 = 0; myLoop0 < myMax; myLoop0++) {
+        for (let myLoop1 = 0; myLoop1 < myMax; myLoop1++) {
+            document.getElementById('myDiv01').innerHTML += 
+            `myArrayAuto[${myLoop0},${myLoop1}] = ${myArrayAuto[myLoop0][myLoop1]}<br>`;
+        }
+    }
+}
 </script>
-
-Input: <input type="text" id="myFirstName" value="Ayan"><br>
-
-<input type="button" value="Set manual Array" onclick="{
-   myArrayManual = [[3, 4, 2], [1, 2, 3], [5, 6, 7]];
-   document.getElementById('myDiv01').innerHTML = 'You set the array';
-}">
-
-<input type="button" value="Show Manual Array" onclick="{
-   document.getElementById('myDiv01').innerHTML = '';
-   console.log(myArrayManual);
-
-   for (let myLoop0 = 0; myLoop0 < myMax; myLoop0++) {
-     for (let myLoop1 = 0; myLoop1 < myMax; myLoop1++) {
-        document.getElementById('myDiv01').innerHTML +=
-       `myArrayManual[${myLoop0},${myLoop1}] = ${myArrayManual[myLoop0][myLoop1]}<br>`;
-     }
-   }
-}">
-
-<input type="button" value="Set Auto Array" onclick="{
-   for (let i = 0; i < myMax; i++) {
-       for (let j = 0; j < myMax; j++) {
-           myArrayAuto[i][j] = Math.floor(Math.random() * 100); // Correctly randomizing and assigning
-       }
-   }
-   document.getElementById('myDiv01').innerHTML = 'Auto array has been set';
-}">
-
-<input type="button" value="Show Auto Array" onclick="{
-   document.getElementById('myDiv01').innerHTML += '<br>Auto Array Contents:<br>';
-   for (let myLoop0 = 0; myLoop0 < myMax; myLoop0++) {
-     for (let myLoop1 = 0; myLoop1 < myMax; myLoop1++) {
-        document.getElementById('myDiv01').innerHTML += 
-       `myArrayAuto[${myLoop0},${myLoop1}] = ${myArrayAuto[myLoop0][myLoop1]}<br>`;
-     }
-   }
-}">
-
-<br><br>
-
-<div id="myDiv01"></div>
 
 </body>
 </html>
