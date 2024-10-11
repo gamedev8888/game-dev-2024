@@ -23,7 +23,7 @@
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
-        input[type="text"] {
+        input[type="text"], input[type="number"] {
             width: calc(100% - 22px);
             padding: 10px;
             margin: 10px 0;
@@ -39,7 +39,7 @@
             border-radius: 4px;
             cursor: pointer;
             transition: background-color 0.3s;
-            width: 100%;
+            width: calc(100% - 22px);
             margin: 5px 0;
         }
         input[type="button"]:hover {
@@ -50,6 +50,7 @@
             padding: 10px;
             background-color: #f4f4f4;
             border-left: 5px solid #007BFF;
+            white-space: pre-wrap; /* Maintain formatting */
         }
     </style>
 </head>
@@ -58,7 +59,10 @@
 <div class="container">
     <h1>Multi-Dimensional Arrays Example</h1>
 
-    <label for="manualArrayValues">Enter 9 numbers (separated by commas):</label>
+    <label for="arraySize">Array Size (N x N):</label>
+    <input type="number" id="arraySize" value="3" min="2" max="10">
+
+    <label for="manualArrayValues">Enter numbers (separated by commas):</label>
     <input type="text" id="manualArrayValues" placeholder="e.g. 3, 4, 2, 1, 2, 3, 5, 6, 7">
 
     <input type="button" value="Set Manual Array" onclick="setManualArray()">
@@ -66,60 +70,81 @@
     
     <input type="button" value="Set Auto Array" onclick="setAutoArray()">
     <input type="button" value="Show Auto Array" onclick="showAutoArray()">
+    
+    <label for="minRange">Min Range:</label>
+    <input type="number" id="minRange" value="0">
+    
+    <label for="maxRange">Max Range:</label>
+    <input type="number" id="maxRange" value="100">
 
+    <input type="button" value="Clear" onclick="clearArrays()">
+    
     <div id="myDiv01"></div>
 </div>
 
 <script>
-// Set a few global Variables
-let myMax = 3;
-let myArrayManual = Array(myMax);
-let myArrayAuto = new Array(myMax).fill().map(() => new Array(myMax));
+// Set global Variables
+let myArrayManual = [];
+let myArrayAuto = [];
+
+// Function to extract array size input
+function getArraySize() {
+    return parseInt(document.getElementById('arraySize').value) || 3;
+}
 
 // Function to set manual array from input
 function setManualArray() {
-    const values = document.getElementById('manualArrayValues').value.split(',').map(Number);
-    if (values.length !== 9) {
-        document.getElementById('myDiv01').innerHTML = 'Please enter exactly 9 numbers.';
+    const size = getArraySize();
+    const values = document.getElementById('manualArrayValues').value.split(',');
+    if (values.length !== size * size || values.some(value => isNaN(value))) {
+        displayMessage('Please enter exactly ' + (size * size) + ' valid numbers.');
         return;
     }
     myArrayManual = [];
-    for (let i = 0; i < myMax; i++) {
-        myArrayManual[i] = values.slice(i * myMax, (i + 1) * myMax);
+    for (let i = 0; i < size; i++) {
+        myArrayManual[i] = values.slice(i * size, (i + 1) * size).map(Number);
     }
-    document.getElementById('myDiv01').innerHTML = 'You set the manual array.';
+    displayMessage('You set the manual array successfully.');
 }
 
 // Function to show manual array
 function showManualArray() {
-    document.getElementById('myDiv01').innerHTML = '<strong>Manual Array:</strong><br>';
-    for (let myLoop0 = 0; myLoop0 < myMax; myLoop0++) {
-        for (let myLoop1 = 0; myLoop1 < myMax; myLoop1++) {
-            document.getElementById('myDiv01').innerHTML +=
-            `myArrayManual[${myLoop0},${myLoop1}] = ${myArrayManual[myLoop0][myLoop1]}<br>`;
-        }
-    }
+    displayMessage('<strong>Manual Array:</strong>\n' + formatArray(myArrayManual));
 }
 
 // Function to set auto array
 function setAutoArray() {
-    for (let i = 0; i < myMax; i++) {
-        for (let j = 0; j < myMax; j++) {
-            myArrayAuto[i][j] = Math.floor(Math.random() * 100); // Correctly randomizing and assigning
-        }
-    }
-    document.getElementById('myDiv01').innerHTML = 'Auto array has been set.';
+    const size = getArraySize();
+    const min = parseInt(document.getElementById('minRange').value) || 0;
+    const max = parseInt(document.getElementById('maxRange').value) || 100;
+
+    myArrayAuto = Array.from({ length: size }, () => 
+        Array.from({ length: size }, () => Math.floor(Math.random() * (max - min) + min))
+    );
+    
+    displayMessage('Auto array has been set successfully.');
 }
 
 // Function to show auto array
 function showAutoArray() {
-    document.getElementById('myDiv01').innerHTML += '<br><strong>Auto Array Contents:</strong><br>';
-    for (let myLoop0 = 0; myLoop0 < myMax; myLoop0++) {
-        for (let myLoop1 = 0; myLoop1 < myMax; myLoop1++) {
-            document.getElementById('myDiv01').innerHTML += 
-            `myArrayAuto[${myLoop0},${myLoop1}] = ${myArrayAuto[myLoop0][myLoop1]}<br>`;
-        }
-    }
+    displayMessage('<strong>Auto Array Contents:</strong>\n' + formatArray(myArrayAuto));
+}
+
+// Utility function to format array for display
+function formatArray(array) {
+    return array.map(row => row.join(", ")).join("\n");
+}
+
+// Function to display messages
+function displayMessage(msg) {
+    document.getElementById('myDiv01').innerHTML = msg;
+}
+
+// Function to clear arrays and output
+function clearArrays() {
+    myArrayManual = [];
+    myArrayAuto = [];
+    document.getElementById('myDiv01').innerHTML = 'Arrays cleared.';
 }
 </script>
 
