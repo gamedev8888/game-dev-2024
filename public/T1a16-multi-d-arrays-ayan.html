@@ -22,6 +22,7 @@
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s; /* Smooth transition for background color */
         }
         input[type="text"], input[type="number"], input[type="color"] {
             width: calc(100% - 22px);
@@ -56,7 +57,7 @@
 </head>
 <body>
 
-<div class="container">
+<div class="container" id="mainContainer">
     <h1>Multi-Dimensional Arrays Example</h1>
 
     <label for="arraySize">Array Size (N x N):</label>
@@ -77,12 +78,11 @@
     <label for="maxRange">Max Range:</label>
     <input type="number" id="maxRange" value="100">
 
-    <label for="colorPicker">Choose Background Color:</label>
-    <input type="color" id="colorPicker" value="#f4f4f4">
-    <input type="button" value="Change Color" onclick="changeColor()">
+    <label for="backgroundColor">Choose Background Color:</label>
+    <input type="color" id="backgroundColor" value="#ffffff" onchange="changeBackgroundColor()">
 
     <input type="button" value="Clear" onclick="clearArrays()">
-
+    
     <div id="myDiv01"></div>
 </div>
 
@@ -94,6 +94,12 @@ let myArrayAuto = [];
 // Function to extract array size input
 function getArraySize() {
     return parseInt(document.getElementById('arraySize').value) || 3;
+}
+
+// Function to change the background color of the container
+function changeBackgroundColor() {
+    const color = document.getElementById('backgroundColor').value;
+    document.getElementById('mainContainer').style.backgroundColor = color;
 }
 
 // Function to set manual array from input
@@ -142,12 +148,6 @@ function formatArray(array) {
 // Function to display messages
 function displayMessage(msg) {
     document.getElementById('myDiv01').innerHTML = msg;
-}
-
-// Function to change color of the output display
-function changeColor() {
-    const chosenColor = document.getElementById('colorPicker').value;
-    document.getElementById('myDiv01').style.backgroundColor = chosenColor;
 }
 
 // Function to clear arrays and output
