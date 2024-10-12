@@ -7,23 +7,26 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
             margin: 0;
             padding: 20px;
+            background-image: url('https://cdn.wallpapersafari.com/6/52/91BGFK.jpg'); /* Set the background image */
+            background-size: cover; /* Cover the entire page */
+            background-position: center; /* Center the image */
+            background-repeat: no-repeat; /* Prevent repeating the image */
         }
         h1 {
             text-align: center;
-            color: #ffffff; /* Change header color to white */
+            color: #ffffff; /* Set header color to white for visibility against the background */
         }
         .container {
             max-width: 600px;
             margin: 0 auto;
             padding: 20px;
-            background-color: #000000; /* Change background color to black */
             border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
             transition: background-color 0.3s; /* Smooth transition for background color */
-            color: #ffffff; /* Change text color to white for better readability */
+            color: #000000; /* Change text color to black for better readability */
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white background for the container */
         }
         input[type="text"], input[type="number"], input[type="color"] {
             width: calc(100% - 22px);
@@ -32,8 +35,8 @@
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
-            background-color: #333333; /* Dark background for inputs */
-            color: #ffffff; /* White text for inputs */
+            background-color: #ffffff; /* White background for inputs */
+            color: #000000; /* Black text for inputs */
         }
         input[type="button"] {
             background-color: #007BFF;
@@ -52,9 +55,9 @@
         #myDiv01 {
             margin-top: 20px;
             padding: 10px;
-            background-color: #222222; /* Darker background for the output area */
+            background-color: #f0f0f0; /* Light gray background for output area */
             border-left: 5px solid #007BFF;
-            color: #ffffff; /* White text for messages */
+            color: #000000; /* Black text for messages */
             white-space: pre-wrap; /* Maintain formatting */
         }
     </style>
