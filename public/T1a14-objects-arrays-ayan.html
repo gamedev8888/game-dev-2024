@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore objects and arrays through examples and interactive features.">
     <title>Objects and Arrays by Ayan</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
@@ -13,44 +14,45 @@
             background-size: cover; 
             background-position: center; 
             background-repeat: no-repeat; 
-            color: yellow; 
+            color: #fff; /* Default text color to white for better visibility */
             text-align: center;
             padding: 40px;
             margin: 0;
             transition: background-color 0.4s, color 0.4s;
         }
         h1 {
-            color: #37474f;
+            color: #ffe600; /* Brighter yellow for header */
             margin-bottom: 20px;
-            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* More shadow for depth */
             font-size: 2.5em;
         }
         p {
-            color: #455a64;
+            margin-bottom: 20px;
             font-size: 1.2em;
+            color: #fff; /* Keep paragraphs readable */
         }
         textarea, input[type="text"] {
             width: 90%;
             max-width: 600px;
             padding: 15px;
-            border: 2px solid #009688;
+            border: 2px solid #ffe600; /* Brighter border */
             border-radius: 8px;
             font-family: monospace;
-            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent for readability */
-            color: #333;
+            background-color: rgba(0, 0, 0, 0.6); /* Darker background for readability */
+            color: #ffe600; /* Match with the border color */
             margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
             resize: none;
             transition: border-color 0.4s, box-shadow 0.4s;
         }
         textarea:focus, input[type="text"]:focus {
-            border-color: #00796b;
+            border-color: #ffd700; /* Lighter focus color */
             outline: none;
-            box-shadow: 0 0 10px rgba(0, 121, 107, 0.5);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5); /* Bright focus glow */
         }
         button {
-            background-color: #009688;
-            color: white;
+            background-color: #ffd700; /* Gold button */
+            color: #333; /* Dark text for buttons for contrast */
             border: none;
             padding: 12px 24px;
             border-radius: 8px;
@@ -58,30 +60,29 @@
             margin: 5px;
             font-size: 18px;
             transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
         }
         button:hover {
-            background-color: #00796b;
+            background-color: #e6c200; /* Slightly darker on hover */
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.6);
         }
         #result {
             margin-top: 20px;
             padding: 15px;
-            border: 1px solid #ccc;
+            border: 1px solid #ffe600; /* Matching border */
             border-radius: 8px;
-            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent for readability */
+            background-color: rgba(0, 0, 0, 0.6); /* Darker for contrast */
             display: inline-block;
             white-space: pre-wrap;
             font-family: monospace;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            color: #333;
+            color: #ffe600; /* Match with the text */
             max-width: 80%;
             overflow-x: auto;
             transition: background-color 0.4s, color 0.4s;
         }
         .error {
-            color: #e91e63;
+            color: #ff4c4c; /* Bright red */
             font-size: 14px;
             margin-top: 10px;
         }
@@ -95,9 +96,9 @@
             display: none;
             max-width: 150px;
             margin: 10px;
-            border: 2px solid #009688;
+            border: 2px solid #ffe600; /* Matching border */
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
             transition: transform 0.3s;
             opacity: 0; 
             animation: fadeIn 0.5s forwards;
@@ -106,33 +107,9 @@
             display: block;
             opacity: 1; 
         }
-        #darkModeButton {
-            background-color: #333;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-        }
-        #darkModeButton:hover {
-            background-color: #555;
-        }
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
-        }
-        body.dark {
-            background-color: #1a1a1a;
-            color: #ffffff;
-        }
-        textarea.dark, input[type="text"].dark {
-            background-color: #333;
-            color: #fff;
-            border-color: #666;
-        }
-        #result.dark {
-            background-color: #333;
-            color: #fff;
-            border-color: #666;
         }
         @media (max-width: 600px) {
             h1 {
@@ -150,7 +127,7 @@
 <p>Show your research about objects and arrays in the textarea below:</p>
 
 <!-- Existing textarea for default research -->
-<textarea rows="8" readonly>
+<textarea id="inputData" rows="8" readonly>
 let myArray1 = [
     { name: 'Bob', age: 28 },
     { name: 'Charlie', age: 32 }
@@ -168,59 +145,64 @@ let myArray3 = [
     { city: 'Paris', country: 'France' }
 ];
 </textarea>
-<input type="text" id="userInput" placeholder="Enter your JSON array here" />
-<button id="submitButton">Submit</button>
-<div id="loading" style="display: none;">Processing...</div>
+
+<button id="displayButton">Display Data</button>
+
 <div id="result"></div>
 <div id="imageContainer"></div>
-<div class="error" id="errorMessage"></div>
-
-<button id="darkModeButton" onclick="toggleDarkMode()">Toggle Dark Mode</button>
+<div class="error" id="error"></div>
 
 <script>
-    // Toggle dark mode functionality
-    function toggleDarkMode() {
-        document.body.classList.toggle("dark");
-        const elements = document.querySelectorAll("textarea, input[type='text'], #result");
-        elements.forEach(element => element.classList.toggle("dark"));
-    }
+    document.getElementById('displayButton').onclick = function () {
+        const inputData = document.getElementById('inputData').value;
+        const resultElement = document.getElementById('result');
+        const errorElement = document.getElementById('error');
+        const imageContainer = document.getElementById('imageContainer');
+        
+        // Clear previous results and errors
+        resultElement.textContent = '';
+        errorElement.textContent = '';
+        imageContainer.innerHTML = '';
 
-    // Process input data
-    function processInput() {
-        document.getElementById('loading').style.display = 'block';
-        setTimeout(() => { // Simulates loading time
-            const inputValue = document.getElementById('userInput').value;
-            const resultDiv = document.getElementById('result');
-            const errorMessage = document.getElementById('errorMessage');
-            const imageContainer = document.getElementById('imageContainer');
-            errorMessage.innerText = '';
-            imageContainer.innerHTML = '';
-
-            // Validate JSON input
-            try {
-                const jsonData = JSON.parse(inputValue);
-                if (!Array.isArray(jsonData)) throw new Error('Input must be an array');
-
-                // Display results
-                resultDiv.innerText = JSON.stringify(jsonData, null, 2);
-                jsonData.forEach(item => {
-                    if (item.name) {
-                        const img = document.createElement('img');
-                        img.src = `https://i.pravatar.cc/200?u=${item.name}`;
-                        img.className = 'image show';
-                        imageContainer.appendChild(img);
-                    }
-                });
-            } catch (error) {
-                errorMessage.innerText = error.message;
-                resultDiv.innerText = '';
-            } finally {
-                document.getElementById('loading').style.display = 'none';
+        try {
+            const parsedData = eval(inputData); // Caution: eval can be dangerous; this is for demonstration only
+            if (!Array.isArray(parsedData)) {
+                throw new Error("Input is not an array.");
             }
-        }, 1000); // Simulate loading for 1 second
-    }
 
-    document.getElementById('submitButton').addEventListener('click', processInput);
+            resultElement.textContent = JSON.stringify(parsedData, null, 2); // Display the parsed array in a readable format
+            
+            // Display images based on parsed data
+            parsedData.forEach(item => {
+                if (item.name) {
+                    const img = document.createElement('img');
+                    img.src = `https://via.placeholder.com/150?text=${item.name}`;
+                    img.alt = item.name;
+                    img.className = 'image show';
+                    imageContainer.appendChild(img);
+                }
+
+                if (item.title) {
+                    const img = document.createElement('img');
+                    img.src = `https://via.placeholder.com/150?text=${item.title}`;
+                    img.alt = item.title;
+                    img.className = 'image show';
+                    imageContainer.appendChild(img);
+                }
+
+                if (item.city) {
+                    const img = document.createElement('img');
+                    img.src = `https://via.placeholder.com/150?text=${item.city}`;
+                    img.alt = item.city;
+                    img.className = 'image show';
+                    imageContainer.appendChild(img);
+                }
+            });
+
+        } catch (error) {
+            errorElement.textContent = `Error: ${error.message}`;
+        }
+    }
 </script>
 
 </body>
