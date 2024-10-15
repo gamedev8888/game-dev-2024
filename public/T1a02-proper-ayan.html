@@ -6,8 +6,11 @@
     <title>T1a02-proper-ayan.html</title>
     <style>
         :root {
-            --bg-color: #ff0000; /* Red background */
-            --text-color: #ffffff; /* White text */
+            --bg-color: #ff0000;
+            --text-color: #ffffff;
+            --button-color: #000000;
+            --button-hover-color: #333;
+            --achievement-color: #ffe600; /* Gold for achievements */
         }
         body {
             background-color: var(--bg-color);
@@ -15,44 +18,225 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            text-align: center; /* Center align all text */
+            text-align: center;
         }
         button {
             font-size: 20px;
             padding: 10px 20px;
             color: var(--text-color);
-            background-color: #000000; /* Black button */
+            background-color: var(--button-color);
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, transform 0.3s;
         }
         button:hover {
-            background-color: #333; /* Darker button on hover */
+            background-color: var(--button-hover-color);
+            transform: scale(1.1); /* Scale effect on hover */
+        }
+        .achievement {
+            display: none;
+            margin-top: 20px;
+            font-size: 24px;
+            color: var(--achievement-color);
+            animation: fadeIn 1s; /* Fade-in animation */
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        #hangman {
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+        #wordDisplay {
+            font-size: 30px;
+            letter-spacing: 5px;
+            margin: 20px 0;
+        }
+        #category {
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        #message {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+        #gameContainer {
+            display: none; /* Hidden by default */
         }
     </style>
 </head>
 <body>
-    <h1>T1a02-proper-ayan.html</h1>
-    <p>Welcome to my webpage! This document serves as a template for future projects.</p>
+    <h1>Cookie Clicker & Hangman Game</h1>
     
-    <h2>Cookie Clicker</h2>
-    <p>You have <span id="cookieCount">0</span> cookies.</p>
-    <button id="cookieButton">Click me to earn a cookie!</button>
+    <!-- Cookie Clicker Section -->
+    <div id="cookieClicker">
+        <h2>Cookie Clicker</h2>
+        <p>You have <span id="cookieCount">0</span> cookies.</p>
+        <button id="cookieButton">Click me to earn a cookie!</button>
+        <p class="achievement" id="achievementMessage">Achievement unlocked!</p>
+        <audio id="clickSound" src="click-sound.mp3"></audio> <!-- Add a sound file -->
+
+        <button id="startHangmanButton">Start Hangman Game</button>
+    </div>
+
+    <!-- Hangman Game Section -->
+    <div id="hangmanGame">
+        <div id="gameContainer">
+            <h2>Hangman Game</h2>
+            <div id="hangman">😶</div>
+            <div id="category"></div>
+            <div id="wordDisplay">Word: _______</div>
+            <input type="text" id="letterInput" maxlength="1">
+            <button id="guessButton">Guess</button>
+            <button id="resetButton">Reset Game</button>
+            <div id="message"></div>
+            <select id="categorySelect">
+                <option value="">Select a Category</option>
+                <option value="animals">Animals</option>
+                <option value="countries">Countries</option>
+                <option value="fruits">Fruits</option>
+                <option value="colors">Colors</option>
+                <option value="movies">Movies</option>
+                <option value="foods">Foods</option>
+            </select>
+        </div>
+    </div>
 
     <script>
-        // Initialize cookie count
-        let cookieCount = 0;
-
-        // Get elements from the DOM
+        // Cookie Clicker Script
+        let cookieCount = localStorage.getItem('cookieCount') ? parseInt(localStorage.getItem('cookieCount')) : 0;
         const cookieCountDisplay = document.getElementById('cookieCount');
         const cookieButton = document.getElementById('cookieButton');
+        const achievementMessage = document.getElementById('achievementMessage');
+        const clickSound = document.getElementById('clickSound');
 
-        // Function to handle cookie clicks
+        cookieCountDisplay.textContent = cookieCount;
+
+        function checkAchievements() {
+            if (cookieCount === 10 || cookieCount === 50 || cookieCount === 100) {
+                displayAchievement();
+            }
+        }
+
+        function displayAchievement() {
+            achievementMessage.style.display = 'block';
+            setTimeout(() => {
+                achievementMessage.style.display = 'none';
+            }, 2000); // Hide after 2 seconds
+        }
+
         cookieButton.onclick = function() {
-            cookieCount++; // Increment cookie count
-            cookieCountDisplay.textContent = cookieCount; // Update the display
+            cookieCount++;
+            cookieCountDisplay.textContent = cookieCount;
+            localStorage.setItem('cookieCount', cookieCount);
+            checkAchievements();
+            clickSound.currentTime = 0; // Reset to start
+            clickSound.play(); // Play sound effect
         };
+
+        // Hangman Game Script
+        const categories = {
+            animals: ["elephant", "giraffe", "kangaroo", "dolphin", "zebra"],
+            countries: ["argentina", "brazil", "canada", "denmark", "uganda"],
+            fruits: ["apple", "banana", "kiwi", "mango", "orange"],
+            colors: ["red", "blue", "green", "yellow", "purple"],
+            movies: ["inception", "titanic", "gladiator", "matrix", "frozen"],
+            foods: ["pizza", "sushi", "burger", "pasta", "salad"]
+        };
+
+        let selectedCategory = "";
+        let selectedWord = "";
+        let guessedLetters = [];
+        let wrongGuesses = 0;
+
+        const hangmanGameElement = document.getElementById('hangmanGame');
+        const gameContainer = document.getElementById('gameContainer');
+        const wordDisplayElement = document.getElementById('wordDisplay');
+        const categoryElement = document.getElementById('category');
+        const letterInput = document.getElementById('letterInput');
+        const guessButton = document.getElementById('guessButton');
+        const resetButton = document.getElementById('resetButton');
+        const messageElement = document.getElementById('message');
+        const categorySelect = document.getElementById('categorySelect');
+        
+        document.getElementById('startHangmanButton').addEventListener('click', function() {
+            cookieClicker.style.display = 'none';
+            hangmanGameElement.style.display = 'block';
+            startHangmanGame();
+        });
+
+        categorySelect.addEventListener('change', function() {
+            selectedCategory = this.value;
+            if (selectedCategory) {
+                selectWord();
+                resetGame();
+                categoryElement.textContent = "Category: " + selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1);
+            }
+        });
+
+        guessButton.addEventListener('click', function() {
+            const letter = letterInput.value.toLowerCase();
+            letterInput.value = '';
+
+            if (letter && !guessedLetters.includes(letter)) {
+                guessedLetters.push(letter);
+                if (!selectedWord.includes(letter)) {
+                    wrongGuesses++;
+                }
+                updateWordDisplay();
+                updateHangman();
+                checkGameStatus();
+            }
+        });
+
+        resetButton.addEventListener('click', resetGame);
+
+        function startHangmanGame() {
+            gameContainer.style.display = 'block'; // Show the game container
+        }
+
+        function selectWord() {
+            const words = categories[selectedCategory];
+            selectedWord = words[Math.floor(Math.random() * words.length)];
+        }
+
+        function updateWordDisplay() {
+            const display = selectedWord.split('').map(letter => (guessedLetters.includes(letter) ? letter : '_')).join(' ');
+            wordDisplayElement.textContent = "Word: " + display;
+        }
+
+        function updateHangman() {
+            const hangmanStages = ["😶", "😐", "😮", "😳", "😱", "😩", "💀"];
+            hangmanElement.textContent = hangmanStages[wrongGuesses];
+        }
+
+        function checkGameStatus() {
+            if (wrongGuesses >= 6) {
+                messageElement.textContent = "Game Over! The word was: " + selectedWord;
+                disableGame();
+            } else if (selectedWord.split('').every(letter => guessedLetters.includes(letter))) {
+                messageElement.textContent = "Congratulations! You've guessed the word: " + selectedWord;
+                disableGame();
+            }
+        }
+
+        function disableGame() {
+            letterInput.disabled = true;
+            guessButton.disabled = true;
+        }
+
+        function resetGame() {
+            guessedLetters = [];
+            wrongGuesses = 0;
+            letterInput.disabled = false;
+            guessButton.disabled = false;
+            messageElement.textContent = '';
+            letterInput.value = '';
+            updateHangman();
+            updateWordDisplay();
+        }
     </script>
 </body>
 </html>
