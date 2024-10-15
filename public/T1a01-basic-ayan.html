@@ -7,23 +7,39 @@
     <style>
         body {
             background-image: url('https://wallpapercave.com/wp/wp7385848.jpg');
-            background-size: cover;  /* Cover the entire background */
+            background-size: cover;  /* Ensures the image covers the entire background */
             background-position: center;  /* Center the image */
-            background-repeat: no-repeat;  /* Prevent repeating the image */
+            background-repeat: no-repeat;  /* Prevents image repetition */
             color: #E5E5E5;  /* Light gray for text */
+            margin: 0;  /* Remove default margin */
+            height: 100vh;  /* Full viewport height */
         }
 
         h1, h2 {
             color: #FFD700;  /* Gold color for headings */
+            text-align: center;  /* Center align the headings */
         }
 
         a {
             color: #add8e6;  /* Light blue color for links */
+            text-decoration: none;  /* Remove underline from links */
+        }
+
+        a:hover {
+            text-decoration: underline;  /* Underline on hover for better UX */
         }
 
         .image-link img {
-            width: 100px;  /* Set the width */
+            width: 100px;  /* Set the width of images */
             height: auto;  /* Maintain aspect ratio */
+            display: block;  /* Makes the images block elements */
+            margin: 0 auto;  /* Center images */
+        }
+
+        ul {
+            text-align: center;  /* Center align the list */
+            list-style-type: none;  /* Remove bullet points */
+            padding: 0;  /* Remove default padding */
         }
     </style>
 </head>
