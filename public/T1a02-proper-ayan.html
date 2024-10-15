@@ -65,6 +65,9 @@
         #gameContainer {
             display: none; /* Hidden by default */
         }
+        #hangmanGame {
+            display: none; /* Hidden by default */
+        }
     </style>
 </head>
 <body>
@@ -160,9 +163,10 @@
         const resetButton = document.getElementById('resetButton');
         const messageElement = document.getElementById('message');
         const categorySelect = document.getElementById('categorySelect');
+        const hangmanElement = document.getElementById('hangman'); // Added definition here
         
         document.getElementById('startHangmanButton').addEventListener('click', function() {
-            cookieClicker.style.display = 'none';
+            document.getElementById('cookieClicker').style.display = 'none'; // Fixed selection
             hangmanGameElement.style.display = 'block';
             startHangmanGame();
         });
