@@ -9,97 +9,109 @@
     <style>
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: #f4f4f4;
+            background-image: url('https://wallpapercave.com/wp/wp7385812.jpg');
+            background-size: cover; 
+            background-position: center; 
+            background-repeat: no-repeat; 
+            color: yellow; 
             text-align: center;
             padding: 40px;
             margin: 0;
-            transition: background-color 0.3s, color 0.3s;
+            transition: background-color 0.4s, color 0.4s;
         }
         h1 {
-            color: #4A4A4A;
+            color: #37474f;
             margin-bottom: 20px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            font-size: 2.5em;
         }
         p {
-            color: #666;
+            color: #455a64;
+            font-size: 1.2em;
         }
         textarea, input[type="text"] {
             width: 90%;
             max-width: 600px;
             padding: 15px;
-            border: 2px solid #4A90E2;
-            border-radius: 5px;
+            border: 2px solid #009688;
+            border-radius: 8px;
             font-family: monospace;
-            background-color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent for readability */
             color: #333;
             margin-bottom: 20px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             resize: none;
-            transition: border-color 0.3s;
+            transition: border-color 0.4s, box-shadow 0.4s;
         }
         textarea:focus, input[type="text"]:focus {
-            border-color: #357ABD;
+            border-color: #00796b;
             outline: none;
+            box-shadow: 0 0 10px rgba(0, 121, 107, 0.5);
         }
         button {
-            background-color: #4A90E2;
+            background-color: #009688;
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+            padding: 12px 24px;
+            border-radius: 8px;
             cursor: pointer;
             margin: 5px;
-            font-size: 16px;
+            font-size: 18px;
             transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
         button:hover {
-            background-color: #357ABD;
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            background-color: #00796b;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
         }
         #result {
             margin-top: 20px;
             padding: 15px;
             border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #ffffff;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent for readability */
             display: inline-block;
             white-space: pre-wrap;
             font-family: monospace;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             color: #333;
             max-width: 80%;
             overflow-x: auto;
-            transition: background-color 0.3s, color 0.3s;
+            transition: background-color 0.4s, color 0.4s;
         }
         .error {
-            color: red;
+            color: #e91e63;
             font-size: 14px;
             margin-top: 10px;
         }
         #imageContainer {
             display: flex;
-            justify-content: center;
             flex-wrap: wrap;
+            justify-content: center;
             margin-top: 20px;
         }
         .image {
             display: none;
-            max-width: 200px;
+            max-width: 150px;
             margin: 10px;
-            border: 2px solid #4A90E2;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border: 2px solid #009688;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s;
+            opacity: 0; 
+            animation: fadeIn 0.5s forwards;
         }
         .image.show {
             display: block;
-            animation: fadeIn 0.5s forwards;
+            opacity: 1; 
         }
         #darkModeButton {
             background-color: #333;
             color: #fff;
             border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
         }
         #darkModeButton:hover {
             background-color: #555;
@@ -156,65 +168,59 @@ let myArray3 = [
     { city: 'Paris', country: 'France' }
 ];
 </textarea>
-
-<p>Example Input: <code>[{"name": "Alice", "age": 25}, {"name": "Tom", "age": 30}]</code></p>
-<div id="inputSection">
-    <input type="text" id="userInput" aria-label="Input your objects and arrays here" placeholder='Enter your array of objects... e.g. [{"name": "John", "age": 30}]'>
-    <button onclick="processInput()">Submit</button>
-    <div class="error" id="errorMessage"></div>
-</div>
-
-<div id="result" aria-live="polite"></div>
+<input type="text" id="userInput" placeholder="Enter your JSON array here" />
+<button id="submitButton">Submit</button>
+<div id="loading" style="display: none;">Processing...</div>
+<div id="result"></div>
 <div id="imageContainer"></div>
+<div class="error" id="errorMessage"></div>
+
 <button id="darkModeButton" onclick="toggleDarkMode()">Toggle Dark Mode</button>
 
 <script>
-    // Function to toggle dark mode
+    // Toggle dark mode functionality
     function toggleDarkMode() {
-        document.body.classList.toggle('dark');
+        document.body.classList.toggle("dark");
+        const elements = document.querySelectorAll("textarea, input[type='text'], #result");
+        elements.forEach(element => element.classList.toggle("dark"));
     }
 
-    // Function to process user input
+    // Process input data
     function processInput() {
-        const input = document.getElementById('userInput').value;
-        const errorMessage = document.getElementById('errorMessage');
-        const result = document.getElementById('result');
-        const imageContainer = document.getElementById('imageContainer');
-        imageContainer.innerHTML = ''; // Clear previous images
-        result.textContent = '';
-        errorMessage.textContent = '';
+        document.getElementById('loading').style.display = 'block';
+        setTimeout(() => { // Simulates loading time
+            const inputValue = document.getElementById('userInput').value;
+            const resultDiv = document.getElementById('result');
+            const errorMessage = document.getElementById('errorMessage');
+            const imageContainer = document.getElementById('imageContainer');
+            errorMessage.innerText = '';
+            imageContainer.innerHTML = '';
 
-        // Basic validation for array structure
-        if (!input.trim().startsWith('[') || !input.trim().endsWith(']')) {
-            errorMessage.textContent = "Input should start with '[' and end with ']'. Please enter a valid array.";
-            return;
-        }
+            // Validate JSON input
+            try {
+                const jsonData = JSON.parse(inputValue);
+                if (!Array.isArray(jsonData)) throw new Error('Input must be an array');
 
-        // Try to parse JSON
-        try {
-            const parsedInput = JSON.parse(input);
-            if (!Array.isArray(parsedInput)) {
-                throw new Error("Parsed input is not an array.");
+                // Display results
+                resultDiv.innerText = JSON.stringify(jsonData, null, 2);
+                jsonData.forEach(item => {
+                    if (item.name) {
+                        const img = document.createElement('img');
+                        img.src = `https://i.pravatar.cc/200?u=${item.name}`;
+                        img.className = 'image show';
+                        imageContainer.appendChild(img);
+                    }
+                });
+            } catch (error) {
+                errorMessage.innerText = error.message;
+                resultDiv.innerText = '';
+            } finally {
+                document.getElementById('loading').style.display = 'none';
             }
-            result.textContent = JSON.stringify(parsedInput, null, 2);
-            showImages(parsedInput);
-        } catch (error) {
-            errorMessage.textContent = "Invalid JSON format: " + error.message;
-        }
+        }, 1000); // Simulate loading for 1 second
     }
 
-    // Function to show images based on input data
-    function showImages(data) {
-        data.forEach(item => {
-            if (item.name) {
-                const img = document.createElement('img');
-                img.src = `https://via.placeholder.com/150?text=${encodeURIComponent(item.name)}`;
-                img.alt = `Image related to ${item.name}`;
-                img.className = 'image show';
-                document.getElementById('imageContainer').appendChild(img);
-            }
-        });
-    }
+    document.getElementById('submitButton').addEventListener('click', processInput);
 </script>
 
 </body>
