@@ -6,13 +6,14 @@
     <meta name="description" content="Explore objects and arrays through examples and interactive features.">
     <title>Objects and Arrays by Ayan</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <style>
         body {
             font-family: 'Roboto', sans-serif;
             background-image: url('https://wallpapercave.com/wp/wp7385812.jpg');
             background-size: cover; 
             background-position: center; 
-            color: #fff; /* Default text color to white for better visibility */
+            color: #fff;
             text-align: center;
             padding: 40px;
             margin: 0;
@@ -28,11 +29,11 @@
             margin-bottom: 20px;
             font-size: 1.2em;
         }
-        textarea, input[type="text"], select {
+        textarea, input[type="text"] {
             width: 90%;
             max-width: 600px;
             padding: 15px;
-            border: 2px solid #ffe600; 
+            border: 2px solid #ffe600;
             border-radius: 8px;
             font-family: monospace;
             background-color: rgba(0, 0, 0, 0.6);
@@ -40,6 +41,12 @@
             margin-bottom: 20px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
             resize: none;
+            transition: border-color 0.4s, box-shadow 0.4s;
+        }
+        textarea:focus, input[type="text"]:focus {
+            border-color: #ffd700;
+            outline: none;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
         button {
             background-color: #ffd700;
@@ -70,6 +77,12 @@
             color: #ffe600;
             max-width: 80%;
             overflow-x: auto;
+            transition: background-color 0.4s, color 0.4s;
+        }
+        .error {
+            color: #ff4c4c;
+            font-size: 14px;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -80,129 +93,62 @@
 
 <!-- Textarea for inputting data -->
 <textarea id="inputData" rows="20"> 
-{
-    "myArray1": [
-        { "name": "Bob", "age": 28 },
-        { "name": "Charlie", "age": 32 },
-        { "name": "Alice", "age": 25 },
-        { "name": "Dave", "age": 30 }
-    ],
-    "myArray2": [
-        { "title": "Inception", "year": 2010 },
-        { "title": "The Matrix", "year": 1999 }
-    ]
-}
+let myArray1 = [
+    { name: 'Bob', age: 28 },
+    { name: 'Charlie', age: 32 },
+    { name: 'Alice', age: 25 },
+    { name: 'Dave', age: 30 }
+];
+
+let myArray2 = [
+    { title: 'Inception', year: 2010 },
+    { title: 'The Matrix', year: 1999 },
+    { title: 'Interstellar', year: 2014 },
+    { title: 'The Shawshank Redemption', year: 1994 },
+    { title: 'Pulp Fiction', year: 1994 }
+];
+
+let myArray3 = [
+    { city: 'New York', country: 'USA' },
+    { city: 'Tokyo', country: 'Japan' },
+    { city: 'Paris', country: 'France' },
+    { city: 'Sydney', country: 'Australia' },
+    { city: 'Cairo', country: 'Egypt' }
+];
+
+let myArray4 = [
+    { id: 1, product: 'Laptop', price: 999.99, inStock: true },
+    { id: 2, product: 'Smartphone', price: 499.99, inStock: true },
+    { id: 3, product: 'Tablet', price: 299.99, inStock: false },
+    { id: 4, product: 'Headphones', price: 199.99, inStock: true }
+];
+
+let myArray5 = [
+    { name: 'Tesla Model S', year: 2020, features: ['Autopilot', 'Electric', 'Luxury'] },
+    { name: 'Ford F-150', year: 2021, features: ['Gas', 'Truck', 'Four-wheel drive'] },
+    { name: 'Chevrolet Camaro', year: 2019, features: ['Gas', 'Sport', 'Coupe'] },
+    { name: 'Nissan Leaf', year: 2022, features: ['Electric', 'Eco-friendly', 'Compact'] }
+];
+
+let myArray6 = [
+    { username: 'user1', email: 'user1@example.com', active: true },
+    { username: 'user2', email: 'user2@example.com', active: false },
+    { username: 'user3', email: 'user3@example.com', active: true },
+    { username: 'admin', email: 'admin@example.com', active: true }
+];
 </textarea>
 
-<button id="submitBtn">Submit</button>
+<!-- Button to Process the Input -->
+<button id="processButton">Process Input</button>
 
+<!-- Result Display Area -->
 <div id="result"></div>
-<div id="modifySection" style="display:none;">
-    <h2>Modify Item</h2>
-    <select id="arraySelect"></select>
-    <select id="itemSelect"></select>
-    <input type="text" id="updateInput" placeholder="Update value" />
-    <button id="modifyBtn">Modify Item</button>
-    <button id="deleteBtn">Delete Item</button>
-</div>
-
-<h2>Add Item</h2>
-<input type="text" id="newItemInput" placeholder="New item JSON object (e.g., { 'name': 'New', 'age': 20 })" />
-<button id="addItemBtn">Add Item</button>
-<p class="error" id="errorMsg" style="color: red;"></p>
 
 <script>
-    let parsedData;
-
-    document.getElementById('submitBtn').addEventListener('click', function() {
-        const inputData = document.getElementById('inputData').value;
-
-        try {
-            // Parse the input as JSON
-            parsedData = JSON.parse(inputData);
-
-            // Display parsed data
-            displayResults(parsedData);
-
-            // Populate arrays for modification
-            populateSelectOptions(parsedData);
-        } catch (error) {
-            // Handle and display error
-            document.getElementById('result').textContent = "Error: Invalid input. Please enter valid JSON.";
-            document.getElementById('modifySection').style.display = 'none';
-        }
-    });
-
-    function displayResults(data) {
-        let output = '';
-        for (const [key, value] of Object.entries(data)) {
-            output += `${key}:\n` + JSON.stringify(value, null, 4) + '\n\n';
-        }
-        document.getElementById('result').textContent = output;
-        document.getElementById('modifySection').style.display = 'block'; // Show modification section
-    }
-
-    function populateSelectOptions(data) {
-        const arraySelect = document.getElementById('arraySelect');
-        arraySelect.innerHTML = '';
-        for (const key in data) {
-            const option = document.createElement('option');
-            option.value = key;
-            option.textContent = key;
-            arraySelect.appendChild(option);
-        }
-        arraySelect.onchange(); // Ensure the first item is populated in itemSelect
-    }
-
-    document.getElementById('arraySelect').addEventListener('change', function() {
-        const selectedArray = parsedData[this.value];
-        const itemSelect = document.getElementById('itemSelect');
-        itemSelect.innerHTML = '';
-        selectedArray.forEach((item, index) => {
-            const option = document.createElement('option');
-            option.value = index;
-            option.textContent = JSON.stringify(item);
-            itemSelect.appendChild(option);
-        });
-    });
-
-    document.getElementById('modifyBtn').addEventListener('click', function() {
-        const arrayName = document.getElementById('arraySelect').value;
-        const itemIndex = document.getElementById('itemSelect').value;
-        const newValue = document.getElementById('updateInput').value;
-
-        try {
-            const parsedNewItem = JSON.parse(newValue);
-            parsedData[arrayName][itemIndex] = parsedNewItem;
-            displayResults(parsedData);
-            document.getElementById('errorMsg').textContent = '';
-        } catch (error) {
-            document.getElementById('errorMsg').textContent = 'Error: Invalid JSON format.';
-        }
-    });
-
-    document.getElementById('deleteBtn').addEventListener('click', function() {
-        const arrayName = document.getElementById('arraySelect').value;
-        const itemIndex = document.getElementById('itemSelect').value;
-
-        parsedData[arrayName].splice(itemIndex, 1);
-        displayResults(parsedData);
-    });
-
-    document.getElementById('addItemBtn').addEventListener('click', function() {
-        const newItemInput = document.getElementById('newItemInput').value;
-        const arrayName = document.getElementById('arraySelect').value;
-
-        try {
-            const newItem = JSON.parse(newItemInput);
-            parsedData[arrayName].push(newItem);
-            displayResults(parsedData);
-            document.getElementById('newItemInput').value = ''; // Clear input
-            document.getElementById('errorMsg').textContent = '';
-        } catch (error) {
-            document.getElementById('errorMsg').textContent = 'Error: Invalid JSON format for the new item.';
-        }
-    });
+    document.getElementById('processButton').onclick = function() {
+        const inputText = document.getElementById('inputData').value;
+        document.getElementById('result').textContent = inputText; // Displaying the input text
+    };
 </script>
 
 </body>
