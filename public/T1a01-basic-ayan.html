@@ -7,39 +7,40 @@
     <style>
         body {
             background-image: url('https://wallpapercave.com/wp/wp7385848.jpg');
-            background-size: cover;  /* Ensures the image covers the entire background */
-            background-position: center;  /* Center the image */
-            background-repeat: no-repeat;  /* Prevents image repetition */
-            color: #E5E5E5;  /* Light gray for text */
-            margin: 0;  /* Remove default margin */
-            height: 100vh;  /* Full viewport height */
+            background-size: cover;  
+            background-position: center;  
+            background-repeat: no-repeat;  
+            color: #E5E5E5;  
+            margin: 0;  
+            min-height: 100vh;  
+            font-family: Arial, sans-serif; /* Ensure a readable font */
         }
 
         h1, h2 {
-            color: #FFD700;  /* Gold color for headings */
-            text-align: center;  /* Center align the headings */
+            color: #FFD700;  
+            text-align: center;  
         }
 
         a {
-            color: #add8e6;  /* Light blue color for links */
-            text-decoration: none;  /* Remove underline from links */
+            color: #add8e6;  
+            text-decoration: none;  
         }
 
         a:hover {
-            text-decoration: underline;  /* Underline on hover for better UX */
+            text-decoration: underline;  
         }
 
         .image-link img {
-            width: 100px;  /* Set the width of images */
-            height: auto;  /* Maintain aspect ratio */
-            display: block;  /* Makes the images block elements */
-            margin: 0 auto;  /* Center images */
+            width: 100px;  
+            height: auto;  
+            display: block;  
+            margin: 0 auto;  
         }
 
         ul {
-            text-align: center;  /* Center align the list */
-            list-style-type: none;  /* Remove bullet points */
-            padding: 0;  /* Remove default padding */
+            text-align: center;  
+            list-style-type: none;  
+            padding: 0;  
         }
     </style>
 </head>
@@ -50,19 +51,26 @@
         <li><a href="http://www.google.ca">Link to Google</a></li>
     </ul>
     
-    <h2>Image 1</h2>
-    <a href="https://i.pinimg.com/originals/89/89/fc/8989fc89063e6474c0daca6a284ac555.jpg" class="image-link"> 
-        <img src="https://i.pinimg.com/originals/89/89/fc/8989fc89063e6474c0daca6a284ac555.jpg" alt="Placeholder Image">
-    </a>
+    <main>
+        <h2>Image 1</h2>
+        <a href="https://i.pinimg.com/originals/89/89/fc/8989fc89063e6474c0daca6a284ac555.jpg" class="image-link" aria-label="Image 1 Description"> 
+            <img src="https://i.pinimg.com/originals/89/89/fc/8989fc89063e6474c0daca6a284ac555.jpg" alt="A beautiful scenic view">
+        </a>
 
-    <h2>Image 2</h2>
-    <a href="https://i.pinimg.com/originals/03/14/8c/03148cdd151128b99abf137917881a5b.jpg" class="image-link"> 
-        <img src="https://i.pinimg.com/originals/03/14/8c/03148cdd151128b99abf137917881a5b.jpg" alt="Another Placeholder Image">
-    </a>
+        <h2>Image 2</h2>
+        <a href="https://i.pinimg.com/originals/03/14/8c/03148cdd151128b99abf137917881a5b.jpg" class="image-link" aria-label="Image 2 Description"> 
+            <img src="https://i.pinimg.com/originals/03/14/8c/03148cdd151128b99abf137917881a5b.jpg" alt="Another beautiful scenic view">
+        </a>
 
-    <h2>Image 3</h2>
-    <a href="https://th.bing.com/th/id/OIP.rz2BDoiYM-_sOhQgftMZGgHaLY?rs=1&pid=ImgDetMain" class="image-link"> 
-        <img src="https://th.bing.com/th/id/OIP.rz2BDoiYM-_sOhQgftMZGgHaLY?rs=1&pid=ImgDetMain" alt="New Placeholder Image">
-    </a>
+        <h2>Image 3</h2>
+        <a href="https://th.bing.com/th/id/OIP.rz2BDoiYM-_sOhQgftMZGgHaLY?rs=1&pid=ImgDetMain" class="image-link" aria-label="Image 3 Description"> 
+            <img src="https://th.bing.com/th/id/OIP.rz2BDoiYM-_sOhQgftMZGgHaLY?rs=1&pid=ImgDetMain" alt="A new scenic view">
+        </a>
+        
+        <h2>Image 4</h2>
+        <a href="https://static2.cbrimages.com/wordpress/wp-content/uploads/2020/07/Thanos-On-Throne.jpg?q=50&fit=crop&w=740&h=986" class="image-link" aria-label="Thanos on throne"> 
+            <img src="https://static2.cbrimages.com/wordpress/wp-content/uploads/2020/07/Thanos-On-Throne.jpg?q=50&fit=crop&w=740&h=986" alt="Thanos sitting on his throne">
+        </a>
+    </main>
 </body>
 </html>
