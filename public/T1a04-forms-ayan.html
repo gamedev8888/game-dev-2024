@@ -78,24 +78,24 @@
     <form id="myForm" aria-labelledby="formTitle" novalidate>
         <div>
             <label for="name">What is your name?</label>
-            <input type="text" id="name" name="name" required placeholder="Enter your name">
+            <input type="text" id="name" name="name" required placeholder="Enter your name" value="John Doe"> <!-- Default name -->
         </div>
 
         <div>
             <label for="age">How old are you?</label>
-            <input type="number" id="age" name="age" min="1" max="120" required placeholder="Enter your age">
+            <input type="number" id="age" name="age" min="1" max="120" required placeholder="Enter your age" value="25"> <!-- Default age -->
         </div>
 
         <div>
             <label for="favoriteColor">What is your favorite color?</label>
-            <input type="text" id="favoriteColor" name="favoriteColor" placeholder="e.g., Blue, Red">
+            <input type="text" id="favoriteColor" name="favoriteColor" placeholder="e.g., Blue, Red" value="Blue"> <!-- Default favorite color -->
         </div>
 
         <div>
             <label>Do you prefer cats or dogs?</label><br>
             <input type="radio" id="cats" name="pets" value="cats" required>
             <label for="cats">Cats</label>
-            <input type="radio" id="dogs" name="pets" value="dogs">
+            <input type="radio" id="dogs" name="pets" value="dogs" checked> <!-- Default preference for Dogs -->
             <label for="dogs">Dogs</label>
         </div>
 
@@ -104,7 +104,7 @@
             <select id="game" name="game" required>
                 <option value="">Select your game</option>
                 <option value="soccer">Soccer</option>
-                <option value="basketball">Basketball</option>
+                <option value="basketball" selected>Basketball</option> <!-- Default game selected -->
                 <option value="videoGames">Video Games</option>
                 <option value="hideAndSeek">Hide and Seek</option>
             </select>
@@ -112,11 +112,11 @@
 
         <div>
             <label for="comments">Any additional comments?</label>
-            <textarea id="comments" name="comments" rows="4" placeholder="Your comments..."></textarea>
+            <textarea id="comments" name="comments" rows="4" placeholder="Your comments...">No comments.</textarea> <!-- Default comment -->
         </div>
 
         <div>
-            <input type="checkbox" id="terms" name="terms" required>
+            <input type="checkbox" id="terms" name="terms" required checked> <!-- Default checkbox checked -->
             <label for="terms">I agree to the terms and conditions</label>
         </div>
 
