@@ -126,32 +126,73 @@
 <p>Show your research about objects and arrays in the textarea below:</p>
 
 <!-- Textarea for inputting data -->
-<textarea id="inputData" rows="8">
+<textarea id="inputData" rows="20"> 
 let myArray1 = [
     { name: 'Bob', age: 28 },
-    { name: 'Charlie', age: 32 }
+    { name: 'Charlie', age: 32 },
+    { name: 'Alice', age: 25 },
+    { name: 'Dave', age: 30 }
 ];
 
 let myArray2 = [
     { title: 'Inception', year: 2010 },
     { title: 'The Matrix', year: 1999 },
-    { title: 'Interstellar', year: 2014 }
+    { title: 'Interstellar', year: 2014 },
+    { title: 'The Shawshank Redemption', year: 1994 },
+    { title: 'Pulp Fiction', year: 1994 }
 ];
 
 let myArray3 = [
     { city: 'New York', country: 'USA' },
     { city: 'Tokyo', country: 'Japan' },
-    { city: 'Paris', country: 'France' }
+    { city: 'Paris', country: 'France' },
+    { city: 'Sydney', country: 'Australia' },
+    { city: 'Cairo', country: 'Egypt' }
+];
+
+let myArray4 = [
+    { id: 1, product: 'Laptop', price: 999.99, inStock: true },
+    { id: 2, product: 'Smartphone', price: 499.99, inStock: true },
+    { id: 3, product: 'Tablet', price: 299.99, inStock: false },
+    { id: 4, product: 'Headphones', price: 199.99, inStock: true }
+];
+
+let myArray5 = [
+    { name: 'Tesla Model S', year: 2020, features: ['Autopilot', 'Electric', 'Luxury'] },
+    { name: 'Ford F-150', year: 2021, features: ['Gas', 'Truck', 'Four-wheel drive'] },
+    { name: 'Chevrolet Camaro', year: 2019, features: ['Gas', 'Sport', 'Coupe'] },
+    { name: 'Nissan Leaf', year: 2022, features: ['Electric', 'Eco-friendly', 'Compact'] }
+];
+
+let myArray6 = [
+    { username: 'user1', email: 'user1@example.com', active: true },
+    { username: 'user2', email: 'user2@example.com', active: false },
+    { username: 'user3', email: 'user3@example.com', active: true },
+    { username: 'admin', email: 'admin@example.com', active: true }
 ];
 </textarea>
 
+<!-- Button to process the data (make sure to add this in your code) -->
 <button id="submitBtn">Submit</button>
+
+<!-- Container to display result -->
 <div id="result"></div>
 
 <script>
     document.getElementById('submitBtn').addEventListener('click', function() {
         const inputData = document.getElementById('inputData').value;
-        document.getElementById('result').textContent = inputData; // Output the textarea content
+
+        try {
+            // Evaluate the input as JavaScript code
+            const data = eval('(' + inputData + ')');
+            
+            // Convert the object or array back to JSON for display
+            const result = JSON.stringify(data, null, 4); // Pretty print
+            document.getElementById('result').textContent = result; 
+        } catch (error) {
+            // Display error message for invalid input
+            document.getElementById('result').textContent = "Error: Invalid input. Please enter valid JavaScript objects/arrays.";
+        }
     });
 </script>
 
