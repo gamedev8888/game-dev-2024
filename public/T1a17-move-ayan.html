@@ -1,25 +1,34 @@
-<h1 align=center>T1a17-move-ayan.html</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T1a17-move-ayan</title>
+    <script>
+        // global variables
+        let myClock02;
 
-<script>
+        function moveImageRight() {
+            const img = document.getElementById('myImage01');
+            // Get the current position and move it to the right
+            img.style.left = (parseInt(img.style.left) + 10) + 'px'; // Move 10px to the right
+        }
 
-//global variables
-let myClock02
+        function autoMoveRight() {
+            clearInterval(myClock02); // Clear any existing interval
+            myClock02 = setInterval(moveImageRight, 30); // Activate move every 30 ms
+        }
+    </script>
+</head>
+<body>
 
-</script>
+<h1 align="center">T1a17-move-ayan.html</h1>
 
-<input type=button id="myNum02" value="Image Right" onclick="{
-   document.getElementByid('myImage01').style.left =
-parseInt(document.getElementByid('myimage01'.style.left = 0
-}"><br><br>
+<input type="button" id="myButton02" value="Image Right" onclick="moveImageRight()"><br><br>
+<input type="button" value="Auto Move Right" onclick="autoMoveRight()"><br><br>
 
-<input type=button value="Auto Move Right" onclick="{
-   document.getElementByid('myImage01').style.left = 0
-   clearinterval(myClock02)
-   myClock02 = SetInterval(function(){
-      document.getElementByid('myButton02').click()
-   },30)  // activate click every 30 ms (milliseconds)
+<img id="myImage01" style="position:relative; width:100px; height:80px; top:0px; left:0px;" 
+src="https://www.pngmart.com/files/22/Doctor-Doom-PNG-Isolated-Photo.png" alt="Doctor Doom">
 
- }"><br><br>
-
-<img id="myImage01" style="position:relative; width:100px; height:80px; top:0px;
-left:0px;" src="https://www.pngmart.com/files/22/Doctor-Doom-PNG-Isolated-Photo.png
+</body>
+</html>
