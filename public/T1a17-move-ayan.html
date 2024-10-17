@@ -15,40 +15,56 @@
             height: 100vh;
             margin: 0;
             padding: 0;
-            background-image: url('https://png.pngtree.com/background/20230521/original/pngtree-abstract-black-and-red-abstract-backgrounds-hd-wallpapers-picture-image_2683625.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            color: #f0f0f0;
-            font-family: Arial, sans-serif;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+            background: linear-gradient(to bottom right, #2c3e50, #34495e);
+            color: #ecf0f1;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
         }
 
         h1 {
             margin-bottom: 20px;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 10px;
+        }
+
+        .buttons-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
         }
 
         button {
-            background-color: rgba(255, 0, 0, 0.85);
+            background-color: #e74c3c;
             border: none;
-            padding: 10px 20px;
+            padding: 15px;
             margin: 5px;
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
-            transition: background-color 0.3s, transform 0.2s;
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+            flex: 1 0 120px;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         }
 
         button:hover {
-            background-color: rgba(200, 0, 0, 0.85);
-            transform: scale(1.05);
+            background-color: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         }
 
         img {
             position: relative;
             width: 90px;
             height: 100px;
-            transition: left 0.1s linear, top 0.1s linear;
+            transition: left 0.1s linear, top 0.1s linear, transform 0.2s;
             touch-action: none; /* Prevent touch gestures */
         }
 
@@ -62,55 +78,122 @@
                 height: 80px;
             }
         }
+
+        #status {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #fff;
+            text-align: center;
+        }
+
+        #bgChange {
+            margin-top: 20px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #3498db;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #bgChange:hover {
+            background-color: #2980b9;
+        }
     </style>
     <script>
         let myClock02;
+        let moveSpeed = 10;  // Movement speed
+        let backgroundColorIndex = 0;
+        const backgrounds = [
+            "linear-gradient(to bottom right, #2c3e50, #34495e)",
+            "linear-gradient(to bottom right, #1abc9c, #16a085)",
+            "linear-gradient(to bottom right, #3498db, #2980b9)",
+            "linear-gradient(to bottom right, #9b59b6, #8e44ad)",
+            "linear-gradient(to bottom right, #e67e22, #d35400)"
+        ];
 
+        // Move image function
         function moveImage(distanceX, distanceY) {
             const img = document.getElementById('myImage01');
             img.style.left = img.style.left || '0px';
             img.style.top = img.style.top || '0px';
-            
+
             let currentLeft = parseInt(img.style.left);
             let currentTop = parseInt(img.style.top);
 
+            // Move logic with boundary checks
             if (distanceX) {
-                if (currentLeft + distanceX >= 0 && currentLeft + distanceX <= window.innerWidth - img.width) {
-                    img.style.left = (currentLeft + distanceX) + 'px';
+                const newLeft = currentLeft + distanceX;
+                if (newLeft >= 0 && newLeft <= window.innerWidth - img.width) {
+                    img.style.left = newLeft + 'px';
                 }
             }
 
             if (distanceY) {
-                if (currentTop + distanceY >= 0 && currentTop + distanceY <= window.innerHeight - img.height) {
-                    img.style.top = (currentTop + distanceY) + 'px';
+                const newTop = currentTop + distanceY;
+                if (newTop >= 0 && newTop <= window.innerHeight - img.height) {
+                    img.style.top = newTop + 'px';
                 }
             }
+
+            updateStatus(`Moved to (${parseInt(img.style.left)}px, ${parseInt(img.style.top)}px)`);
         }
 
+        // Auto-move function
         function autoMove(distanceX, distanceY) {
             clearInterval(myClock02);
             myClock02 = setInterval(() => moveImage(distanceX, distanceY), 30);
+            updateStatus(`Auto-Moving (${distanceX}, ${distanceY})`);
         }
 
+        // Reset function
         function resetPosition() {
             const img = document.getElementById('myImage01');
             img.style.left = '0px';
             img.style.top = '0px';
+            updateStatus('Position reset to (0px, 0px)');
         }
 
+        // Change background function
+        function changeBackground() {
+            backgroundColorIndex = (backgroundColorIndex + 1) % backgrounds.length;
+            document.body.style.background = backgrounds[backgroundColorIndex];
+            updateStatus('Background color changed');
+        }
+
+        // Update status message
+        function updateStatus(message) {
+            document.getElementById('status').textContent = message;
+        }
+
+        // Handle keyboard input
         document.addEventListener('keydown', (event) => {
-            switch(event.key) {
+            switch (event.key) {
                 case 'ArrowLeft':
-                    moveImage(-10, 0);
+                    moveImage(-moveSpeed, 0);
                     break;
                 case 'ArrowRight':
-                    moveImage(10, 0);
+                    moveImage(moveSpeed, 0);
                     break;
                 case 'ArrowUp':
-                    moveImage(0, -10);
+                    moveImage(0, -moveSpeed);
                     break;
                 case 'ArrowDown':
-                    moveImage(0, 10);
+                    moveImage(0, moveSpeed);
+                    break;
+                case ' ':
+                    event.preventDefault(); // Prevent default scrolling on spacebar
+                    clearInterval(myClock02);
+                    updateStatus('Auto-Move Stopped');
+                    break;
+                case '+':
+                    moveSpeed++;
+                    updateStatus(`Speed set to ${moveSpeed}`);
+                    break;
+                case '-':
+                    if (moveSpeed > 1) moveSpeed--;
+                    updateStatus(`Speed set to ${moveSpeed}`);
                     break;
             }
         });
@@ -121,27 +204,30 @@
 
     <h1>T1a17-move-ayan.html</h1>
 
-    <div>
-        <button onclick="moveImage(-10, 0)" aria-label="Move Left"><i class="fas fa-arrow-left"></i> Move Left</button>
-        <button onclick="moveImage(10, 0)" aria-label="Move Right"><i class="fas fa-arrow-right"></i> Move Right</button><br>
-        <button onclick="moveImage(0, -10)" aria-label="Move Up"><i class="fas fa-arrow-up"></i> Move Up</button>
-        <button onclick="moveImage(0, 10)" aria-label="Move Down"><i class="fas fa-arrow-down"></i> Move Down</button><br>
-        <button onclick="moveImage(-10, 10)">Down Left</button>
-        <button onclick="moveImage(10, 10)">Down Right</button><br>
-        <button onclick="moveImage(-10, -10)">Right Up</button>
-        <button onclick="moveImage(10, -10)">Right Down</button><br>
-        <button onclick="autoMove(-10, 10)">Auto Move Down Left</button>
-        <button onclick="autoMove(10, 10)">Auto Move Down Right</button><br>
-        <button onclick="autoMove(-10, -10)">Auto Move Right Up</button>
-        <button onclick="autoMove(10, -10)">Auto Move Right Down</button><br>
-        <button onclick="autoMove(10, 0)">Auto Move Right</button>
-        <button onclick="autoMove(0, 10)">Auto Move Down</button>
-        <button onclick="autoMove(-10, 0)">Auto Move Left</button>
-        <button onclick="autoMove(0, -10)">Auto Move Up</button><br>
+    <div class="buttons-container">
+        <button onclick="moveImage(-moveSpeed, 0)" aria-label="Move Left"><i class="fas fa-arrow-left"></i> Move Left</button>
+        <button onclick="moveImage(moveSpeed, 0)" aria-label="Move Right"><i class="fas fa-arrow-right"></i> Move Right</button>
+        <button onclick="moveImage(0, -moveSpeed)" aria-label="Move Up"><i class="fas fa-arrow-up"></i> Move Up</button>
+        <button onclick="moveImage(0, moveSpeed)" aria-label="Move Down"><i class="fas fa-arrow-down"></i> Move Down</button>
+        <button onclick="moveImage(-moveSpeed, moveSpeed)">Down Left</button>
+        <button onclick="moveImage(moveSpeed, moveSpeed)">Down Right</button>
+        <button onclick="moveImage(-moveSpeed, -moveSpeed)">Right Up</button>
+        <button onclick="moveImage(moveSpeed, -moveSpeed)">Right Down</button>
+        <button onclick="autoMove(-moveSpeed, moveSpeed)">Auto Move Down Left</button>
+        <button onclick="autoMove(moveSpeed, moveSpeed)">Auto Move Down Right</button>
+        <button onclick="autoMove(-moveSpeed, -moveSpeed)">Auto Move Right Up</button>
+        <button onclick="autoMove(moveSpeed, -moveSpeed)">Auto Move Right Down</button>
+        <button onclick="autoMove(moveSpeed, 0)">Auto Move Right</button>
+        <button onclick="autoMove(0, moveSpeed)">Auto Move Down</button>
+        <button onclick="autoMove(-moveSpeed, 0)">Auto Move Left</button>
+        <button onclick="autoMove(0, -moveSpeed)">Auto Move Up</button>
         <button onclick="clearInterval(myClock02)">Stop Auto Move</button>
         <button onclick="resetPosition()">Reset Position</button>
     </div>
 
+    <button id="bgChange" onclick="changeBackground()">Change Background</button>    
+
+    <p id="status">Status: Ready to move!</p>
     <img id="myImage01" src="https://www.pngmart.com/files/22/Doctor-Doom-PNG-Isolated-Photo.png" alt="Doctor Doom">
 
 </body>
