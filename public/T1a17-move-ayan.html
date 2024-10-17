@@ -5,18 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>T1a17-move-ayan</title>
     <script>
-        // global variables
         let myClock02;
 
-        function moveImageRight() {
+        function moveImage(distanceX, distanceY) {
             const img = document.getElementById('myImage01');
-            // Get the current position and move it to the right
-            img.style.left = (parseInt(img.style.left) + 10) + 'px'; // Move 10px to the right
+            img.style.left = img.style.left || '0px'; // Ensure it starts from 0px
+            img.style.top = img.style.top || '0px'; // Ensure it starts from 0px
+            
+            let currentLeft = parseInt(img.style.left); 
+            let currentTop = parseInt(img.style.top); 
+
+            // Move left/right
+            if (distanceX) {
+                if (currentLeft + distanceX >= 0 && currentLeft + distanceX <= window.innerWidth - img.width) {
+                    img.style.left = (currentLeft + distanceX) + 'px'; // Move left or right
+                }
+            }
+
+            // Move up/down
+            if (distanceY) {
+                if (currentTop + distanceY >= 0 && currentTop + distanceY <= window.innerHeight - img.height) {
+                    img.style.top = (currentTop + distanceY) + 'px'; // Move up or down
+                }
+            }
         }
 
-        function autoMoveRight() {
-            clearInterval(myClock02); // Clear any existing interval
-            myClock02 = setInterval(moveImageRight, 30); // Activate move every 30 ms
+        function autoMove(distanceX, distanceY) {
+            clearInterval(myClock02);
+            myClock02 = setInterval(() => moveImage(distanceX, distanceY), 30);
         }
     </script>
 </head>
@@ -24,8 +40,15 @@
 
 <h1 align="center">T1a17-move-ayan.html</h1>
 
-<input type="button" id="myButton02" value="Image Right" onclick="moveImageRight()"><br><br>
-<input type="button" value="Auto Move Right" onclick="autoMoveRight()"><br><br>
+<input type="button" id="myButtonLeft" value="Move Left" onclick="moveImage(-10, 0)">
+<input type="button" id="myButtonRight" value="Move Right" onclick="moveImage(10, 0)"><br><br>
+<input type="button" id="myButtonUp" value="Move Up" onclick="moveImage(0, -10)">
+<input type="button" id="myButtonDown" value="Move Down" onclick="moveImage(0, 10)"><br><br>
+
+<input type="button" value="Auto Move Right" onclick="autoMove(10, 0)">
+<input type="button" value="Auto Move Down" onclick="autoMove(0, 10)">
+<input type="button" value="Auto Move Left" onclick="autoMove(-10, 0)"><br><br>
+<input type="button" value="Stop Auto Move" onclick="clearInterval(myClock02)"><br><br>
 
 <img id="myImage01" style="position:relative; width:90px; height:100px; top:0px; left:0px;" 
 src="https://www.pngmart.com/files/22/Doctor-Doom-PNG-Isolated-Photo.png" alt="Doctor Doom">
