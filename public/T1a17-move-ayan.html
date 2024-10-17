@@ -1,97 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>T1a17-move-ayan</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            padding: 0;
-            background-image: url('https://png.pngtree.com/background/20230521/original/pngtree-abstract-black-and-red-abstract-backgrounds-hd-wallpapers-picture-image_2683625.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            color: #f0f0f0;
-            font-family: Arial, sans-serif;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-        }
-
-        h1 {
-            margin-bottom: 20px;
-        }
-
-        button {
-            background-color: rgba(255, 0, 0, 0.85);
-            border: none;
-            padding: 10px 20px;
-            margin: 5px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-
-        button:hover {
-            background-color: rgba(200, 0, 0, 0.85);
-            transform: scale(1.05);
-        }
-
-        img {
-            position: relative;
-            width: 90px;
-            height: 100px;
-            transition: left 0.1s linear, top 0.1s linear;
-        }
-    </style>
-    <script>
-        let myClock02;
-
-        function moveImage(distanceX, distanceY) {
-            const img = document.getElementById('myImage01');
-            img.style.left = img.style.left || '0px';
-            img.style.top = img.style.top || '0px';
-            
-            let currentLeft = parseInt(img.style.left);
-            let currentTop = parseInt(img.style.top);
-
-            // Move left/right
-            if (distanceX) {
-                if (currentLeft + distanceX >= 0 && currentLeft + distanceX <= window.innerWidth - img.width) {
-                    img.style.left = (currentLeft + distanceX) + 'px';
-                }
-            }
-
-            // Move up/down
-            if (distanceY) {
-                if (currentTop + distanceY >= 0 && currentTop + distanceY <= window.innerHeight - img.height) {
-                    img.style.top = (currentTop + distanceY) + 'px';
-                }
-            }
-        }
-
-        function autoMove(distanceX, distanceY) {
-            clearInterval(myClock02);
-            myClock02 = setInterval(() => moveImage(distanceX, distanceY), 30);
-        }
-
-        function resetPosition() {
-            const img = document.getElementById('myImage01');
-            img.style.left = '0px';
-            img.style.top = '0px';
-        }
-    </script>
-</head>
-
 <body>
-
     <h1>T1a17-move-ayan.html</h1>
 
     <div>
@@ -104,21 +11,20 @@
         <button onclick="moveImage(10, 10)">Down Right</button><br>
         <button onclick="moveImage(-10, -10)">Right Up</button>
         <button onclick="moveImage(10, -10)">Right Down</button><br>
-        <button onclick="autoMove(10, 0)">Auto Move Right</button>
-        <button onclick="autoMove(0, 10)">Auto Move Down</button>
-        <button onclick="autoMove(-10, 0)">Auto Move Left</button>
-        <button onclick="autoMove(0, -10)">Auto Move Up</button><br>
-        <!-- New auto move buttons -->
+
+        <!-- New auto move diagonal buttons -->
         <button onclick="autoMove(-10, 10)">Auto Move Down Left</button>
         <button onclick="autoMove(10, 10)">Auto Move Down Right</button><br>
         <button onclick="autoMove(-10, -10)">Auto Move Right Up</button>
         <button onclick="autoMove(10, -10)">Auto Move Right Down</button><br>
+
+        <button onclick="autoMove(10, 0)">Auto Move Right</button>
+        <button onclick="autoMove(0, 10)">Auto Move Down</button>
+        <button onclick="autoMove(-10, 0)">Auto Move Left</button>
+        <button onclick="autoMove(0, -10)">Auto Move Up</button><br>
         <button onclick="clearInterval(myClock02)">Stop Auto Move</button>
         <button onclick="resetPosition()">Reset Position</button>
     </div>
 
     <img id="myImage01" src="https://www.pngmart.com/files/22/Doctor-Doom-PNG-Isolated-Photo.png" alt="Doctor Doom">
-
 </body>
-
-</html>
