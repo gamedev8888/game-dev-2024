@@ -6,30 +6,26 @@
     <title>JavaScript Objects Example</title>
     <style>
         body {
-            background: url('https://wallpapercave.com/wp/A9rkblk.jpg') no-repeat center center fixed; /* Replace with your desired background image */
-            background-size: cover; /* Make the background cover the entire viewport */
+            background: url('https://wallpapercave.com/wp/A9rkblk.jpg') no-repeat center center fixed;
+            background-size: cover;
             font-family: Arial, sans-serif;
-            color: blue; /* Bright cyan */
+            color: blue;
             text-align: center;
             margin: 0;
             transition: color 0.5s;
             overflow: hidden;
         }
-
-        h2 {
-            color: blue; /* Bright blue */
+        h2, h4 {
+            color: blue;
         }
-
         a {
-            color: blue; /* blue */
+            color: blue;
             text-decoration: none;
         }
-
         a:hover {
             text-decoration: underline;
-            color: #ff00ff; /* Magenta */
+            color: #ff00ff;
         }
-
         .button {
             background-color: #0056b3;
             border: none;
@@ -42,75 +38,75 @@
             transition: background-color 0.3s, transform 0.2s;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-
         .button:hover {
             background-color: #0056a1;
             transform: scale(1.05);
         }
-
         #myDiv01 {
             background-color: rgb(0 23 255 / 80%);
             border-radius: 8px;
             padding: 15px;
             margin-top: 20px;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-            color: #ffffff; /* White text */
+            color: #ffffff;
         }
-
         #objectForm {
             margin-top: 20px;
-            display: flex; /* Flexbox for better layout */
-            flex-direction: column; /* Stack items vertically */
-            align-items: center; /* Center items */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-
-        input[type="text"] {
+        input[type="text"], input[type="number"] {
             padding: 10px;
             margin: 5px 0;
-            width: 200px; /* Set width */
+            width: 200px;
             border: 1px solid #0056b3;
             border-radius: 4px;
             transition: border-color 0.3s;
         }
-
-        input[type="text"]:focus {
-            border-color: #ffcc00; /* Focus border color */
+        input[type="text"]:focus, input[type="number"]:focus {
+            border-color: #ffcc00;
         }
     </style>
     <script>
-        const predefinedObjects = [
-            {
-                firstName: "John",
-                lastName: "Doe",
-                age: 50,
-                eyeColor: "blue"
-            },
-            {
-                firstName: "Jane",
-                lastName: "Smith",
-                age: 30,
-                eyeColor: "green"
-            },
-            {
-                firstName: "Michael",
-                lastName: "Brown",
-                age: 25,
-                eyeColor: "hazel"
-            },
-           
+        const predefinedPersons = [
+            { firstName: "John", lastName: "Doe", age: 50, eyeColor: "blue" },
+            { firstName: "Jane", lastName: "Smith", age: 30, eyeColor: "green" },
+            { firstName: "Michael", lastName: "Brown", age: 25, eyeColor: "hazel" },
+            { firstName: "Emily", lastName: "Davis", age: 22, eyeColor: "brown" },
+            { firstName: "Chris", lastName: "Johnson", age: 35, eyeColor: "blue" },
+        ];
+
+        const predefinedPets = [
+            { name: "Rex", type: "Dog", age: 5, breed: "German Shepherd" },
+            { name: "Whiskers", type: "Cat", age: 3, breed: "Siamese" },
+            { name: "Goldy", type: "Fish", age: 1, breed: "Goldfish" },
+            { name: "Polly", type: "Parrot", age: 2, breed: "Macaw" },
+        ];
+
+        const predefinedVehicles = [
+            { make: "Toyota", model: "Camry", year: 2020, color: "Red" },
+            { make: "Honda", model: "Civic", year: 2018, color: "Blue" },
+            { make: "Tesla", model: "Model S", year: 2019, color: "White" },
+            { make: "Ford", model: "Mustang", year: 2021, color: "Black" },
         ];
 
         function createObject() {
-            const firstName = document.getElementById('firstName').value;
-            const lastName = document.getElementById('lastName').value;
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
             const age = document.getElementById('age').value;
-            const eyeColor = document.getElementById('eyeColor').value;
+            const eyeColor = document.getElementById('eyeColor').value.trim();
+
+            if (!firstName || !lastName || !age || !eyeColor) {
+                alert("Please fill in all fields.");
+                return;
+            }
 
             let myPerson = {
-                firstName: firstName,
-                lastName: lastName,
-                age: age,
-                eyeColor: eyeColor
+                firstName,
+                lastName,
+                age: Number(age),
+                eyeColor
             };
 
             displayObject(myPerson);
@@ -125,14 +121,36 @@
                                 eyeColor: ${person.eyeColor}<br>`;
         }
 
-        function displayPredefinedObjects() {
+        function displayPredefinedPersons() {
             const output = document.getElementById('myDiv01');
-            output.innerHTML = "<strong>Predefined Objects:</strong><br>";
-            predefinedObjects.forEach(person => {
+            output.innerHTML = "<strong>Predefined Persons:</strong><br>";
+            predefinedPersons.forEach(person => {
                 output.innerHTML += `firstName: ${person.firstName}<br>
                                      lastName: ${person.lastName}<br>
                                      age: ${person.age}<br>
                                      eyeColor: ${person.eyeColor}<br><br>`;
+            });
+        }
+
+        function displayPredefinedPets() {
+            const output = document.getElementById('myDiv01');
+            output.innerHTML = "<strong>Predefined Pets:</strong><br>";
+            predefinedPets.forEach(pet => {
+                output.innerHTML += `Name: ${pet.name}<br>
+                                     Type: ${pet.type}<br>
+                                     Age: ${pet.age}<br>
+                                     Breed: ${pet.breed}<br><br>`;
+            });
+        }
+
+        function displayPredefinedVehicles() {
+            const output = document.getElementById('myDiv01');
+            output.innerHTML = "<strong>Predefined Vehicles:</strong><br>";
+            predefinedVehicles.forEach(vehicle => {
+                output.innerHTML += `Make: ${vehicle.make}<br>
+                                     Model: ${vehicle.model}<br>
+                                     Year: ${vehicle.year}<br>
+                                     Color: ${vehicle.color}<br><br>`;
             });
         }
     </script>
@@ -140,22 +158,23 @@
 <body>
 
 <h2>T1a12 - JavaScript Objects Example</h2>
-
-<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_Objects" target="_blank">Good reference for JavaScript Objects</a><br> 
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Working_with_Objects" target="_blank">Good reference for JavaScript Objects</a><br>
 
 <p>Objects are stored named variables.</p>
 
-<h4>Create Your Own Object</h4>
+<h4>Create Your Own Person Object</h4>
 <div id="objectForm">
-    <input type="text" id="firstName" placeholder="First Name" />
-    <input type="text" id="lastName" placeholder="Last Name" />
-    <input type="text" id="age" placeholder="Age" />
-    <input type="text" id="eyeColor" placeholder="Eye Color" />
+    <input type="text" id="firstName" placeholder="First Name">
+    <input type="text" id="lastName" placeholder="Last Name">
+    <input type="number" id="age" placeholder="Age">
+    <input type="text" id="eyeColor" placeholder="Eye Color">
     <input type="button" class="button" value="Create Object" onClick="createObject()">
 </div>
 
-<h4>View Predefined Objects</h4>
-<input type="button" class="button" value="Show Predefined Objects" onClick="displayPredefinedObjects()">
+<h4>View Predefined Entities</h4>
+<input type="button" class="button" value="Show Predefined Persons" onClick="displayPredefinedPersons()">
+<input type="button" class="button" value="Show Predefined Pets" onClick="displayPredefinedPets()">
+<input type="button" class="button" value="Show Predefined Vehicles" onClick="displayPredefinedVehicles()">
 
 <div id="myDiv01">...</div>
 <br>
