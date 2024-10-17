@@ -1,4 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T1a17-move-ayan.html</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0; /* Ensure no margin */
+            padding: 0; /* Ensure no padding */
+            background-image: url('https://png.pngtree.com/background/20230521/original/pngtree-abstract-black-and-red-abstract-backgrounds-hd-wallpapers-picture-image_2683625.jpg');
+            background-size: cover; /* Cover the entire viewport */
+            background-position: center; /* Center the image */
+            background-repeat: no-repeat; /* Prevent tiling */
+            color: #f0f0f0; /* Lighter text color for better contrast */
+            font-family: Arial, sans-serif;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: rgba(255, 0, 0, 0.85); /* Red color with some transparency */
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        button:hover {
+            background-color: rgba(200, 0, 0, 0.85); /* Darker red on hover */
+            transform: scale(1.05);
+        }
+
+        img {
+            position: relative;
+            width: 90px;
+            height: 100px;
+            transition: left 0.1s linear, top 0.1s linear;
+        }
+    </style>
+    <script>
+        let myClock02;
+
+        function moveImage(distanceX, distanceY) {
+            const img = document.getElementById('myImage01');
+            img.style.left = img.style.left || '0px'; // Ensure it starts from 0px
+            img.style.top = img.style.top || '0px'; // Ensure it starts from 0px
+            
+            let currentLeft = parseInt(img.style.left); 
+            let currentTop = parseInt(img.style.top); 
+
+            // Move left/right
+            if (distanceX) {
+                if (currentLeft + distanceX >= 0 && currentLeft + distanceX <= window.innerWidth - img.width) {
+                    img.style.left = (currentLeft + distanceX) + 'px'; // Move left or right
+                }
+            }
+
+            // Move up/down
+            if (distanceY) {
+                if (currentTop + distanceY >= 0 && currentTop + distanceY <= window.innerHeight - img.height) {
+                    img.style.top = (currentTop + distanceY) + 'px'; // Move up or down
+                }
+            }
+        }
+
+        function autoMove(distanceX, distanceY) {
+            clearInterval(myClock02);
+            myClock02 = setInterval(() => moveImage(distanceX, distanceY), 30);
+        }
+
+        function resetPosition() {
+            const img = document.getElementById('myImage01');
+            img.style.left = '0px';
+            img.style.top = '0px';
+        }
+    </script>
+</head>
+
 <body>
+
     <h1>T1a17-move-ayan.html</h1>
 
     <div>
@@ -27,4 +120,7 @@
     </div>
 
     <img id="myImage01" src="https://www.pngmart.com/files/22/Doctor-Doom-PNG-Isolated-Photo.png" alt="Doctor Doom">
+
 </body>
+
+</html>
