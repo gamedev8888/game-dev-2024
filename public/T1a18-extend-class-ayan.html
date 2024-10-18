@@ -26,6 +26,12 @@
                 document.getElementById('myDiv01').innerHTML = this.myName + ' is a great cat <br>';
             }
         } // end extended class MyCat
+
+        class MyDog extends MyAnimal {
+            myShow() {
+                document.getElementById('myDiv01').innerHTML = this.myName + ' is a loyal dog <br>';
+            }
+        } // end extended class MyDog
     </script>
 
     <input type="button" value="Example Class Set and Show Class Animal" onClick="{
@@ -39,6 +45,12 @@
     <input type="button" value="Example Extend Class Animal as Cat" onClick="{
         let catName = document.getElementById('myText01').value;
         myPet = new MyCat(catName || 'Fluffy', 14);
+        myPet.myShow();
+    }"><br><br>
+
+    <input type="button" value="Example Extend Class Animal as Dog" onClick="{
+        let dogName = document.getElementById('myText01').value;
+        myPet = new MyDog(dogName || 'Buddy', 3);
         myPet.myShow();
     }"><br><br>
 
