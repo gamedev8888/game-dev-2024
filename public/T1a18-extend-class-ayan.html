@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="css-ayan.css">
-    <title>Classes</title>
+    <title>Fancy Animal Creator</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -16,6 +15,10 @@
 
         h2 {
             color: #5A67D8;
+        }
+
+        label {
+            font-weight: bold;
         }
 
         select, input[type="text"], input[type="number"], input[type="button"] {
@@ -72,7 +75,7 @@
         <option value="fox">Fox</option>
     </select><br>
 
-    <input type="text" id="myText01" placeholder="Enter your animal's name">
+    <input type="text" id="myText01" placeholder="Enter your animal's name (optional)">
     <input type="number" id="myAge" placeholder="Enter your animal's age" min="0"><br>
 
     <input type="button" id="createAnimalBtn" value="Create Animal"><br>
@@ -111,25 +114,40 @@
             }
         }
 
+        // Define default names for each animal type
+        const defaultNames = {
+            bunny: ["Fluff", "Thumper", "Binky", "Cottontail"],
+            cat: ["Whiskers", "Shadow", "Simba", "Luna"],
+            dog: ["Buddy", "Max", "Bella", "Charlie"],
+            fox: ["Foxy", "Rusty", "Sly", "Amber"]
+        };
+
         // Event listener for the create animal button
         document.getElementById('createAnimalBtn').addEventListener('click', () => {
             const animalType = document.getElementById('animalType').value;
-            const animalName = document.getElementById('myText01').value;
+            const animalName = document.getElementById('myText01').value.trim();
             const animalAge = document.getElementById('myAge').value;
 
             let myAnimal;
+            
+            // Generate a random default name if the user doesn't provide one
+            if (!animalName) {
+                const randomIndex = Math.floor(Math.random() * defaultNames[animalType].length);
+                animalName = defaultNames[animalType][randomIndex];
+            }
+
             switch (animalType) {
                 case 'bunny':
-                    myAnimal = new MyBunny(animalName || 'Snickers', animalAge || 5);
+                    myAnimal = new MyBunny(animalName, animalAge || 5);
                     break;
                 case 'cat':
-                    myAnimal = new MyCat(animalName || 'Buddy', animalAge || 14);
+                    myAnimal = new MyCat(animalName, animalAge || 14);
                     break;
                 case 'dog':
-                    myAnimal = new MyDog(animalName || 'Fluffy', animalAge || 3);
+                    myAnimal = new MyDog(animalName, animalAge || 3);
                     break;
                 case 'fox':
-                    myAnimal = new MyFox(animalName || 'Foxy', animalAge || 4);
+                    myAnimal = new MyFox(animalName, animalAge || 4);
                     break;
                 default:
                     myAnimal = new MyAnimal(animalName || 'Animal', animalAge || 0);
