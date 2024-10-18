@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Superhero and Animal Creator</title>
+    <title>Classes By Ayan</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -74,7 +74,7 @@
     <div id="animalCreator" style="display:none;">
         <h3>Animal Creator</h3>
         <label for="animalType">Choose an animal:</label>
-        <select id="animalType">
+        <select id="animalType" onchange="setAnimalDefaults()">
             <option value="bunny">Bunny</option>
             <option value="cat">Cat</option>
             <option value="dog">Dog</option>
@@ -97,7 +97,7 @@
     <div id="heroCreator" style="display:none;">
         <h3>Superhero Creator</h3>
         <label for="heroName">Hero Name:</label>
-        <input type="text" id="heroName" placeholder="Enter superhero name"><br>
+        <input type="text" id="heroName" placeholder="Enter superhero name" value="Heroic Ray"><br>
 
         <label for="heroType">Choose a hero type:</label>
         <select id="heroType">
@@ -108,10 +108,10 @@
         </select><br>
 
         <label for="powers">Powers (comma-separated):</label>
-        <input type="text" id="powers" placeholder="e.g., flying, strength"><br>
+        <input type="text" id="powers" placeholder="e.g., flying, strength" value="Flying, Super Strength"><br>
 
         <label for="origin">Origin Story (optional):</label>
-        <textarea id="origin" placeholder="Tell the story..."></textarea><br>
+        <textarea id="origin" placeholder="Tell the story...">Once an ordinary person, now a hero!</textarea><br>
 
         <input type="button" id="createHeroBtn" value="Create Hero"><br>
     </div>
@@ -133,7 +133,6 @@
             }
         }
 
-        // rest of animal classes...
         class MyCat extends MyAnimal { myShow() { document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a great cat, Age: <strong>${this.myAge}</strong><br>`; } }
         class MyDog extends MyAnimal { myShow() { document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a loyal dog, Age: <strong>${this.myAge}</strong><br>`; } }
         class MyFox extends MyAnimal { myShow() { document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a clever fox, Age: <strong>${this.myAge}</strong><br>`; } }
@@ -249,10 +248,19 @@
             superhero.showDetails();
         });
 
+        // Set default values based on selected animal type
+        function setAnimalDefaults() {
+            const animalType = document.getElementById('animalType').value;
+            const randomName = defaultNames[animalType][Math.floor(Math.random() * defaultNames[animalType].length)];
+            document.getElementById('myText01').value = randomName;
+            document.getElementById('myAge').value = '5'; // Default age for all animals
+        }
+
         // Toggle visibility of creators
         document.getElementById('toggleAnimalBtn').addEventListener('click', () => {
             document.getElementById('animalCreator').style.display = 'block';
             document.getElementById('heroCreator').style.display = 'none';
+            setAnimalDefaults(); // Set default values when the animal creator is shown
             document.getElementById('myDiv01').innerHTML = "Select an animal to create!";
         });
 
@@ -261,7 +269,6 @@
             document.getElementById('heroCreator').style.display = 'block';
             document.getElementById('myDiv01').innerHTML = "Create your superhero!";
         });
-        
     </script>
 </body>
 </html>
