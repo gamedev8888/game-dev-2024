@@ -75,6 +75,11 @@
         <option value="fox">Fox</option>
         <option value="lion">Lion</option>
         <option value="tiger">Tiger</option>
+        <option value="elephant">Elephant</option>
+        <option value="giraffe">Giraffe</option>
+        <option value="zebra">Zebra</option>
+        <option value="bear">Bear</option>
+        <option value="panda">Panda</option>
     </select><br>
 
     <input type="text" id="myText01" placeholder="Enter your animal's name (optional)">
@@ -128,14 +133,49 @@
             }
         }
 
-        // Define default names for each animal type
+        class MyElephant extends MyAnimal {
+            myShow() {
+                document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a gentle elephant, Age: <strong>${this.myAge}</strong><br>`;
+            }
+        }
+
+        class MyGiraffe extends MyAnimal {
+            myShow() {
+                document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a tall giraffe, Age: <strong>${this.myAge}</strong><br>`;
+            }
+        }
+
+        class MyZebra extends MyAnimal {
+            myShow() {
+                document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a striped zebra, Age: <strong>${this.myAge}</strong><br>`;
+            }
+        }
+
+        class MyBear extends MyAnimal {
+            myShow() {
+                document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a strong bear, Age: <strong>${this.myAge}</strong><br>`;
+            }
+        }
+
+        class MyPanda extends MyAnimal {
+            myShow() {
+                document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a playful panda, Age: <strong>${this.myAge}</strong><br>`;
+            }
+        }
+
+        // Default names for each animal type
         const defaultNames = {
             bunny: ["Fluff", "Thumper", "Binky", "Cottontail"],
             cat: ["Whiskers", "Shadow", "Simba", "Luna"],
             dog: ["Buddy", "Max", "Bella", "Charlie"],
             fox: ["Foxy", "Rusty", "Sly", "Amber"],
             lion: ["Leo", "Simba", "Nala", "Mufasa"],
-            tiger: ["Sher Khan", "Tigger", "Stripes", "Rajah"]
+            tiger: ["Sher Khan", "Tigger", "Stripes", "Rajah"],
+            elephant: ["Dumbo", "Bubbles", "Elsa", "Manny"],
+            giraffe: ["Longneck", "Stretch", "Spots", "Gigi"],
+            zebra: ["Stripes", "Ziggy", "Zara", "Bingo"],
+            bear: ["Baloo", "Yogi", "Paddington", "Winnie"],
+            panda: ["Po", "Bamboo", "Ling-Ling", "Lucky"]
         };
 
         // Event listener for the create animal button
@@ -145,7 +185,7 @@
             const animalAge = document.getElementById('myAge').value;
 
             let myAnimal;
-            
+
             // Generate a random default name if the user doesn't provide one
             if (!animalName) {
                 const randomIndex = Math.floor(Math.random() * defaultNames[animalType].length);
@@ -170,6 +210,21 @@
                     break;
                 case 'tiger':
                     myAnimal = new MyTiger(animalName, animalAge || 6);
+                    break;
+                case 'elephant':
+                    myAnimal = new MyElephant(animalName, animalAge || 12);
+                    break;
+                case 'giraffe':
+                    myAnimal = new MyGiraffe(animalName, animalAge || 15);
+                    break;
+                case 'zebra':
+                    myAnimal = new MyZebra(animalName, animalAge || 5);
+                    break;
+                case 'bear':
+                    myAnimal = new MyBear(animalName, animalAge || 7);
+                    break;
+                case 'panda':
+                    myAnimal = new MyPanda(animalName, animalAge || 10);
                     break;
                 default:
                     myAnimal = new MyAnimal(animalName || 'Animal', animalAge || 0);
