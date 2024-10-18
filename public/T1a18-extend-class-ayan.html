@@ -73,6 +73,8 @@
         <option value="cat">Cat</option>
         <option value="dog">Dog</option>
         <option value="fox">Fox</option>
+        <option value="lion">Lion</option>
+        <option value="tiger">Tiger</option>
     </select><br>
 
     <input type="text" id="myText01" placeholder="Enter your animal's name (optional)">
@@ -114,18 +116,32 @@
             }
         }
 
+        class MyLion extends MyAnimal {
+            myShow() {
+                document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a majestic lion, Age: <strong>${this.myAge}</strong><br>`;
+            }
+        }
+
+        class MyTiger extends MyAnimal {
+            myShow() {
+                document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a fierce tiger, Age: <strong>${this.myAge}</strong><br>`;
+            }
+        }
+
         // Define default names for each animal type
         const defaultNames = {
             bunny: ["Fluff", "Thumper", "Binky", "Cottontail"],
             cat: ["Whiskers", "Shadow", "Simba", "Luna"],
             dog: ["Buddy", "Max", "Bella", "Charlie"],
-            fox: ["Foxy", "Rusty", "Sly", "Amber"]
+            fox: ["Foxy", "Rusty", "Sly", "Amber"],
+            lion: ["Leo", "Simba", "Nala", "Mufasa"],
+            tiger: ["Sher Khan", "Tigger", "Stripes", "Rajah"]
         };
 
         // Event listener for the create animal button
         document.getElementById('createAnimalBtn').addEventListener('click', () => {
             const animalType = document.getElementById('animalType').value;
-            const animalName = document.getElementById('myText01').value.trim();
+            let animalName = document.getElementById('myText01').value.trim();
             const animalAge = document.getElementById('myAge').value;
 
             let myAnimal;
@@ -148,6 +164,12 @@
                     break;
                 case 'fox':
                     myAnimal = new MyFox(animalName, animalAge || 4);
+                    break;
+                case 'lion':
+                    myAnimal = new MyLion(animalName, animalAge || 8);
+                    break;
+                case 'tiger':
+                    myAnimal = new MyTiger(animalName, animalAge || 6);
                     break;
                 default:
                     myAnimal = new MyAnimal(animalName || 'Animal', animalAge || 0);
