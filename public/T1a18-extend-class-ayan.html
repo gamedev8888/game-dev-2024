@@ -10,7 +10,7 @@
     <h2 align="center">T1a18 Extend Class By Ayan</h2>
 
     <input type="text" id="myText01" value="may be useful later"><br>
-    <input type="button" id="animalBtn" value="Set and Show My Bunny"><br><br>
+    <input type="button" id="animalBtn" value="Bunny"><br><br>
     <input type="button" id="catBtn" value="Cat"><br><br>
     <input type="button" id="dogBtn" value="Dog"><br><br>
 
@@ -22,8 +22,9 @@
                 this.myName = passName;
                 this.myAge = passAge;
             }
+           class MyBunny extends MyAnimal {
             myShow() {
-                document.getElementById('myDiv01').innerHTML = 'Hello ' + this.myName + ', Age: ' + this.myAge + '<br>';
+                document.getElementById('myDiv01').innerHTML = this.myName + ' is a fanastic bunny, Age: ' + this.myAge + '<br>';
             }
         }
 
