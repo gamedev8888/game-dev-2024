@@ -8,12 +8,12 @@
         body {
             font-family: 'Arial', sans-serif;
             background-image: url('https://wallpaperaccess.com/full/2320946.jpg');
-            background-size: cover;
-            background-position: center;
-            color: #fff;
+            background-size: cover; /* Cover the entire page */
+            background-position: center; /* Center the image */
+            color: #fff; /* Change text color to white for contrast */
             text-align: center;
             padding: 20px;
-            margin: 0;
+            margin: 0; /* Remove default margin */
         }
 
         h2 {
@@ -30,8 +30,8 @@
             margin: 10px 0;
             border: 2px solid #5A67D8;
             border-radius: 5px;
-            background-color: rgba(255, 255, 255, 0.9);
-            color: #333;
+            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white background */
+            color: #333; /* Dark text for inputs for readability */
             transition: border 0.3s;
         }
 
@@ -59,23 +59,14 @@
             padding: 20px;
             border: 1px solid #ddd;
             border-radius: 5px;
-            background-color: rgba(255, 255, 255, 0.8);
-            color: #333;
+            background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+            color: #333; /* Dark text for output area */
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
             transition: transform 0.3s;
         }
 
         #myDiv01:hover {
             transform: scale(1.02);
-        }
-
-        #generatedImage {
-            margin-top: 20px;
-        }
-
-        #superheroImage {
-            max-width: 300px;
-            display: none;
         }
     </style>
 </head>
@@ -133,10 +124,6 @@
 
     <div id="myDiv01">...</div>
 
-    <div id="generatedImage">
-        <img id="superheroImage" src="" alt="Superhero Image">
-    </div>
-
     <script>
         // Animal Creator
         class MyAnimal {
@@ -152,26 +139,30 @@
             }
         }
 
-        class MyCat extends MyAnimal { 
-            myShow() { 
-                document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a great cat, Age: <strong>${this.myAge}</strong><br>`; 
-            } 
-        }
+        class MyCat extends MyAnimal { myShow() { document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a great cat, Age: <strong>${this.myAge}</strong><br>`; } }
+        class MyDog extends MyAnimal { myShow() { document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a loyal dog, Age: <strong>${this.myAge}</strong><br>`; } }
+        class MyFox extends MyAnimal { myShow() { document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a clever fox, Age: <strong>${this.myAge}</strong><br>`; } }
+        class MyLion extends MyAnimal { myShow() { document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a majestic lion, Age: <strong>${this.myAge}</strong><br>`; } }
+        class MyTiger extends MyAnimal { myShow() { document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a fierce tiger, Age: <strong>${this.myAge}</strong><br>`; } }
+        class MyElephant extends MyAnimal { myShow() { document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a gentle elephant, Age: <strong>${this.myAge}</strong><br>`; } }
+        class MyGiraffe extends MyAnimal { myShow() { document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a tall giraffe, Age: <strong>${this.myAge}</strong><br>`; } }
+        class MyZebra extends MyAnimal { myShow() { document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a striped zebra, Age: <strong>${this.myAge}</strong><br>`; } }
+        class MyBear extends MyAnimal { myShow() { document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a strong bear, Age: <strong>${this.myAge}</strong><br>`; } }
+        class MyPanda extends MyAnimal { myShow() { document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a playful panda, Age: <strong>${this.myAge}</strong><br>`; } }
 
-        class MyDog extends MyAnimal { 
-            myShow() { 
-                document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a loyal dog, Age: <strong>${this.myAge}</strong><br>`; 
-            } 
-        }
-
-        // Other animal classes omitted for brevity...
-        
         // Default names for each animal type
         const defaultNames = {
             bunny: ["Fluff", "Thumper", "Binky", "Cottontail"],
             cat: ["Whiskers", "Shadow", "Simba", "Luna"],
             dog: ["Buddy", "Max", "Bella", "Charlie"],
-            // Additional default names...
+            fox: ["Foxy", "Rusty", "Sly", "Amber"],
+            lion: ["Leo", "Simba", "Nala", "Mufasa"],
+            tiger: ["Sher Khan", "Tigger", "Stripes", "Rajah"],
+            elephant: ["Dumbo", "Bubbles", "Elsa", "Manny"],
+            giraffe: ["Longneck", "Stretch", "Spots", "Gigi"],
+            zebra: ["Stripes", "Ziggy", "Zara", "Bingo"],
+            bear: ["Baloo", "Yogi", "Paddington", "Winnie"],
+            panda: ["Po", "Bamboo", "Ling-Ling", "Lucky"]
         };
 
         // Event listener for the create animal button
@@ -198,7 +189,32 @@
                 case 'dog':
                     myAnimal = new MyDog(animalName, animalAge || 3);
                     break;
-                // Other cases omitted for brevity...
+                case 'fox':
+                    myAnimal = new MyFox(animalName, animalAge || 4);
+                    break;
+                case 'lion':
+                    myAnimal = new MyLion(animalName, animalAge || 8);
+                    break;
+                case 'tiger':
+                    myAnimal = new MyTiger(animalName, animalAge || 6);
+                    break;
+                case 'elephant':
+                    myAnimal = new MyElephant(animalName, animalAge || 12);
+                    break;
+                case 'giraffe':
+                    myAnimal = new MyGiraffe(animalName, animalAge || 15);
+                    break;
+                case 'zebra':
+                    myAnimal = new MyZebra(animalName, animalAge || 5);
+                    break;
+                case 'bear':
+                    myAnimal = new MyBear(animalName, animalAge || 7);
+                    break;
+                case 'panda':
+                    myAnimal = new MyPanda(animalName, animalAge || 10);
+                    break;
+                default:
+                    myAnimal = new MyAnimal(animalName || 'Animal', animalAge || 0);
             }
 
             myAnimal.myShow();
@@ -222,14 +238,8 @@
             }
         }
 
-        // Function to simulate image generation
-        async function generateSuperheroImage() {
-            // Simulating an API call using a static URL (replace with your actual API call)
-            return 'https://via.placeholder.com/300.png?text=Superhero+Image'; // Placeholder image URL
-        }
-
         // Event listener for the create hero button
-        document.getElementById('createHeroBtn').addEventListener('click', async () => {
+        document.getElementById('createHeroBtn').addEventListener('click', () => {
             const heroName = document.getElementById('heroName').value.trim();
             const heroType = document.getElementById('heroType').value;
             const powers = document.getElementById('powers').value.split(',').map(power => power.trim()).filter(Boolean);
@@ -242,12 +252,6 @@
 
             const superhero = new Superhero(heroName, heroType, powers, origin);
             superhero.showDetails();
-
-            // Generate the superhero image
-            const superheroImageUrl = await generateSuperheroImage();
-            const imgElement = document.getElementById('superheroImage');
-            imgElement.src = superheroImageUrl;
-            imgElement.style.display = 'block'; // Show the image
         });
 
         // Set default values based on selected animal type
