@@ -5,15 +5,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="css-ayan.css">
     <title>Classes</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #5A67D8;
+        }
+
+        select, input[type="text"], input[type="number"], input[type="button"] {
+            width: 200px;
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid #5A67D8;
+            border-radius: 5px;
+            transition: border 0.3s;
+        }
+
+        select:focus, input[type="text"]:focus, input[type="number"]:focus {
+            border-color: #4C51BF;
+            outline: none;
+        }
+
+        input[type="button"] {
+            cursor: pointer;
+            background-color: #5A67D8;
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="button"]:hover {
+            background-color: #4C51BF;
+        }
+
+        #myDiv01 {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        #myDiv01:hover {
+            transform: scale(1.02);
+        }
+    </style>
 </head>
 <body>
-    <h2 align="center">T1a18 Extend Class By Ayan</h2>
+    <h2>Animal Creator</h2>
 
-    <input type="text" id="myText01" value="may be useful later"><br>
-    <input type="button" id="animalBtn" value="Bunny"><br><br>
-    <input type="button" id="catBtn" value="Cat"><br><br>
-    <input type="button" id="dogBtn" value="Dog"><br><br>
-    <input type="button" id="foxBtn" value="Fox"><br><br> <!-- Button for Fox -->
+    <label for="animalType">Choose an animal:</label>
+    <select id="animalType">
+        <option value="bunny">Bunny</option>
+        <option value="cat">Cat</option>
+        <option value="dog">Dog</option>
+        <option value="fox">Fox</option>
+    </select><br>
+
+    <input type="text" id="myText01" placeholder="Enter your animal's name">
+    <input type="number" id="myAge" placeholder="Enter your animal's age" min="0"><br>
+
+    <input type="button" id="createAnimalBtn" value="Create Animal"><br>
 
     <div id="myDiv01">...</div>
 
@@ -27,56 +89,54 @@
 
         class MyBunny extends MyAnimal {
             myShow() {
-                document.getElementById('myDiv01').innerHTML = this.myName + ' is a fantastic bunny, Age: ' + this.myAge + '<br>';
+                document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a fantastic bunny, Age: <strong>${this.myAge}</strong><br>`;
             }
         }
 
         class MyCat extends MyAnimal {
             myShow() {
-                document.getElementById('myDiv01').innerHTML = this.myName + ' is a great cat, Age: ' + this.myAge + '<br>';
+                document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a great cat, Age: <strong>${this.myAge}</strong><br>`;
             }
         }
 
         class MyDog extends MyAnimal {
             myShow() {
-                document.getElementById('myDiv01').innerHTML = this.myName + ' is a loyal dog, Age: ' + this.myAge + '<br>';
+                document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a loyal dog, Age: <strong>${this.myAge}</strong><br>`;
             }
         }
-        
-        class MyFox extends MyAnimal { // New MyFox class
+
+        class MyFox extends MyAnimal {
             myShow() {
-                document.getElementById('myDiv01').innerHTML = this.myName + ' is a clever fox, Age: ' + this.myAge + '<br>';
+                document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a clever fox, Age: <strong>${this.myAge}</strong><br>`;
             }
         }
 
-        // Event listener for the bunny button
-        document.getElementById('animalBtn').addEventListener('click', () => {
-            let bunnyName = document.getElementById('myText01').value;
-            let myBunny = new MyBunny(bunnyName || 'Snickers', 5);
-            myBunny.myShow();
-        });
+        // Event listener for the create animal button
+        document.getElementById('createAnimalBtn').addEventListener('click', () => {
+            const animalType = document.getElementById('animalType').value;
+            const animalName = document.getElementById('myText01').value;
+            const animalAge = document.getElementById('myAge').value;
 
-        // Event listener for the cat button
-        document.getElementById('catBtn').addEventListener('click', () => {
-            let catName = document.getElementById('myText01').value;
-            let myPet = new MyCat(catName || 'Buddy', 14);
-            myPet.myShow();
-        });
+            let myAnimal;
+            switch (animalType) {
+                case 'bunny':
+                    myAnimal = new MyBunny(animalName || 'Snickers', animalAge || 5);
+                    break;
+                case 'cat':
+                    myAnimal = new MyCat(animalName || 'Buddy', animalAge || 14);
+                    break;
+                case 'dog':
+                    myAnimal = new MyDog(animalName || 'Fluffy', animalAge || 3);
+                    break;
+                case 'fox':
+                    myAnimal = new MyFox(animalName || 'Foxy', animalAge || 4);
+                    break;
+                default:
+                    myAnimal = new MyAnimal(animalName || 'Animal', animalAge || 0);
+            }
 
-        // Event listener for the dog button
-        document.getElementById('dogBtn').addEventListener('click', () => {
-            let dogName = document.getElementById('myText01').value;
-            let myPet = new MyDog(dogName || 'Fluffy', 3);
-            myPet.myShow();
+            myAnimal.myShow();
         });
-        
-        // Event listener for the fox button
-        document.getElementById('foxBtn').addEventListener('click', () => {
-            let foxName = document.getElementById('myText01').value;
-            let myFox = new MyFox(foxName || 'Foxy', 4);
-            myFox.myShow();
-        });
-
     </script>
 </body>
 </html>
