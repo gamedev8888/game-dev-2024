@@ -13,6 +13,7 @@
     <input type="button" id="animalBtn" value="Bunny"><br><br>
     <input type="button" id="catBtn" value="Cat"><br><br>
     <input type="button" id="dogBtn" value="Dog"><br><br>
+    <input type="button" id="foxBtn" value="Fox"><br><br> <!-- Button for Fox -->
 
     <div id="myDiv01">...</div>
 
@@ -22,9 +23,11 @@
                 this.myName = passName;
                 this.myAge = passAge;
             }
-           class MyBunny extends MyAnimal {
+        }
+
+        class MyBunny extends MyAnimal {
             myShow() {
-                document.getElementById('myDiv01').innerHTML = this.myName + ' is a fanastic bunny, Age: ' + this.myAge + '<br>';
+                document.getElementById('myDiv01').innerHTML = this.myName + ' is a fantastic bunny, Age: ' + this.myAge + '<br>';
             }
         }
 
@@ -39,27 +42,41 @@
                 document.getElementById('myDiv01').innerHTML = this.myName + ' is a loyal dog, Age: ' + this.myAge + '<br>';
             }
         }
+        
+        class MyFox extends MyAnimal { // New MyFox class
+            myShow() {
+                document.getElementById('myDiv01').innerHTML = this.myName + ' is a clever fox, Age: ' + this.myAge + '<br>';
+            }
+        }
 
         // Event listener for the bunny button
         document.getElementById('animalBtn').addEventListener('click', () => {
             let bunnyName = document.getElementById('myText01').value;
-            let myBunny = new MyAnimal(bunnyName || 'Snickers', 5);
+            let myBunny = new MyBunny(bunnyName || 'Snickers', 5);
             myBunny.myShow();
         });
 
         // Event listener for the cat button
         document.getElementById('catBtn').addEventListener('click', () => {
             let catName = document.getElementById('myText01').value;
-            let myPet = new MyCat(catName || 'buddy', 14);
+            let myPet = new MyCat(catName || 'Buddy', 14);
             myPet.myShow();
         });
 
         // Event listener for the dog button
         document.getElementById('dogBtn').addEventListener('click', () => {
             let dogName = document.getElementById('myText01').value;
-            let myPet = new MyDog(dogName || 'fluffy', 3);
+            let myPet = new MyDog(dogName || 'Fluffy', 3);
             myPet.myShow();
         });
+        
+        // Event listener for the fox button
+        document.getElementById('foxBtn').addEventListener('click', () => {
+            let foxName = document.getElementById('myText01').value;
+            let myFox = new MyFox(foxName || 'Foxy', 4);
+            myFox.myShow();
+        });
+
     </script>
 </body>
 </html>
