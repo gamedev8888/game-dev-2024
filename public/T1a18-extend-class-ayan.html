@@ -35,22 +35,22 @@
     </script>
 
     <input type="button" value="Example Class Set and Show Class Animal" onClick="{
-        let dogName = document.getElementById('myText01').value;
-        myDog = new MyAnimal(dogName || 'Snickers', 5);
-        myDog.myShow();
+        let bunnyName = document.getElementById('myText01').value;
+        myBunny = new MyAnimal(bunnyName || 'Snickers', 5);
+        myBunny.myShow();
     }"><br><br>
 
     <input type="text" id="myText01" value="may be useful later"><br>
 
-    <input type="button" value="Example Extend Class Animal as Cat" onClick="{
+    <input type="button" value="Cat" onClick="{
         let catName = document.getElementById('myText01').value;
-        myPet = new MyCat(catName || 'Fluffy', 14);
+        myPet = new MyCat(catName || 'buddy', 14);
         myPet.myShow();
     }"><br><br>
 
-    <input type="button" value="Example Extend Class Animal as Dog" onClick="{
+    <input type="button" value="Dog" onClick="{
         let dogName = document.getElementById('myText01').value;
-        myPet = new MyDog(dogName || 'Buddy', 3);
+        myPet = new MyDog(dogName || 'fluffy', 3);
         myPet.myShow();
     }"><br><br>
 
