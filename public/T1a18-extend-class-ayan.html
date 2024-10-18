@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Classes</title>
+    <title>Superhero and Animal Creator</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -63,6 +63,13 @@
             color: #333; /* Dark text for output area */
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
             transition: transform 0.3s;
+        }
+
+        #myDiv01 img {
+            max-width: 100px; /* Set max width for images to 100px */
+            max-height: 100px; /* Set max height for images to 100px */
+            margin-top: 10px; /* Space above images */
+            border-radius: 5px; /* Rounded corners for images */
         }
 
         #myDiv01:hover {
@@ -227,6 +234,20 @@
                 this.heroType = heroType;
                 this.powers = powers || [];
                 this.origin = origin || "Unknown origin.";
+                this.image = this.setImage(); // Set the superhero image based on the name or type
+            }
+
+            setImage() {
+                const images = {
+                    "Heroic Ray": "https://example.com/heroic-ray.jpg",
+                    "Superman": "https://example.com/superman.jpg",
+                    "Batman": "https://example.com/batman.jpg",
+                    "Wonder Woman": "https://example.com/wonder-woman.jpg",
+                    "Spider-Man": "https://example.com/spider-man.jpg",
+                    "Iron Man": "https://example.com/iron-man.jpg",
+                    "Black Widow": "https://example.com/black-widow.jpg"
+                };
+                return images[this.name] || "https://example.com/default-superhero.jpg"; // Default image if not found
             }
 
             showDetails() {
@@ -234,6 +255,7 @@
                 document.getElementById('myDiv01').innerHTML = `
                     <strong>${this.name}</strong> is a ${this.heroType} with the following powers: <strong>${powersList}</strong>.
                     <br><em>Origin: ${this.origin}</em>
+                    <img src="${this.image}" alt="${this.name}">
                 `;
             }
         }
