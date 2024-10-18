@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fancy Animal Creator</title>
+    <title>Superhero and Animal Creator</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -21,7 +21,7 @@
             font-weight: bold;
         }
 
-        select, input[type="text"], input[type="number"], input[type="button"] {
+        select, input[type="text"], input[type="number"], input[type="button"], textarea {
             width: 200px;
             padding: 10px;
             margin: 10px 0;
@@ -30,7 +30,7 @@
             transition: border 0.3s;
         }
 
-        select:focus, input[type="text"]:focus, input[type="number"]:focus {
+        select:focus, input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
             border-color: #4C51BF;
             outline: none;
         }
@@ -65,31 +65,61 @@
     </style>
 </head>
 <body>
-    <h2>Animal Creator</h2>
 
-    <label for="animalType">Choose an animal:</label>
-    <select id="animalType">
-        <option value="bunny">Bunny</option>
-        <option value="cat">Cat</option>
-        <option value="dog">Dog</option>
-        <option value="fox">Fox</option>
-        <option value="lion">Lion</option>
-        <option value="tiger">Tiger</option>
-        <option value="elephant">Elephant</option>
-        <option value="giraffe">Giraffe</option>
-        <option value="zebra">Zebra</option>
-        <option value="bear">Bear</option>
-        <option value="panda">Panda</option>
-    </select><br>
+    <h2>Animal and Superhero Creator</h2>
 
-    <input type="text" id="myText01" placeholder="Enter your animal's name (optional)">
-    <input type="number" id="myAge" placeholder="Enter your animal's age" min="0"><br>
+    <input type="button" id="toggleAnimalBtn" value="Create Animal">
+    <input type="button" id="toggleHeroBtn" value="Create Superhero"><br>
 
-    <input type="button" id="createAnimalBtn" value="Create Animal"><br>
+    <div id="animalCreator" style="display:none;">
+        <h3>Animal Creator</h3>
+        <label for="animalType">Choose an animal:</label>
+        <select id="animalType">
+            <option value="bunny">Bunny</option>
+            <option value="cat">Cat</option>
+            <option value="dog">Dog</option>
+            <option value="fox">Fox</option>
+            <option value="lion">Lion</option>
+            <option value="tiger">Tiger</option>
+            <option value="elephant">Elephant</option>
+            <option value="giraffe">Giraffe</option>
+            <option value="zebra">Zebra</option>
+            <option value="bear">Bear</option>
+            <option value="panda">Panda</option>
+        </select><br>
+
+        <input type="text" id="myText01" placeholder="Enter your animal's name (optional)">
+        <input type="number" id="myAge" placeholder="Enter your animal's age" min="0"><br>
+
+        <input type="button" id="createAnimalBtn" value="Create Animal"><br>
+    </div>
+
+    <div id="heroCreator" style="display:none;">
+        <h3>Superhero Creator</h3>
+        <label for="heroName">Hero Name:</label>
+        <input type="text" id="heroName" placeholder="Enter superhero name"><br>
+
+        <label for="heroType">Choose a hero type:</label>
+        <select id="heroType">
+            <option value="superhero">Superhero</option>
+            <option value="villain">Villain</option>
+            <option value="sidekick">Sidekick</option>
+            <option value="anti-hero">Anti-Hero</option>
+        </select><br>
+
+        <label for="powers">Powers (comma-separated):</label>
+        <input type="text" id="powers" placeholder="e.g., flying, strength"><br>
+
+        <label for="origin">Origin Story (optional):</label>
+        <textarea id="origin" placeholder="Tell the story..."></textarea><br>
+
+        <input type="button" id="createHeroBtn" value="Create Hero"><br>
+    </div>
 
     <div id="myDiv01">...</div>
 
     <script>
+        // Animal Creator
         class MyAnimal {
             constructor(passName, passAge) {
                 this.myName = passName;
@@ -103,65 +133,17 @@
             }
         }
 
-        class MyCat extends MyAnimal {
-            myShow() {
-                document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a great cat, Age: <strong>${this.myAge}</strong><br>`;
-            }
-        }
-
-        class MyDog extends MyAnimal {
-            myShow() {
-                document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a loyal dog, Age: <strong>${this.myAge}</strong><br>`;
-            }
-        }
-
-        class MyFox extends MyAnimal {
-            myShow() {
-                document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a clever fox, Age: <strong>${this.myAge}</strong><br>`;
-            }
-        }
-
-        class MyLion extends MyAnimal {
-            myShow() {
-                document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a majestic lion, Age: <strong>${this.myAge}</strong><br>`;
-            }
-        }
-
-        class MyTiger extends MyAnimal {
-            myShow() {
-                document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a fierce tiger, Age: <strong>${this.myAge}</strong><br>`;
-            }
-        }
-
-        class MyElephant extends MyAnimal {
-            myShow() {
-                document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a gentle elephant, Age: <strong>${this.myAge}</strong><br>`;
-            }
-        }
-
-        class MyGiraffe extends MyAnimal {
-            myShow() {
-                document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a tall giraffe, Age: <strong>${this.myAge}</strong><br>`;
-            }
-        }
-
-        class MyZebra extends MyAnimal {
-            myShow() {
-                document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a striped zebra, Age: <strong>${this.myAge}</strong><br>`;
-            }
-        }
-
-        class MyBear extends MyAnimal {
-            myShow() {
-                document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a strong bear, Age: <strong>${this.myAge}</strong><br>`;
-            }
-        }
-
-        class MyPanda extends MyAnimal {
-            myShow() {
-                document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a playful panda, Age: <strong>${this.myAge}</strong><br>`;
-            }
-        }
+        // rest of animal classes...
+        class MyCat extends MyAnimal { myShow() { document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a great cat, Age: <strong>${this.myAge}</strong><br>`; } }
+        class MyDog extends MyAnimal { myShow() { document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a loyal dog, Age: <strong>${this.myAge}</strong><br>`; } }
+        class MyFox extends MyAnimal { myShow() { document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a clever fox, Age: <strong>${this.myAge}</strong><br>`; } }
+        class MyLion extends MyAnimal { myShow() { document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a majestic lion, Age: <strong>${this.myAge}</strong><br>`; } }
+        class MyTiger extends MyAnimal { myShow() { document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a fierce tiger, Age: <strong>${this.myAge}</strong><br>`; } }
+        class MyElephant extends MyAnimal { myShow() { document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a gentle elephant, Age: <strong>${this.myAge}</strong><br>`; } }
+        class MyGiraffe extends MyAnimal { myShow() { document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a tall giraffe, Age: <strong>${this.myAge}</strong><br>`; } }
+        class MyZebra extends MyAnimal { myShow() { document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a striped zebra, Age: <strong>${this.myAge}</strong><br>`; } }
+        class MyBear extends MyAnimal { myShow() { document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a strong bear, Age: <strong>${this.myAge}</strong><br>`; } }
+        class MyPanda extends MyAnimal { myShow() { document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a playful panda, Age: <strong>${this.myAge}</strong><br>`; } }
 
         // Default names for each animal type
         const defaultNames = {
@@ -232,6 +214,54 @@
 
             myAnimal.myShow();
         });
+
+        // Superhero Creator
+        class Superhero {
+            constructor(name, heroType, powers, origin) {
+                this.name = name;
+                this.heroType = heroType;
+                this.powers = powers || [];
+                this.origin = origin || "Unknown origin.";
+            }
+
+            showDetails() {
+                const powersList = this.powers.length ? this.powers.join(', ') : 'None';
+                document.getElementById('myDiv01').innerHTML = `
+                    <strong>${this.name}</strong> is a ${this.heroType} with the following powers: <strong>${powersList}</strong>.
+                    <br><em>Origin: ${this.origin}</em>
+                `;
+            }
+        }
+
+        // Event listener for the create hero button
+        document.getElementById('createHeroBtn').addEventListener('click', () => {
+            const heroName = document.getElementById('heroName').value.trim();
+            const heroType = document.getElementById('heroType').value;
+            const powers = document.getElementById('powers').value.split(',').map(power => power.trim()).filter(Boolean);
+            const origin = document.getElementById('origin').value.trim();
+
+            if (!heroName) {
+                alert("Please enter a name for your superhero!");
+                return;
+            }
+
+            const superhero = new Superhero(heroName, heroType, powers, origin);
+            superhero.showDetails();
+        });
+
+        // Toggle visibility of creators
+        document.getElementById('toggleAnimalBtn').addEventListener('click', () => {
+            document.getElementById('animalCreator').style.display = 'block';
+            document.getElementById('heroCreator').style.display = 'none';
+            document.getElementById('myDiv01').innerHTML = "Select an animal to create!";
+        });
+
+        document.getElementById('toggleHeroBtn').addEventListener('click', () => {
+            document.getElementById('animalCreator').style.display = 'none';
+            document.getElementById('heroCreator').style.display = 'block';
+            document.getElementById('myDiv01').innerHTML = "Create your superhero!";
+        });
+        
     </script>
 </body>
 </html>
