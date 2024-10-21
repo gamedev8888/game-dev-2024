@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -69,7 +69,6 @@
             transform: scale(1.02);
         }
 
-        /* New styles for the Pokémon creator */
         #pokemonCreator {
             display: none;
         }
@@ -90,9 +89,19 @@
     <input type="button" id="toggleHeroBtn" value="Create Superhero">
     <input type="button" id="togglePokemonBtn" value="Create Pokémon"><br>
 
-    <!-- Existing Animal Creator Code... -->
+    <!-- Animal Creator (Placeholder) -->
+    <div id="animalCreator" style="display: none;">
+        <h3>Animal Creator</h3>
+        <!-- Add your animal creation logic here -->
+        <p>Animal creation functionality goes here.</p>
+    </div>
 
-    <!-- Existing Superhero Creator Code... -->
+    <!-- Superhero Creator (Placeholder) -->
+    <div id="heroCreator" style="display: none;">
+        <h3>Superhero Creator</h3>
+        <!-- Add your superhero creation logic here -->
+        <p>Superhero creation functionality goes here.</p>
+    </div>
 
     <div id="pokemonCreator">
         <h3>Pokémon Creator</h3>
@@ -116,8 +125,6 @@
     <div id="myDiv01">...</div>
 
     <script>
-        // Existing JavaScript code...
-
         // Pokémon data
         const pokemonData = {
             pikachu: {
@@ -186,6 +193,20 @@
             document.getElementById('pokemonCreator').style.display = 'block';
             setPokemonDefaults(); // Set default values when the Pokémon creator is shown
             document.getElementById('myDiv01').innerHTML = "Create your Pokémon!";
+        });
+
+        document.getElementById('toggleAnimalBtn').addEventListener('click', () => {
+            document.getElementById('animalCreator').style.display = 'block';
+            document.getElementById('heroCreator').style.display = 'none';
+            document.getElementById('pokemonCreator').style.display = 'none';
+            document.getElementById('myDiv01').innerHTML = "Create your Animal!";
+        });
+
+        document.getElementById('toggleHeroBtn').addEventListener('click', () => {
+            document.getElementById('animalCreator').style.display = 'none';
+            document.getElementById('heroCreator').style.display = 'block';
+            document.getElementById('pokemonCreator').style.display = 'none';
+            document.getElementById('myDiv01').innerHTML = "Create your Superhero!";
         });
     </script>
 </body>
