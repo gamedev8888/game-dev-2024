@@ -99,10 +99,17 @@ function restartGame() {
 }
 
 // Game variables for Hangman
-const words = ["javascript", "html", "css", "computer", "programming", "hangman"];
-let selectedWord, guessedLetters, wrongGuesses;
+const easyWords = ["cat", "dog", "fish", "book", "star"];
+const hardWords = ["javascript", "html", "css", "computer", "programming", "hangman"];
+let selectedWord, guessedLetters, wrongGuesses, words;
+
+function setDifficulty() {
+    const difficulty = myVar('difficultySelect').value;
+    words = difficulty === "easy" ? easyWords : hardWords;
+}
 
 function startHangman() {
+    setDifficulty();
     selectedWord = words[Math.floor(Math.random() * words.length)];
     guessedLetters = [];
     wrongGuesses = 0;
@@ -164,9 +171,14 @@ Input: <input type="text" id="myFirstName" value="Ayan">
 
 <!-- Hangman game -->
 <h2>Hangman Game</h2>
+<label for="difficultySelect">Select Difficulty:</label>
+<select id="difficultySelect">
+    <option value="easy">Easy</option>
+    <option value="hard">Hard</option>
+</select>
+<input type="button" value="Start Game" onclick="startHangman()">
 <input type="text" id="hangmanInput" placeholder="Enter a letter">
 <input type="button" value="Guess" onclick="guessLetter()">
-<input type="button" value="Start Game" onclick="startHangman()">
 <div id="hangmanResult"></div>
 <div id="hangmanMessage">Press "Start Game" to begin!</div>
 
