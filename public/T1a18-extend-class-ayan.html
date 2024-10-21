@@ -86,23 +86,33 @@
         <h3>Animal Creator</h3>
         <label for="animalType">Choose an Animal:</label>
         <select id="animalType">
-            <option value="dog">Dog</option>
+            <option value="dog" selected>Dog</option>  <!-- Default selected option -->
             <option value="cat">Cat</option>
             <option value="elephant">Elephant</option>
             <option value="lion">Lion</option>
         </select><br>
 
-        <input type="text" id="animalName" placeholder="Enter your Animal's name (optional)">
+        <input type="text" id="animalName" placeholder="Enter your Animal's name (optional)" value="Buddy">  <!-- Default name -->
         <input type="button" id="createAnimalBtn" value="Create Animal"><br>
       
         <div id="animalInfo"></div>
     </div>
 
-    <!-- Superhero Creator (Placeholder) -->
+    <!-- Superhero Creator -->
     <div id="heroCreator" style="display: none;">
         <h3>Superhero Creator</h3>
-        <!-- Add your superhero creation logic here -->
-        <p>Superhero creation functionality goes here.</p>
+        <label for="heroType">Choose a Superhero:</label>
+        <select id="heroType">
+            <option value="superman" selected>Superman</option>
+            <option value="batman">Batman</option>
+            <option value="wonderwoman">Wonder Woman</option>
+            <option value="spiderman">Spider-Man</option>
+        </select><br>
+
+        <input type="text" id="heroName" placeholder="Enter your Superhero's name (optional)" value="Hero of Justice">  <!-- Default name -->
+        <input type="button" id="createHeroBtn" value="Create Superhero"><br>
+      
+        <div id="heroInfo"></div>
     </div>
 
     <div id="myDiv01">...</div>
@@ -113,6 +123,13 @@
             cat: "Cats are curious and playful creatures.",
             elephant: "Elephants are known for their intelligence and large size.",
             lion: "Lions are fierce and social animals, often called the King of the Jungle."
+        };
+
+        const superheroData = {
+            superman: "Superman has super strength and can fly.",
+            batman: "Batman is known for his intelligence, combat skills, and gadgets.",
+            wonderwoman: "Wonder Woman possesses incredible strength and combat skills.",
+            spiderman: "Spider-Man can climb walls and has spider-sense."
         };
 
         // Event listener for create Animal button
@@ -128,17 +145,36 @@
             animalInfo.innerHTML = `<strong>${animalName}</strong>: ${animalData[animalType]}`;
         });
 
+        // Event listener for create Superhero button
+        document.getElementById('createHeroBtn').addEventListener('click', () => {
+            const heroType = document.getElementById('heroType').value;
+            let heroName = document.getElementById('heroName').value.trim();
+
+            if (!heroName) {
+                heroName = heroType.charAt(0).toUpperCase() + heroType.slice(1).replace(/([A-Z])/g, ' $1'); // Format hero name based on the type
+            }
+
+            const heroInfo = document.getElementById('heroInfo');
+            heroInfo.innerHTML = `<strong>${heroName}</strong>: ${superheroData[heroType]}`;
+        });
+
         // Toggle visibility of creators
         document.getElementById('toggleAnimalBtn').addEventListener('click', () => {
             document.getElementById('animalCreator').style.display = 'block';
             document.getElementById('heroCreator').style.display = 'none';
             document.getElementById('myDiv01').innerHTML = "Create your Animal!";
+            // Set default values when shown
+            document.getElementById('animalName').value = "Buddy"; // Reset to default name
+            document.getElementById('animalType').value = "dog"; // Default selected animal
         });
 
         document.getElementById('toggleHeroBtn').addEventListener('click', () => {
             document.getElementById('animalCreator').style.display = 'none';
             document.getElementById('heroCreator').style.display = 'block';
             document.getElementById('myDiv01').innerHTML = "Create your Superhero!";
+            // Set default values for superheroes when shown
+            document.getElementById('heroName').value = "Hero of Justice"; // Reset to default name
+            document.getElementById('heroType').value = "superman"; // Default selected hero
         });
     </script>
 </body>
