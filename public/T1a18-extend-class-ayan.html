@@ -145,26 +145,29 @@
         let currentPokemon; // Store current Pokémon data
         let isShiny = false; // State for shiny toggle
 
-        // Event listener for create Superhero button
-        document.getElementById('createHeroBtn').addEventListener('click', () => {
+        // Function to update hero display
+        function updateHeroDisplay() {
             const heroType = document.getElementById('heroType').value;
-            let heroName = document.getElementById('heroName').value.trim().toLowerCase(); // Convert to lowercase for matching
+            const heroName = document.getElementById('heroName').value.trim().toLowerCase();
 
-            // Fallback to superheroType if heroName is empty
-            if (!heroName) {
-                heroName = heroType;
-            }
+            // Use the hero type if no name provided
+            const displayName = heroName ? heroName : heroType;
 
             // Display superhero info
             const heroInfo = document.getElementById('heroInfo');
-            heroInfo.innerHTML = `<strong>${heroName.charAt(0).toUpperCase() + heroName.slice(1)}</strong>: ${superheroData[heroType]}`;
+            heroInfo.innerHTML = `<strong>${displayName.charAt(0).toUpperCase() + displayName.slice(1)}</strong>: ${superheroData[heroType]}`;
             
             // Display the corresponding superhero image
             const heroImage = document.getElementById('heroImage');
-            heroImage.src = superheroImages[heroName] || superheroImages['hero of justice']; // Default image if not found
-            heroImage.alt = `${heroName.charAt(0).toUpperCase() + heroName.slice(1)} Image`;
+            heroImage.src = superheroImages[displayName] || superheroImages['hero of justice']; // Default image if not found
+            heroImage.alt = `${displayName.charAt(0).toUpperCase() + displayName.slice(1)} Image`;
             heroImage.style.display = 'block'; // Show the image
-        });
+        }
+
+        // Event listener for superhero selection change
+        document.getElementById('heroType').addEventListener('change', updateHeroDisplay);
+        // Event listener for custom superhero name change
+        document.getElementById('heroName').addEventListener('input', updateHeroDisplay);
 
         // Generate a random Pokémon
         document.getElementById('randomPokemonBtn').addEventListener('click', async () => {
@@ -247,9 +250,7 @@
             document.getElementById('heroCreator').style.display = 'block';
             document.getElementById('pokemonIdSection').style.display = 'none'; // Hide Pokémon input section
             document.getElementById('myDiv01').innerHTML = "Create your Superhero!";
-            // Set default values for superheroes when shown
-            document.getElementById('heroName').value = "Hero of Justice"; // Reset to default name
-            document.getElementById('heroType').value = "superman"; // Default selected hero
+            updateHeroDisplay(); // Update display initially
         });
     </script>
 </body>
