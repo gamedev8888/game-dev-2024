@@ -10,13 +10,13 @@
             background-image: url('https://1.bp.blogspot.com/-fip0yy6o2Y0/XuXCbLMULmI/AAAAAAAAwZE/-mgeDNU4aq8k-VLPTFB0in_pfzwLicWwQCLcBGAsYHQ/s2560/2020-deadpool-artwork-4k-o4-3840x2160.jpg');
             background-size: cover;
             background-position: center;
-            color: #55a63c;
+            color: #fff;  /* Change default text color to white for better readability */
             text-align: center;
             padding: 20px;
         }
 
         h1, h2 {
-            color: #4CAF50;
+            color: #ffcc00; /* Bright gold for headings */
         }
 
         input[type="text"] {
@@ -24,35 +24,38 @@
             margin: 10px 0;
             width: 200px;
             border: 1px solid #ddd;
-            border-radius: 4px;
+            border-radius: 5px;
+            background-color: rgba(0, 0, 0, 0.7); /* Dark background for input fields */
+            color: #fff; /* White text in input */
         }
 
         input[type="button"] {
             padding: 10px 15px;
-            background-color: #4CAF50;
+            background-color: #ff9900; /* Orange button color */
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
         }
 
         input[type="button"]:hover {
-            background-color: #45a049;
+            background-color: #e68a00; /* Darker orange on hover */
         }
 
         #myDiv01, #guessResult, #hangmanResult {
             margin-top: 20px;
             padding: 10px;
             border: 1px solid #ddd;
-            border-radius: 4px;
-            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent background for results */
+            color: #ffcc00; /* Gold color for background text */
             display: inline-block;
         }
 
         .news-link {
             margin-top: 20px;
             font-size: 16px;
-            color: #4CAF50;
+            color: #ffcc00; /* Gold color for news link */
             text-decoration: underline;
         }
     </style>
@@ -171,7 +174,7 @@ Input: <input type="text" id="myFirstName" value="Ayan">
 
 <!-- Hangman game -->
 <h2>Hangman Game</h2>
-<label for="difficultySelect">Select Difficulty:</label>
+<label for="difficultySelect" style="color: #ffcc00;">Select Difficulty:</label>
 <select id="difficultySelect">
     <option value="easy">Easy</option>
     <option value="hard">Hard</option>
