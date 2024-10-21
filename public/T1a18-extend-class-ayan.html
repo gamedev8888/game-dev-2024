@@ -79,6 +79,7 @@
 
         img {
             max-width: 150px; /* Limit image size */
+            margin-top: 10px; /* Add some space above images */
         }
 
         .pokemon-stats {
@@ -136,6 +137,7 @@
         <input type="button" id="createHeroBtn" value="Create Superhero"><br>
       
         <div id="heroInfo"></div>
+        <img id="heroImage" src="" alt="" style="display:none;"/> <!-- Hero image placeholder -->
     </div>
 
     <div id="myDiv01">...</div>
@@ -153,6 +155,16 @@
             batman: "Batman is known for his intelligence, combat skills, and gadgets.",
             wonderwoman: "Wonder Woman possesses incredible strength and combat skills.",
             spiderman: "Spider-Man can climb walls and has spider-sense."
+        };
+
+        // JSON Object for Superhero Images
+        const superheroImages = {
+            superman: "https://img.icons8.com/color/452/superman.png",
+            batman: "https://img.icons8.com/color/452/batman.png",
+            wonderwoman: "https://img.icons8.com/color/452/wonder-woman.png",
+            spiderman: "https://img.icons8.com/color/452/spiderman.png",
+            'hero of justice': "https://img.icons8.com/color/452/superman.png", // Default image for custom names
+            // Add more heroes and corresponding images as needed
         };
 
         let currentPokemon; // Store current Pokémon data
@@ -174,14 +186,22 @@
         // Event listener for create Superhero button
         document.getElementById('createHeroBtn').addEventListener('click', () => {
             const heroType = document.getElementById('heroType').value;
-            let heroName = document.getElementById('heroName').value.trim();
+            let heroName = document.getElementById('heroName').value.trim().toLowerCase(); // Convert to lowercase for matching
 
+            // Fallback to superheroType if heroName is empty
             if (!heroName) {
-                heroName = heroType.charAt(0).toUpperCase() + heroType.slice(1).replace(/([A-Z])/g, ' $1');
+                heroName = heroType;
             }
 
+            // Display superhero info
             const heroInfo = document.getElementById('heroInfo');
-            heroInfo.innerHTML = `<strong>${heroName}</strong>: ${superheroData[heroType]}`;
+            heroInfo.innerHTML = `<strong>${heroName.charAt(0).toUpperCase() + heroName.slice(1)}</strong>: ${superheroData[heroType]}`;
+            
+            // Display the corresponding superhero image
+            const heroImage = document.getElementById('heroImage');
+            heroImage.src = superheroImages[heroName] || superheroImages['hero of justice']; // Default image if not found
+            heroImage.alt = `${heroName.charAt(0).toUpperCase() + heroName.slice(1)} Image`;
+            heroImage.style.display = 'block'; // Show the image
         });
 
         // Generate a random Pokémon
@@ -254,7 +274,7 @@
             if (currentPokemon) {
                 const types = currentPokemon.types.map(t => t.type.name).join(', ');
                 const stats = currentPokemon.stats.map(stat => `<li>${stat.stat.name}: ${stat.base_stat}</li>`).join('');
-                const habitat = "No habitat information available"; // Default, as it won't be fetched again.
+                const habitat = "No habitat information available"; // Default as it won't be fetched again.
 
                 displayPokemon(currentPokemon, types, stats, habitat); // Update the display
             }
