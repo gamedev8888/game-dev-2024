@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Animal and Superhero Creator</title>
+    <title>Animal, Superhero, and Pokémon Creator</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -72,27 +72,36 @@
         #heroCreator {
             display: none;
         }
+
+        #pokemonInfo {
+            margin-top: 20px;
+        }
+
+        img {
+            max-width: 150px; /* Limit image size */
+        }
     </style>
 </head>
 <body>
 
-    <h2>Animal and Superhero Creator</h2>
+    <h2>Animal, Superhero, and Pokémon Creator</h2>
 
     <input type="button" id="toggleAnimalBtn" value="Create Animal">
-    <input type="button" id="toggleHeroBtn" value="Create Superhero"><br>
+    <input type="button" id="toggleHeroBtn" value="Create Superhero">
+    <input type="button" id="randomPokemonBtn" value="Generate Random Pokémon"><br>
 
     <!-- Animal Creator -->
     <div id="animalCreator" style="display: none;">
         <h3>Animal Creator</h3>
         <label for="animalType">Choose an Animal:</label>
         <select id="animalType">
-            <option value="dog" selected>Dog</option>  <!-- Default selected option -->
+            <option value="dog" selected>Dog</option>
             <option value="cat">Cat</option>
             <option value="elephant">Elephant</option>
             <option value="lion">Lion</option>
         </select><br>
 
-        <input type="text" id="animalName" placeholder="Enter your Animal's name (optional)" value="Buddy">  <!-- Default name -->
+        <input type="text" id="animalName" placeholder="Enter your Animal's name (optional)" value="Buddy">
         <input type="button" id="createAnimalBtn" value="Create Animal"><br>
       
         <div id="animalInfo"></div>
@@ -109,10 +118,16 @@
             <option value="spiderman">Spider-Man</option>
         </select><br>
 
-        <input type="text" id="heroName" placeholder="Enter your Superhero's name (optional)" value="Hero of Justice">  <!-- Default name -->
+        <input type="text" id="heroName" placeholder="Enter your Superhero's name (optional)" value="Hero of Justice">
         <input type="button" id="createHeroBtn" value="Create Superhero"><br>
       
         <div id="heroInfo"></div>
+    </div>
+
+    <!-- Pokémon Info -->
+    <div id="pokemonInfo" style="display: none;">
+        <h3>Random Pokémon</h3>
+        <div id="pokemonDetails"></div>
     </div>
 
     <div id="myDiv01">...</div>
@@ -151,17 +166,38 @@
             let heroName = document.getElementById('heroName').value.trim();
 
             if (!heroName) {
-                heroName = heroType.charAt(0).toUpperCase() + heroType.slice(1).replace(/([A-Z])/g, ' $1'); // Format hero name based on the type
+                heroName = heroType.charAt(0).toUpperCase() + heroType.slice(1).replace(/([A-Z])/g, ' $1');
             }
 
             const heroInfo = document.getElementById('heroInfo');
             heroInfo.innerHTML = `<strong>${heroName}</strong>: ${superheroData[heroType]}`;
         });
 
+        // Generate a random Pokémon
+        document.getElementById('randomPokemonBtn').addEventListener('click', async () => {
+            const randomId = Math.floor(Math.random() * 1025) + 1; // Random Pokémon ID between 1 and 1025
+            const pokemonResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${randomId}`);
+            const pokemon = await pokemonResponse.json();
+            
+            // Prepare Pokémon information
+            const pokemonDetails = `
+                <h4>${pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</h4>
+                <img src="${pokemon.sprites.front_default}" alt="${pokemon.name}">
+                <p><strong>Height:</strong> ${pokemon.height / 10} m</p>
+                <p><strong>Weight:</strong> ${pokemon.weight / 10} kg</p>
+                <p><strong>Abilities:</strong> ${pokemon.abilities.map(a => a.ability.name).join(', ')}</p>
+            `;
+            
+            // Display Pokémon information
+            document.getElementById('pokemonDetails').innerHTML = pokemonDetails;
+            document.getElementById('pokemonInfo').style.display = 'block'; // Show Pokémon info section
+        });
+
         // Toggle visibility of creators
         document.getElementById('toggleAnimalBtn').addEventListener('click', () => {
             document.getElementById('animalCreator').style.display = 'block';
             document.getElementById('heroCreator').style.display = 'none';
+            document.getElementById('pokemonInfo').style.display = 'none'; // Hide Pokémon info
             document.getElementById('myDiv01').innerHTML = "Create your Animal!";
             // Set default values when shown
             document.getElementById('animalName').value = "Buddy"; // Reset to default name
@@ -171,6 +207,7 @@
         document.getElementById('toggleHeroBtn').addEventListener('click', () => {
             document.getElementById('animalCreator').style.display = 'none';
             document.getElementById('heroCreator').style.display = 'block';
+            document.getElementById('pokemonInfo').style.display = 'none'; // Hide Pokémon info
             document.getElementById('myDiv01').innerHTML = "Create your Superhero!";
             // Set default values for superheroes when shown
             document.getElementById('heroName').value = "Hero of Justice"; // Reset to default name
