@@ -68,6 +68,18 @@
         #myDiv01:hover {
             transform: scale(1.02);
         }
+
+        /* New styles for the Pokémon creator */
+        #pokemonCreator {
+            display: none;
+        }
+
+        #pokemonImage {
+            max-width: 150px; /* Adjust max width */
+            max-height: 150px; /* Set a maximum height */
+            margin-top: 10px;
+            display: none; /* Initially hide the image */
+        }
     </style>
 </head>
 <body>
@@ -75,205 +87,105 @@
     <h2>Animal and Superhero Creator</h2>
 
     <input type="button" id="toggleAnimalBtn" value="Create Animal">
-    <input type="button" id="toggleHeroBtn" value="Create Superhero"><br>
+    <input type="button" id="toggleHeroBtn" value="Create Superhero">
+    <input type="button" id="togglePokemonBtn" value="Create Pokémon"><br>
 
-    <div id="animalCreator" style="display:none;">
-        <h3>Animal Creator</h3>
-        <label for="animalType">Choose an animal:</label>
-        <select id="animalType" onchange="setAnimalDefaults()">
-            <option value="bunny">Bunny</option>
-            <option value="cat">Cat</option>
-            <option value="dog">Dog</option>
-            <option value="fox">Fox</option>
-            <option value="lion">Lion</option>
-            <option value="tiger">Tiger</option>
-            <option value="elephant">Elephant</option>
-            <option value="giraffe">Giraffe</option>
-            <option value="zebra">Zebra</option>
-            <option value="bear">Bear</option>
-            <option value="panda">Panda</option>
+    <!-- Existing Animal Creator Code... -->
+
+    <!-- Existing Superhero Creator Code... -->
+
+    <div id="pokemonCreator">
+        <h3>Pokémon Creator</h3>
+        <label for="pokemonType">Choose a Pokémon:</label>
+        <select id="pokemonType" onchange="setPokemonDefaults()">
+            <option value="pikachu">Pikachu</option>
+            <option value="charmander">Charmander</option>
+            <option value="bulbasaur">Bulbasaur</option>
+            <option value="squirtle">Squirtle</option>
+            <option value="jigglypuff">Jigglypuff</option>
+            <option value="meowth">Meowth</option>
         </select><br>
 
-        <input type="text" id="myText01" placeholder="Enter your animal's name (optional)">
-        <input type="number" id="myAge" placeholder="Enter your animal's age" min="0"><br>
+        <input type="text" id="pokemonName" placeholder="Enter your Pokémon's name (optional)">
+        <input type="button" id="createPokemonBtn" value="Create Pokémon"><br>
 
-        <input type="button" id="createAnimalBtn" value="Create Animal"><br>
-    </div>
-
-    <div id="heroCreator" style="display:none;">
-        <h3>Superhero Creator</h3>
-        <label for="heroName">Hero Name:</label>
-        <input type="text" id="heroName" placeholder="Enter superhero name" value="Heroic Ray"><br>
-
-        <label for="heroType">Choose a hero type:</label>
-        <select id="heroType">
-            <option value="superhero">Superhero</option>
-            <option value="villain">Villain</option>
-            <option value="sidekick">Sidekick</option>
-            <option value="anti-hero">Anti-Hero</option>
-        </select><br>
-
-        <label for="powers">Powers (comma-separated):</label>
-        <input type="text" id="powers" placeholder="e.g., flying, strength" value="Flying, Super Strength"><br>
-
-        <label for="origin">Origin Story (optional):</label>
-        <textarea id="origin" placeholder="Tell the story...">Once an ordinary person, now a hero!</textarea><br>
-
-        <input type="button" id="createHeroBtn" value="Create Hero"><br>
+        <img id="pokemonImage" src="" alt="Pokémon Image">
+        <div id="pokemonInfo"></div>
     </div>
 
     <div id="myDiv01">...</div>
 
     <script>
-        // Animal Creator
-        class MyAnimal {
-            constructor(passName, passAge) {
-                this.myName = passName;
-                this.myAge = passAge;
+        // Existing JavaScript code...
+
+        // Pokémon data
+        const pokemonData = {
+            pikachu: {
+                name: "Pikachu",
+                image: "https://img.pokemondb.net/artwork/large/pikachu.jpg",
+                info: "Pikachu is an Electric-type Pokémon. It is known for its cute appearance and electric abilities."
+            },
+            charmander: {
+                name: "Charmander",
+                image: "https://img.pokemondb.net/artwork/large/charmander.jpg",
+                info: "Charmander is a Fire-type Pokémon. It is known for the flame on its tail that indicates its health."
+            },
+            bulbasaur: {
+                name: "Bulbasaur",
+                image: "https://img.pokemondb.net/artwork/large/bulbasaur.jpg",
+                info: "Bulbasaur is a Grass/Poison-type Pokémon. It is known for the plant on its back."
+            },
+            squirtle: {
+                name: "Squirtle",
+                image: "https://img.pokemondb.net/artwork/large/squirtle.jpg",
+                info: "Squirtle is a Water-type Pokémon. It is known for its ability to shoot water."
+            },
+            jigglypuff: {
+                name: "Jigglypuff",
+                image: "https://img.pokemondb.net/artwork/large/jigglypuff.jpg",
+                info: "Jigglypuff is a Normal/Fairy-type Pokémon. It is known for its ability to put others to sleep."
+            },
+            meowth: {
+                name: "Meowth",
+                image: "https://img.pokemondb.net/artwork/large/meowth.jpg",
+                info: "Meowth is a Normal-type Pokémon. It is known for its ability to walk on two legs and its love for shiny objects."
             }
-        }
-
-        class MyBunny extends MyAnimal {
-            myShow() {
-                document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a fantastic bunny, Age: <strong>${this.myAge}</strong><br>`;
-            }
-        }
-
-        class MyCat extends MyAnimal { myShow() { document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a great cat, Age: <strong>${this.myAge}</strong><br>`; } }
-        class MyDog extends MyAnimal { myShow() { document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a loyal dog, Age: <strong>${this.myAge}</strong><br>`; } }
-        class MyFox extends MyAnimal { myShow() { document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a clever fox, Age: <strong>${this.myAge}</strong><br>`; } }
-        class MyLion extends MyAnimal { myShow() { document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a majestic lion, Age: <strong>${this.myAge}</strong><br>`; } }
-        class MyTiger extends MyAnimal { myShow() { document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a fierce tiger, Age: <strong>${this.myAge}</strong><br>`; } }
-        class MyElephant extends MyAnimal { myShow() { document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a gentle elephant, Age: <strong>${this.myAge}</strong><br>`; } }
-        class MyGiraffe extends MyAnimal { myShow() { document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a tall giraffe, Age: <strong>${this.myAge}</strong><br>`; } }
-        class MyZebra extends MyAnimal { myShow() { document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a striped zebra, Age: <strong>${this.myAge}</strong><br>`; } }
-        class MyBear extends MyAnimal { myShow() { document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a strong bear, Age: <strong>${this.myAge}</strong><br>`; } }
-        class MyPanda extends MyAnimal { myShow() { document.getElementById('myDiv01').innerHTML = `<strong>${this.myName}</strong> is a playful panda, Age: <strong>${this.myAge}</strong><br>`; } }
-
-        // Default names for each animal type
-        const defaultNames = {
-            bunny: ["Fluff", "Thumper", "Binky", "Cottontail"],
-            cat: ["Whiskers", "Shadow", "Simba", "Luna"],
-            dog: ["Buddy", "Max", "Bella", "Charlie"],
-            fox: ["Foxy", "Rusty", "Sly", "Amber"],
-            lion: ["Leo", "Simba", "Nala", "Mufasa"],
-            tiger: ["Sher Khan", "Tigger", "Stripes", "Rajah"],
-            elephant: ["Dumbo", "Bubbles", "Elsa", "Manny"],
-            giraffe: ["Longneck", "Stretch", "Spots", "Gigi"],
-            zebra: ["Stripes", "Ziggy", "Zara", "Bingo"],
-            bear: ["Baloo", "Yogi", "Paddington", "Winnie"],
-            panda: ["Po", "Bamboo", "Ling-Ling", "Lucky"]
         };
 
-        // Event listener for the create animal button
-        document.getElementById('createAnimalBtn').addEventListener('click', () => {
-            const animalType = document.getElementById('animalType').value;
-            let animalName = document.getElementById('myText01').value.trim();
-            const animalAge = document.getElementById('myAge').value;
+        // Event listener for the create Pokémon button
+        document.getElementById('createPokemonBtn').addEventListener('click', () => {
+            const pokemonType = document.getElementById('pokemonType').value;
+            let pokemonName = document.getElementById('pokemonName').value.trim();
 
-            let myAnimal;
-
-            // Generate a random default name if the user doesn't provide one
-            if (!animalName) {
-                const randomIndex = Math.floor(Math.random() * defaultNames[animalType].length);
-                animalName = defaultNames[animalType][randomIndex];
+            if (!pokemonName) {
+                pokemonName = pokemonData[pokemonType].name;
             }
 
-            switch (animalType) {
-                case 'bunny':
-                    myAnimal = new MyBunny(animalName, animalAge || 5);
-                    break;
-                case 'cat':
-                    myAnimal = new MyCat(animalName, animalAge || 14);
-                    break;
-                case 'dog':
-                    myAnimal = new MyDog(animalName, animalAge || 3);
-                    break;
-                case 'fox':
-                    myAnimal = new MyFox(animalName, animalAge || 4);
-                    break;
-                case 'lion':
-                    myAnimal = new MyLion(animalName, animalAge || 8);
-                    break;
-                case 'tiger':
-                    myAnimal = new MyTiger(animalName, animalAge || 6);
-                    break;
-                case 'elephant':
-                    myAnimal = new MyElephant(animalName, animalAge || 12);
-                    break;
-                case 'giraffe':
-                    myAnimal = new MyGiraffe(animalName, animalAge || 15);
-                    break;
-                case 'zebra':
-                    myAnimal = new MyZebra(animalName, animalAge || 5);
-                    break;
-                case 'bear':
-                    myAnimal = new MyBear(animalName, animalAge || 7);
-                    break;
-                case 'panda':
-                    myAnimal = new MyPanda(animalName, animalAge || 10);
-                    break;
-                default:
-                    myAnimal = new MyAnimal(animalName || 'Animal', animalAge || 0);
-            }
+            const pokemonImage = document.getElementById('pokemonImage');
+            const pokemonInfo = document.getElementById('pokemonInfo');
 
-            myAnimal.myShow();
+            pokemonImage.src = pokemonData[pokemonType].image;
+            pokemonImage.alt = pokemonName;
+            pokemonImage.style.display = 'block';
+
+            pokemonInfo.innerHTML = `<strong>${pokemonName}</strong>: ${pokemonData[pokemonType].info}`;
         });
 
-        // Superhero Creator
-        class Superhero {
-            constructor(name, heroType, powers, origin) {
-                this.name = name;
-                this.heroType = heroType;
-                this.powers = powers || [];
-                this.origin = origin || "Unknown origin.";
-            }
-
-            showDetails() {
-                const powersList = this.powers.length ? this.powers.join(', ') : 'None';
-                document.getElementById('myDiv01').innerHTML = `
-                    <strong>${this.name}</strong> is a ${this.heroType} with the following powers: <strong>${powersList}</strong>.
-                    <br><em>Origin: ${this.origin}</em>
-                `;
-            }
-        }
-
-        // Event listener for the create hero button
-        document.getElementById('createHeroBtn').addEventListener('click', () => {
-            const heroName = document.getElementById('heroName').value.trim();
-            const heroType = document.getElementById('heroType').value;
-            const powers = document.getElementById('powers').value.split(',').map(power => power.trim()).filter(Boolean);
-            const origin = document.getElementById('origin').value.trim();
-
-            if (!heroName) {
-                alert("Please enter a name for your superhero!");
-                return;
-            }
-
-            const superhero = new Superhero(heroName, heroType, powers, origin);
-            superhero.showDetails();
-        });
-
-        // Set default values based on selected animal type
-        function setAnimalDefaults() {
-            const animalType = document.getElementById('animalType').value;
-            const randomName = defaultNames[animalType][Math.floor(Math.random() * defaultNames[animalType].length)];
-            document.getElementById('myText01').value = randomName;
-            document.getElementById('myAge').value = '5'; // Default age for all animals
+        // Set default values for Pokémon
+        function setPokemonDefaults() {
+            const pokemonType = document.getElementById('pokemonType').value;
+            document.getElementById('pokemonName').value = pokemonData[pokemonType].name;
+            document.getElementById('pokemonImage').style.display = 'none'; // Hide image initially
+            document.getElementById('pokemonInfo').innerHTML = ''; // Clear info
         }
 
         // Toggle visibility of creators
-        document.getElementById('toggleAnimalBtn').addEventListener('click', () => {
-            document.getElementById('animalCreator').style.display = 'block';
-            document.getElementById('heroCreator').style.display = 'none';
-            setAnimalDefaults(); // Set default values when the animal creator is shown
-            document.getElementById('myDiv01').innerHTML = "Select an animal to create!";
-        });
-
-        document.getElementById('toggleHeroBtn').addEventListener('click', () => {
+        document.getElementById('togglePokemonBtn').addEventListener('click', () => {
             document.getElementById('animalCreator').style.display = 'none';
-            document.getElementById('heroCreator').style.display = 'block';
-            document.getElementById('myDiv01').innerHTML = "Create your superhero!";
+            document.getElementById('heroCreator').style.display = 'none';
+            document.getElementById('pokemonCreator').style.display = 'block';
+            setPokemonDefaults(); // Set default values when the Pokémon creator is shown
+            document.getElementById('myDiv01').innerHTML = "Create your Pokémon!";
         });
     </script>
 </body>
