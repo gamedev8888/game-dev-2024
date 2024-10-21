@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Animal, Superhero, and Pokémon Creator</title>
+    <title>Superhero and Pokémon Creator</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -90,9 +90,8 @@
 </head>
 <body>
 
-    <h2>Animal, Superhero, and Pokémon Creator</h2>
+    <h2>Superhero and Pokémon Creator</h2>
 
-    <input type="button" id="toggleAnimalBtn" value="Create Animal">
     <input type="button" id="toggleHeroBtn" value="Create Superhero">
     <input type="button" id="randomPokemonBtn" value="Generate Random Pokémon"><br>
 
@@ -103,23 +102,6 @@
         <input type="button" id="fetchPokemonBtn" value="Fetch Pokémon"><br>
         <div id="pokemonDetails"></div>
         <input type="button" id="toggleShinyBtn" value="Toggle Shiny" style="display:none;">
-    </div>
-
-    <!-- Animal Creator -->
-    <div id="animalCreator" style="display: none;">
-        <h3>Animal Creator</h3>
-        <label for="animalType">Choose an Animal:</label>
-        <select id="animalType">
-            <option value="dog" selected>Dog</option>
-            <option value="cat">Cat</option>
-            <option value="elephant">Elephant</option>
-            <option value="lion">Lion</option>
-        </select><br>
-
-        <input type="text" id="animalName" placeholder="Enter your Animal's name (optional)" value="Buddy">
-        <input type="button" id="createAnimalBtn" value="Create Animal"><br>
-      
-        <div id="animalInfo"></div>
     </div>
 
     <!-- Superhero Creator -->
@@ -143,13 +125,6 @@
     <div id="myDiv01">...</div>
 
     <script>
-        const animalData = {
-            dog: "Dogs are loyal animals and are good companions.",
-            cat: "Cats are curious and playful creatures.",
-            elephant: "Elephants are known for their intelligence and large size.",
-            lion: "Lions are fierce and social animals, often called the King of the Jungle."
-        };
-
         const superheroData = {
             superman: "Superman has super strength and can fly.",
             batman: "Batman is known for his intelligence, combat skills, and gadgets.",
@@ -169,19 +144,6 @@
 
         let currentPokemon; // Store current Pokémon data
         let isShiny = false; // State for shiny toggle
-
-        // Event listener for create Animal button
-        document.getElementById('createAnimalBtn').addEventListener('click', () => {
-            const animalType = document.getElementById('animalType').value;
-            let animalName = document.getElementById('animalName').value.trim();
-
-            if (!animalName) {
-                animalName = animalType.charAt(0).toUpperCase() + animalType.slice(1); // Default to selected animal's name
-            }
-
-            const animalInfo = document.getElementById('animalInfo');
-            animalInfo.innerHTML = `<strong>${animalName}</strong>: ${animalData[animalType]}`;
-        });
 
         // Event listener for create Superhero button
         document.getElementById('createHeroBtn').addEventListener('click', () => {
@@ -274,25 +236,14 @@
             if (currentPokemon) {
                 const types = currentPokemon.types.map(t => t.type.name).join(', ');
                 const stats = currentPokemon.stats.map(stat => `<li>${stat.stat.name}: ${stat.base_stat}</li>`).join('');
-                const habitat = "No habitat information available"; // Default as it won't be fetched again.
+                const habitat = "No habitat information available"; // Default, as it won't be fetched again.
 
                 displayPokemon(currentPokemon, types, stats, habitat); // Update the display
             }
         });
 
         // Toggle visibility of creators
-        document.getElementById('toggleAnimalBtn').addEventListener('click', () => {
-            document.getElementById('animalCreator').style.display = 'block';
-            document.getElementById('heroCreator').style.display = 'none';
-            document.getElementById('pokemonIdSection').style.display = 'none'; // Hide Pokémon input section
-            document.getElementById('myDiv01').innerHTML = "Create your Animal!";
-            // Set default values when shown
-            document.getElementById('animalName').value = "Buddy"; // Reset to default name
-            document.getElementById('animalType').value = "dog"; // Default selected animal
-        });
-
         document.getElementById('toggleHeroBtn').addEventListener('click', () => {
-            document.getElementById('animalCreator').style.display = 'none';
             document.getElementById('heroCreator').style.display = 'block';
             document.getElementById('pokemonIdSection').style.display = 'none'; // Hide Pokémon input section
             document.getElementById('myDiv01').innerHTML = "Create your Superhero!";
