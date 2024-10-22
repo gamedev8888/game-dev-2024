@@ -54,6 +54,16 @@
             transform: scale(1.05);
         }
 
+        .spin-image {
+            transition: transform 0.5s;
+            display: inline-block; /* Required for transform to work properly */
+            margin-top: 10px;
+        }
+
+        .spin-image:hover {
+            transform: rotate(360deg); /* Spins the image */
+        }
+
         .pokemon-stats {
             display: flex;
             justify-content: space-between;
@@ -101,7 +111,6 @@
             0% {
                 transform: rotate(0deg);
             }
-
             100% {
                 transform: rotate(360deg);
             }
@@ -207,7 +216,6 @@
 
             pokemonDetails.innerHTML = `
                 <h3>${pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</h3>
-                <img src="${shinyImage}" alt="${pokemon.name} Image">
                 <div class="pokemon-stats">
                     <span><strong>Height:</strong> ${pokemon.height} decimetres</span>
                     <span><strong>Weight:</strong> ${pokemon.weight} hectograms</span>
@@ -217,10 +225,18 @@
                     <span><strong>Types:</strong> ${types}</span>
                 </div>
             `;
+
+            // Add the spinning image below the Pokémon details
+            pokemonDetails.innerHTML += `
+                <a href="https://example.com" target="_blank" class="spin-image">
+                    <img src="${shinyImage}" alt="${pokemon.name} Image">
+                </a>
+            `;
+
             document.getElementById('toggleShinyBtn').style.display = 'inline';
         };
 
-        // Event listener to toggle shiny Pokemon version
+        // Event listener to toggle shiny Pokémon version
         document.getElementById('toggleShinyBtn').addEventListener('click', () => {
             isShiny = !isShiny;
             if (currentPokemon) displayPokemonDetails(currentPokemon);
