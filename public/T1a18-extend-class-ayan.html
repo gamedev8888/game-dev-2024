@@ -171,6 +171,13 @@
             const myPet = new MyCat(name || 'Default Cat', age || 0);
             myPet.myShow();
         }"><br><br>
+        
+        <input type="button" value="Show Dog Example" onClick="{
+            const name = document.getElementById('nameInput').value;
+            const age = document.getElementById('ageInput').value;
+            const myDog = new MyDog(name || 'Default Dog', age || 0);
+            myDog.myShow();
+        }"><br><br>
 
         <div id="myDiv01">...</div>
     </div>
@@ -189,6 +196,13 @@
         class MyCat extends MyAnimal {
             myShow() {
                 document.getElementById('myDiv01').innerHTML = this.myName + ' is a great cat <br>';
+            }
+        }
+
+        // New Dog class
+        class MyDog extends MyAnimal {
+            myShow() {
+                document.getElementById('myDiv01').innerHTML = this.myName + ' is a loyal dog <br>';
             }
         }
 
