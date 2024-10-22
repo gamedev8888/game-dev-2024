@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -61,7 +62,8 @@
             transform: scale(1.05);
         }
 
-        .pokemon-stats, .animal-stats {
+        .pokemon-stats,
+        .animal-stats {
             display: flex;
             justify-content: space-between;
         }
@@ -108,6 +110,7 @@
             0% {
                 transform: rotate(0deg);
             }
+
             100% {
                 transform: rotate(360deg);
             }
@@ -120,6 +123,7 @@
         }
     </style>
 </head>
+
 <body>
 
     <main>
@@ -219,7 +223,7 @@
         // Function to show loading spinner
         const showLoadingIndicator = (targetId) => {
             const targetElement = document.getElementById(targetId);
-            targetElement.innerHTML = '<div class="spinner"></div>';
+            targetElement.innerHTML = '<div class="spinner"></div>'; // Show spinner
         };
 
         // Function to hide loading spinner
@@ -244,27 +248,25 @@
         // Event listener to fetch random Pokémon
         document.getElementById('randomPokemonBtn').addEventListener('click', async () => {
             clearErrors('pokemonError');
-            showLoadingIndicator('pokemonDetails');
+            showLoadingIndicator('pokemonDetails'); // Show spinner before fetching
             const randomId = Math.floor(Math.random() * 898) + 1; // 898 Pokémon
-            await fetchPokemon(randomId);
-            hideLoadingIndicator();
+            await fetchPokemon(randomId); // Wait for Pokemon fetch to complete
         });
 
         // Event listener to fetch Pokémon by user-input name or ID
         document.getElementById('fetchPokemonBtn').addEventListener('click', async () => {
             clearErrors('pokemonError');
-            showLoadingIndicator('pokemonDetails');
+            showLoadingIndicator('pokemonDetails'); // Show spinner before fetching
             const pokemonInput = document.getElementById('pokemonInput').value.trim();
 
             if (!pokemonInput) {
                 displayError("Please enter a Pokémon name or ID.", 'pokemonError');
-                hideLoadingIndicator();
+                hideLoadingIndicator(); // Hide on error
                 return;
             }
 
             const isId = /^\d+$/.test(pokemonInput);
             await fetchPokemon(isId ? pokemonInput : pokemonInput.toLowerCase());
-            hideLoadingIndicator();
         });
 
         // Function to fetch Pokémon data from the API
@@ -272,11 +274,15 @@
             try {
                 const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${identifier}`);
                 if (!response.ok) throw new Error("Pokémon not found. Please check the name or ID.");
+
                 currentPokemon = await response.json();
                 displayPokemonDetails(currentPokemon);
+
             } catch (error) {
-                displayError(error.message, 'pokemonError');
-                document.getElementById('pokemonDetails').innerHTML = '';
+                displayError(error.message, 'pokemonError'); // Display error message
+                document.getElementById('pokemonDetails').innerHTML = ''; // Clear details on error
+            } finally {
+                hideLoadingIndicator(); // Always hide loading spinner here
             }
         };
 
@@ -299,19 +305,16 @@
                 </div>
             `;
 
-            // Add the spinning image below the Pokémon details
             pokemonDetails.innerHTML += `
-                <a href="https://example.com" target="_blank" class="spin-image">
-                    <img src="${shinyImage}" alt="${pokemon.name} Image">
-                </a>
+                <img src="${shinyImage}" alt="${pokemon.name} Image" />
             `;
-            document.getElementById('toggleShinyBtn').style.display = 'inline';
+            document.getElementById('toggleShinyBtn').style.display = 'inline'; // Show toggle button
         };
 
         // Event listener to toggle shiny Pokémon version
         document.getElementById('toggleShinyBtn').addEventListener('click', () => {
             isShiny = !isShiny;
-            if (currentPokemon) displayPokemonDetails(currentPokemon);
+            if (currentPokemon) displayPokemonDetails(currentPokemon); // Redraw Pokemon details
         });
 
         // Debounce input for Pokémon fetching
@@ -329,10 +332,10 @@
         // Event listener to fetch a random animal
         document.getElementById('fetchAnimalBtn').addEventListener('click', () => {
             clearErrors('animalError');
-            showLoadingIndicator('animalDetails');
+            showLoadingIndicator('animalDetails'); // Show spinner before fetching
             const randomAnimal = animalsData[Math.floor(Math.random() * animalsData.length)];
             displayAnimalDetails(randomAnimal);
-            hideLoadingIndicator();
+            hideLoadingIndicator(); // Hide spinner after showing details
         });
 
         // Function to display animal details
@@ -349,4 +352,5 @@
         };
     </script>
 </body>
+
 </html>
