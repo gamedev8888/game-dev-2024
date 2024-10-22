@@ -22,7 +22,7 @@
             color: #5A67D8;
         }
 
-        .animal-card {
+        .animal-card, .pokemon-card {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -36,7 +36,7 @@
             width: 300px;
         }
 
-        .animal-card:hover {
+        .animal-card:hover, .pokemon-card:hover {
             transform: scale(1.05);
         }
 
@@ -46,13 +46,17 @@
             margin-bottom: 15px;
         }
 
-        .animal-details,
-        .pokemon-stats {
+        .animal-details, .pokemon-stats {
             width: 100%;
             text-align: left;
             margin-bottom: 10px;
             font-size: 16px;
             line-height: 1.5;
+        }
+
+        .pokemon-stats {
+            display: flex;
+            justify-content: space-between;
         }
 
         .button {
@@ -95,9 +99,8 @@
             }
         }
 
-        /* Media queries for responsive design */
         @media (max-width: 600px) {
-            .animal-card {
+            .animal-card, .pokemon-card {
                 width: 90%;
             }
         }
@@ -114,7 +117,7 @@
                 <h3>Fetch Pokémon by Name/ID</h3>
                 <input type="text" id="pokemonInput" placeholder="Enter Pokémon Name or ID">
                 <button class="button" id="fetchPokemonBtn">Fetch Pokémon</button>
-                <div id="pokemonDetails"></div>
+                <div id="pokemonDetails" class="pokemon-card"></div>
                 <p class="error" id="pokemonError" role="alert" style="display:none;"></p>
                 <button class="button" id="toggleShinyBtn" style="display:none;">Toggle Shiny</button>
             </div>
@@ -152,7 +155,6 @@
         let currentPokemon = null;
         let isShiny = false;
         let currentAnimal = null;
-        const cachedPokemons = {};
 
         // Function to fetch random Pokémon
         document.getElementById('randomPokemonBtn').addEventListener('click', async () => {
@@ -191,15 +193,10 @@
 
         // Function to fetch Pokémon by ID
         const fetchPokemonById = async (id) => {
-            if (cachedPokemons[id]) {
-                displayPokemonDetails(cachedPokemons[id]);
-                return;
-            }
             try {
                 const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
                 if (!response.ok) throw new Error(response.status === 404 ? "Pokémon not found. Please check the name or ID." : "Server error. Please try again later.");
                 currentPokemon = await response.json();
-                cachedPokemons[id] = currentPokemon; // Cache the result
                 displayPokemonDetails(currentPokemon);
             } catch (error) {
                 displayError(error.message);
@@ -212,7 +209,6 @@
                 const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
                 if (!response.ok) throw new Error("Pokémon not found. Please check the name or ID.");
                 currentPokemon = await response.json();
-                cachedPokemons[currentPokemon.id] = currentPokemon; // Cache the result
                 displayPokemonDetails(currentPokemon);
             } catch (error) {
                 displayError(error.message);
@@ -238,8 +234,10 @@
                 <h3>${pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</h3>
                 <img src="${shinyImage}" alt="${pokemon.name} Image">
                 <div class="pokemon-stats">
-                    <span><strong>Height:</strong> ${pokemon.height} decimetres</span><br>
-                    <span><strong>Weight:</strong> ${pokemon.weight} hectograms</span><br>
+                    <span><strong>Height:</strong> ${pokemon.height} decimetres</span>
+                    <span><strong>Weight:</strong> ${pokemon.weight} hectograms</span>
+                </div>
+                <div>
                     <span><strong>Abilities:</strong> ${abilities}</span><br>
                     <span><strong>Types:</strong> ${types}</span>
                 </div>
@@ -277,8 +275,7 @@
         // Function to fetch a random animal facts (Using Sample JSON API)
         const fetchAnimal = async (type) => {
             try {
-                // Example JSON data fetching & local data structure simulation (to be replaced with actual API call)
-                // Simulated JSON data for testing - replace with API call in a real case
+                // Sample JSON data (to be replaced with an actual API call)
                 const animalData = [
                     {
                         "type": "cat",
@@ -376,7 +373,7 @@
             }
 
             const animalDiv = document.getElementById('animalDiv');
-            if (animalDiv) { // Check if the animal div exists
+            if (animalDiv) { // Check if animal div exists
                 animalDiv.style.display = 'none'; // Hide the animal details
             }
         };
