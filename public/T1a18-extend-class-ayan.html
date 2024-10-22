@@ -1,196 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>T1a17-move-ayan.html</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            padding: 0;
-            background-image: url('https://png.pngtree.com/background/20230521/original/pngtree-abstract-black-and-red-abstract-backgrounds-hd-wallpapers-picture-image_2683625.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            color: #f0f0f0;
-            font-family: Arial, sans-serif;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-            position: relative;
-        }
-
-        h1 {
-            margin-bottom: 20px;
-        }
-
-        .buttons-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        button {
-            background-color: rgba(255, 0, 0, 0.85);
-            border: none;
-            padding: 10px 20px;
-            margin: 5px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s, transform 0.2s;
-            flex: 1 0 150px; /* Respond regarding the container's width */
-            outline: none;
-        }
-
-        button:hover {
-            background-color: rgba(200, 0, 0, 0.85);
-            transform: scale(1.05);
-        }
-
-        img {
-            position: absolute; /* Changed to absolute position for accurate movement */
-            width: 90px;
-            height: 100px;
-            transition: left 0.1s linear, top 0.1s linear;
-            touch-action: none; /* Prevent touch gestures */
-            user-select: none; /* Prevent user text selection */
-        }
-
-        @media (max-width: 600px) {
-            button {
-                width: 100%;
-                font-size: 14px;
-            }
-
-            img {
-                width: 70px;
-                height: 80px;
-            }
-        }
-
-        #status {
-            margin-top: 20px;
-            font-size: 18px;
-            color: #fff;
-            text-align: center;
-        }
-
-        #speedInput {
-            width: 50px;
-            text-align: center;
-            margin-left: 10px;
-        }
-
-        .controls {
-            display: flex;
-            align-items: center;
-        }
-    </style>
-    <script>
-        class ImageMover {
-            constructor() {
-                this.moveSpeed = 10;
-                this.imageElement = document.getElementById('myImage01');
-                this.imageElement.style.left = '0px';
-                this.imageElement.style.top = '0px';
-                this.autoMoveInterval = null;
-                this.initializeEvents();
-            }
-
-            initializeEvents() {
-                document.getElementById('speedInput').addEventListener('change', (e) => {
-                    this.setSpeed(e.target.value);
-                });
-
-                document.addEventListener('keydown', (event) => this.handleKeyboardInput(event));
-            }
-
-            moveImage(distanceX, distanceY) {
-                let currentLeft = parseInt(this.imageElement.style.left) || 0;
-                let currentTop = parseInt(this.imageElement.style.top) || 0;
-
-                // Calculate new positions
-                const newLeft = currentLeft + distanceX;
-                const newTop = currentTop + distanceY;
-
-                // Check boundaries and update positions
-                if (newLeft >= 0 && newLeft <= window.innerWidth - this.imageElement.width) {
-                    this.imageElement.style.left = newLeft + 'px';
-                }
-
-                if (newTop >= 0 && newTop <= window.innerHeight - this.imageElement.height) {
-                    this.imageElement.style.top = newTop + 'px';
-                }
-
-                this.updateStatus(`Moved to (${this.imageElement.style.left}, ${this.imageElement.style.top})`);
-            }
-
-            setSpeed(value) {
-                this.moveSpeed = parseInt(value) || 1;  // Default to 1 if invalid input
-                this.updateStatus(`Speed set to ${this.moveSpeed}`);
-            }
-
-            updateStatus(message) {
-                document.getElementById('status').textContent = message;
-            }
-
-            handleKeyboardInput(event) {
-                switch (event.key) {
-                    case 'ArrowLeft':
-                        this.moveImage(-this.moveSpeed, 0);
-                        break;
-                    case 'ArrowRight':
-                        this.moveImage(this.moveSpeed, 0);
-                        break;
-                    case 'ArrowUp':
-                        this.moveImage(0, -this.moveSpeed);
-                        break;
-                    case 'ArrowDown':
-                        this.moveImage(0, this.moveSpeed);
-                        break;
-                }
-            }
-
-            resetPosition() {
-                this.imageElement.style.left = '0px';
-                this.imageElement.style.top = '0px';
-                this.updateStatus('Position reset to (0px, 0px)');
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            window.mover = new ImageMover();
-        });
-    </script>
+    <link rel="stylesheet" type="text/css" href="css-ayan.css">
 </head>
 
 <body>
+    <h2 align="center">t1a18 extend ayan.html</h2>
 
-    <h1>T1a17-move-ayan.html</h1>
-    
-    <div class="controls">
-        <label for="speedInput">Speed:</label>
-        <input type="number" id="speedInput" value="10" min="1" aria-label="Set movement speed">
-    </div>
+    <script>
+        class MyAnimal {
+            constructor(passName, passAge) {
+                this.myName = passName;
+                this.myAge = passAge;
+            }
+            myShow() {
+                document.getElementById('myDiv01').innerHTML = 'Hello ' + this.myName + '<br>';
+            }
+        } // end class MyAnimal
 
-    <div class="buttons-container">
-        <button onclick="mover.moveImage(-mover.moveSpeed, 0)" aria-label="Move Left"><i class="fas fa-arrow-left"></i> Move Left</button>
-        <button onclick="mover.moveImage(mover.moveSpeed, 0)" aria-label="Move Right"><i class="fas fa-arrow-right"></i> Move Right</button>
-        <button onclick="mover.moveImage(0, -mover.moveSpeed)" aria-label="Move Up"><i class="fas fa-arrow-up"></i> Move Up</button>
-        <button onclick="mover.moveImage(0, mover.moveSpeed)" aria-label="Move Down"><i class="fas fa-arrow-down"></i> Move Down</button>
-        <button onclick="mover.resetPosition()">Reset Position</button>
-    </div>
+        class MyCat extends MyAnimal {
+            myShow() {
+                document.getElementById('myDiv01').innerHTML = this.myName + ' is a great cat <br>';
+            }
+        } // end extended class MyCat
+    </script>
 
-    <p id="status" aria-live="polite">Status: Ready to move!</p>
-    <img id="myImage01" src="https://www.pngmart.com/files/22/Doctor-Doom-PNG-Isolated-Photo.png" alt="Doctor Doom">
+    <input type="button" value="Example Class Set and Show Class Animal" onClick="{
+        myDog = new MyAnimal('Snickers', 5);
+        myDog.myShow();
+    }"><br><br>
 
+    <input type="text" id="myText01" value="may be useful later"><br>
+
+    <input type="button" value="Example Extend Class Animal as Cat" onClick="{
+        myPet = new MyCat('Fluffy', 14);
+        myPet.myShow();
+    }"><br><br>
+
+    <div id="myDiv01">...</div>
 </body>
-
 </html>
