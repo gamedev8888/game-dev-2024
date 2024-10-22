@@ -52,7 +52,8 @@
             background-color: #4C51BF;
         }
 
-        #myDiv01, #animalDiv {
+        #myDiv01,
+        #animalDiv {
             margin-top: 20px;
             padding: 20px;
             border: 1px solid #ddd;
@@ -63,7 +64,8 @@
             transition: transform 0.3s;
         }
 
-        #myDiv01:hover, #animalDiv:hover {
+        #myDiv01:hover,
+        #animalDiv:hover {
             transform: scale(1.02);
         }
 
@@ -222,15 +224,14 @@
         // Random Animal Fetching Functionality
         document.getElementById('randomAnimalBtn').addEventListener('click', async () => {
             showAnimalLoadingIndicator();
-            const randomId = Math.floor(Math.random() * 100) + 1; // Example range for random animal IDs
-            await fetchAnimalById(randomId);
+            await fetchAnimal(); // Call a function to fetch a random animal
             hideAnimalLoadingIndicator();
         });
 
-        // Function to fetch animal by ID (example API - replace with a real one)
-        const fetchAnimalById = async (id) => {
+        // Function to fetch a random animal facts (Using Animal Facts API)
+        const fetchAnimal = async () => {
             try {
-                const response = await fetch(`https://animal-api.com/animals/${id}`); // Replace with a valid animal API
+                const response = await fetch('https://some-random-api.ml/animal'); // Replace or test with other APIs
                 if (!response.ok) throw new Error("Animal not found");
                 currentAnimal = await response.json();
                 displayAnimalDetails(currentAnimal);
@@ -241,7 +242,7 @@
 
         // Function to display animal details
         const displayAnimalDetails = (animal) => {
-            document.getElementById('animalName').innerText = animal.name || 'Unknown Animal';
+            document.getElementById('animalName').innerText = animal.type || 'Unknown Animal';
             document.getElementById('animalHabitat').innerText = animal.habitat || 'Unknown Habitat';
             document.getElementById('animalDiet').innerText = animal.diet || 'Unknown Diet';
             document.getElementById('animalLifespan').innerText = animal.lifespan || 'Unknown Lifespan';
