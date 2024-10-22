@@ -24,6 +24,13 @@
             margin-bottom: 10px;
         }
 
+        .button-container {
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            gap: 20px; /* Space between buttons */
+            margin-top: 20px; /* Space above the button container */
+        }
+
         .card {
             display: flex;
             flex-direction: column;
@@ -128,11 +135,13 @@
     <main>
         <section aria-labelledby="pokemon-section">
             <h2 id="pokemon-section">Pokémon Fetcher</h2>
-            <button class="button" id="randomPokemonBtn"><i class="fas fa-random"></i>Generate Random Pokémon</button>
+            <div class="button-container">
+                <button class="button" id="randomPokemonBtn"><i class="fas fa-random"></i>Generate Random Pokémon</button>
+                <button class="button" id="fetchPokemonBtn"><i class="fas fa-search"></i>Fetch Pokémon</button>
+            </div>
             <div id="pokemonIdSection">
                 <h3>Fetch Pokémon by Name/ID</h3>
                 <input type="text" id="pokemonInput" placeholder="Enter Pokémon Name or ID">
-                <button class="button" id="fetchPokemonBtn"><i class="fas fa-search"></i>Fetch Pokémon</button>
                 <div id="pokemonDetails" class="card"></div>
                 <p class="error" id="pokemonError" role="alert" style="display:none;"></p>
                 <button class="button" id="toggleShinyBtn" style="display:none;">Toggle Shiny</button>
