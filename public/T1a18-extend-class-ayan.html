@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pokémon Fetcher</title>
+    <title>Pokémon and Animal Fetcher</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -52,7 +52,7 @@
             background-color: #4C51BF;
         }
 
-        #myDiv01 {
+        #myDiv01, #animalDiv {
             margin-top: 20px;
             padding: 20px;
             border: 1px solid #ddd;
@@ -63,7 +63,7 @@
             transition: transform 0.3s;
         }
 
-        #myDiv01:hover {
+        #myDiv01:hover, #animalDiv:hover {
             transform: scale(1.02);
         }
 
@@ -74,17 +74,6 @@
         img {
             max-width: 150px;
             margin-top: 10px;
-        }
-
-        .pokemon-stats {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 10px;
-        }
-
-        .pokemon-stat {
-            margin: 0 10px; /* Adds space between height and weight */
         }
 
         .error {
@@ -112,9 +101,21 @@
 
     <div id="myDiv01">Fetch your Pokémon!</div>
 
+    <!-- Random Animal Section -->
+    <h2>Animal Fetcher</h2>
+    <input type="button" id="randomAnimalBtn" value="Generate Random Animal"><br>
+    <div id="animalDiv" style="display: none;">
+        <h3 id="animalName"></h3>
+        <p><strong>Habitat:</strong> <span id="animalHabitat"></span></p>
+        <p><strong>Diet:</strong> <span id="animalDiet"></span></p>
+        <p><strong>Lifespan:</strong> <span id="animalLifespan"></span></p>
+        <p class="error" id="animalError" style="display:none;"></p>
+    </div>
+
     <script>
         let currentPokemon = null; 
         let isShiny = false;
+        let currentAnimal = null;
 
         // Function to fetch random Pokémon
         document.getElementById('randomPokemonBtn').addEventListener('click', async () => {
@@ -216,6 +217,56 @@
         const hideLoadingIndicator = () => {
             const pokemonError = document.getElementById('pokemonError');
             pokemonError.style.display = 'none';
+        };
+
+        // Random Animal Fetching Functionality
+        document.getElementById('randomAnimalBtn').addEventListener('click', async () => {
+            showAnimalLoadingIndicator();
+            const randomId = Math.floor(Math.random() * 100) + 1; // Example range for random animal IDs
+            await fetchAnimalById(randomId);
+            hideAnimalLoadingIndicator();
+        });
+
+        // Function to fetch animal by ID (example API - replace with a real one)
+        const fetchAnimalById = async (id) => {
+            try {
+                const response = await fetch(`https://animal-api.com/animals/${id}`); // Replace with a valid animal API
+                if (!response.ok) throw new Error("Animal not found");
+                currentAnimal = await response.json();
+                displayAnimalDetails(currentAnimal);
+            } catch (error) {
+                displayAnimalError(error.message);
+            }
+        };
+
+        // Function to display animal details
+        const displayAnimalDetails = (animal) => {
+            document.getElementById('animalName').innerText = animal.name || 'Unknown Animal';
+            document.getElementById('animalHabitat').innerText = animal.habitat || 'Unknown Habitat';
+            document.getElementById('animalDiet').innerText = animal.diet || 'Unknown Diet';
+            document.getElementById('animalLifespan').innerText = animal.lifespan || 'Unknown Lifespan';
+            document.getElementById('animalDiv').style.display = 'block';
+            document.getElementById('animalError').style.display = 'none';
+        };
+
+        // Error display for animal fetching
+        const displayAnimalError = (message) => {
+            const animalError = document.getElementById('animalError');
+            animalError.innerText = message;
+            animalError.style.display = 'block';
+            document.getElementById('animalDiv').style.display = 'none';
+        };
+
+        // Show animal loading indicator
+        const showAnimalLoadingIndicator = () => {
+            const animalDiv = document.getElementById('animalDiv');
+            animalDiv.innerHTML = '<p>Loading animal details...</p>';
+        };
+
+        // Hide animal loading indicator
+        const hideAnimalLoadingIndicator = () => {
+            const animalError = document.getElementById('animalError');
+            animalError.style.display = 'none';
         };
     </script>
 </body>
