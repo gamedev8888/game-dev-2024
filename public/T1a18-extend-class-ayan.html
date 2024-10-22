@@ -82,46 +82,69 @@
             color: red;
             font-weight: bold;
         }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-left: 4px solid #5A67D8;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 
 <body>
 
-    <h2>Pokémon Fetcher</h2>
+    <main>
+        <section aria-labelledby="pokemon-section">
+            <h2 id="pokemon-section">Pokémon Fetcher</h2>
 
-    <input type="button" id="randomPokemonBtn" value="Generate Random Pokémon"><br>
+            <input type="button" id="randomPokemonBtn" value="Generate Random Pokémon"><br>
 
-    <!-- Pokémon Name/ID Input -->
-    <div id="pokemonIdSection">
-        <h3>Fetch Pokémon by Name/ID</h3>
-        <input type="text" id="pokemonInput" placeholder="Enter Pokémon Name or ID">
-        <input type="button" id="fetchPokemonBtn" value="Fetch Pokémon"><br>
-        <div id="pokemonDetails"></div>
-        <p class="error" id="pokemonError" style="display:none;"></p>
-        <input type="button" id="toggleShinyBtn" value="Toggle Shiny" style="display:none;">
-    </div>
+            <div id="pokemonIdSection">
+                <h3>Fetch Pokémon by Name/ID</h3>
+                <input type="text" id="pokemonInput" placeholder="Enter Pokémon Name or ID">
+                <input type="button" id="fetchPokemonBtn" value="Fetch Pokémon"><br>
+                <div id="pokemonDetails"></div>
+                <p class="error" id="pokemonError" role="alert" style="display:none;"></p>
+                <input type="button" id="toggleShinyBtn" value="Toggle Shiny" style="display:none;">
+            </div>
 
-    <div id="myDiv01">Fetch your Pokémon!</div>
+            <div id="myDiv01">Fetch your Pokémon!</div>
+        </section>
 
-    <!-- Random Animal Section -->
-    <h2>Animal Fetcher</h2>
-    <input type="button" id="randomAnimalBtn" value="Generate Random Animal"><br>
-    <div id="animalDiv" style="display: none;">
-        <h3 id="animalName"></h3>
-        <p><strong>Habitat:</strong> <span id="animalHabitat"></span></p>
-        <p><strong>Diet:</strong> <span id="animalDiet"></span></p>
-        <p><strong>Lifespan:</strong> <span id="animalLifespan"></span></p>
-        <p class="error" id="animalError" style="display:none;"></p>
-    </div>
+        <section aria-labelledby="animal-section">
+            <h2 id="animal-section">Animal Fetcher</h2>
+            <input type="button" id="randomAnimalBtn" value="Generate Random Animal"><br>
+            <div id="animalDiv" style="display: none;">
+                <h3 id="animalName"></h3>
+                <p><strong>Habitat:</strong> <span id="animalHabitat"></span></p>
+                <p><strong>Diet:</strong> <span id="animalDiet"></span></p>
+                <p><strong>Lifespan:</strong> <span id="animalLifespan"></span></p>
+                <p class="error" id="animalError" role="alert" style="display:none;"></p>
+            </div>
+        </section>
+    </main>
 
     <script>
-        let currentPokemon = null; 
+        let currentPokemon = null;
         let isShiny = false;
         let currentAnimal = null;
+        const cachedPokemons = {};
 
         // Function to fetch random Pokémon
         document.getElementById('randomPokemonBtn').addEventListener('click', async () => {
-            showLoadingIndicator();
+            showLoadingIndicator('pokemonDetails');
             const randomId = Math.floor(Math.random() * 898) + 1; // There are 898 Pokémon in the API
             await fetchPokemonById(randomId);
             hideLoadingIndicator();
@@ -129,7 +152,7 @@
 
         // Function to fetch Pokémon by user input (name or ID)
         document.getElementById('fetchPokemonBtn').addEventListener('click', async () => {
-            showLoadingIndicator();
+            showLoadingIndicator('pokemonDetails');
             const pokemonInput = document.getElementById('pokemonInput').value.trim();
             const pokemonError = document.getElementById('pokemonError');
 
@@ -156,10 +179,15 @@
 
         // Function to fetch Pokémon by ID
         const fetchPokemonById = async (id) => {
+            if (cachedPokemons[id]) {
+                displayPokemonDetails(cachedPokemons[id]);
+                return;
+            }
             try {
                 const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
-                if (!response.ok) throw new Error("Pokémon not found");
+                if (!response.ok) throw new Error(response.status === 404 ? "Pokémon not found. Please check the name or ID." : "Server error. Please try again later.");
                 currentPokemon = await response.json();
+                cachedPokemons[id] = currentPokemon; // Cache the result
                 displayPokemonDetails(currentPokemon);
             } catch (error) {
                 displayError(error.message);
@@ -170,8 +198,9 @@
         const fetchPokemonByName = async (name) => {
             try {
                 const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
-                if (!response.ok) throw new Error("Pokémon not found");
+                if (!response.ok) throw new Error("Pokémon not found. Please check the name or ID.");
                 currentPokemon = await response.json();
+                cachedPokemons[currentPokemon.id] = currentPokemon; // Cache the result
                 displayPokemonDetails(currentPokemon);
             } catch (error) {
                 displayError(error.message);
@@ -190,13 +219,17 @@
         const displayPokemonDetails = (pokemon) => {
             const pokemonDetails = document.getElementById('pokemonDetails');
             const shinyImage = isShiny ? (pokemon.sprites.front_shiny || 'https://example.com/fallback.png') : (pokemon.sprites.front_default || 'https://example.com/fallback.png');
+            const abilities = pokemon.abilities.map(a => a.ability.name).join(', ');
+            const types = pokemon.types.map(t => t.type.name).join(', ');
 
             pokemonDetails.innerHTML = `
                 <h3>${pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</h3>
                 <img src="${shinyImage}" alt="${pokemon.name} Image">
                 <div class="pokemon-stats">
-                    <span class="pokemon-stat"><strong>Height:</strong> ${pokemon.height} decimetres</span>
-                    <span class="pokemon-stat"><strong>Weight:</strong> ${pokemon.weight} hectograms</span>
+                    <span><strong>Height:</strong> ${pokemon.height} decimetres</span><br>
+                    <span><strong>Weight:</strong> ${pokemon.weight} hectograms</span><br>
+                    <span><strong>Abilities:</strong> ${abilities}</span><br>
+                    <span><strong>Types:</strong> ${types}</span>
                 </div>
             `;
             document.getElementById('toggleShinyBtn').style.display = 'inline';
@@ -210,9 +243,9 @@
         });
 
         // Show loading indicator
-        const showLoadingIndicator = () => {
-            const pokemonDetails = document.getElementById('pokemonDetails');
-            pokemonDetails.innerHTML = '<p>Loading...</p>';
+        const showLoadingIndicator = (targetId) => {
+            const targetElement = document.getElementById(targetId);
+            targetElement.innerHTML = '<div class="spinner"></div>';
         };
 
         // Hide loading indicator
@@ -231,7 +264,7 @@
         // Function to fetch a random animal facts (Using Animal Facts API)
         const fetchAnimal = async () => {
             try {
-                const response = await fetch('https://some-random-api.ml/animal'); // Replace or test with other APIs
+                const response = await fetch('https://some-random-api.ml/animal'); // Replace with a valid Animal API
                 if (!response.ok) throw new Error("Animal not found");
                 currentAnimal = await response.json();
                 displayAnimalDetails(currentAnimal);
@@ -261,7 +294,7 @@
         // Show animal loading indicator
         const showAnimalLoadingIndicator = () => {
             const animalDiv = document.getElementById('animalDiv');
-            animalDiv.innerHTML = '<p>Loading animal details...</p>';
+            animalDiv.innerHTML = '<div class="spinner"></div>';
         };
 
         // Hide animal loading indicator
@@ -269,6 +302,18 @@
             const animalError = document.getElementById('animalError');
             animalError.style.display = 'none';
         };
+
+        // Debounce input for Pokémon fetching
+        let debounceTimer;
+        document.getElementById('pokemonInput').addEventListener('input', () => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                const pokemonInput = document.getElementById('pokemonInput').value.trim();
+                if (pokemonInput) {
+                    document.getElementById('fetchPokemonBtn').click();
+                }
+            }, 300);
+        });
     </script>
 </body>
 
