@@ -77,8 +77,14 @@
         }
 
         .pokemon-stats {
-            text-align: left;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             margin-top: 10px;
+        }
+
+        .pokemon-stat {
+            margin: 0 10px; /* Adds space between height and weight */
         }
 
         .error {
@@ -108,16 +114,19 @@
 
     <script>
         let currentPokemon = null; 
-        let isShiny = false; 
+        let isShiny = false;
 
         // Function to fetch random Pokémon
         document.getElementById('randomPokemonBtn').addEventListener('click', async () => {
+            showLoadingIndicator();
             const randomId = Math.floor(Math.random() * 898) + 1; // There are 898 Pokémon in the API
             await fetchPokemonById(randomId);
+            hideLoadingIndicator();
         });
 
         // Function to fetch Pokémon by user input (name or ID)
         document.getElementById('fetchPokemonBtn').addEventListener('click', async () => {
+            showLoadingIndicator();
             const pokemonInput = document.getElementById('pokemonInput').value.trim();
             const pokemonError = document.getElementById('pokemonError');
 
@@ -125,6 +134,7 @@
             if (!pokemonInput) {
                 pokemonError.innerText = "Please enter a Pokémon name or ID.";
                 pokemonError.style.display = 'block';
+                hideLoadingIndicator();
                 return;
             }
             pokemonError.style.display = 'none'; // Hide error message
@@ -138,6 +148,7 @@
             } else {
                 await fetchPokemonByName(pokemonInput.toLowerCase());
             }
+            hideLoadingIndicator();
         });
 
         // Function to fetch Pokémon by ID
@@ -181,8 +192,8 @@
                 <h3>${pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</h3>
                 <img src="${shinyImage}" alt="${pokemon.name} Image">
                 <div class="pokemon-stats">
-                    <strong>Height:</strong> ${pokemon.height} decimetres<br>
-                    <strong>Weight:</strong> ${pokemon.weight} hectograms
+                    <span class="pokemon-stat"><strong>Height:</strong> ${pokemon.height} decimetres</span>
+                    <span class="pokemon-stat"><strong>Weight:</strong> ${pokemon.weight} hectograms</span>
                 </div>
             `;
             document.getElementById('toggleShinyBtn').style.display = 'inline';
@@ -194,6 +205,18 @@
             isShiny = !isShiny;
             if (currentPokemon) displayPokemonDetails(currentPokemon);
         });
+
+        // Show loading indicator
+        const showLoadingIndicator = () => {
+            const pokemonDetails = document.getElementById('pokemonDetails');
+            pokemonDetails.innerHTML = '<p>Loading...</p>';
+        };
+
+        // Hide loading indicator
+        const hideLoadingIndicator = () => {
+            const pokemonError = document.getElementById('pokemonError');
+            pokemonError.style.display = 'none';
+        };
     </script>
 </body>
 
