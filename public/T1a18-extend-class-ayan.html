@@ -58,8 +58,6 @@
             transition: transform 0.5s;
             display: inline-block; /* Required for transform to work properly */
             margin-top: 10px;
-            width: 150px; /* Set a specific width */
-            height: auto; /* Maintain aspect ratio */
         }
 
         .spin-image:hover {
@@ -228,10 +226,10 @@
                 </div>
             `;
 
-            // Add the new spinning image underneath the Pokémon details
+            // Add the spinning image below the Pokémon details
             pokemonDetails.innerHTML += `
                 <a href="https://example.com" target="_blank" class="spin-image">
-                    <img src="https://i.pinimg.com/736x/bc/cd/65/bccd657eb217b5a942c7f81188c6b4b7.jpg" alt="${pokemon.name} spinning image" class="spin-image">
+                    <img src="${shinyImage}" alt="${pokemon.name} Image">
                 </a>
             `;
 
