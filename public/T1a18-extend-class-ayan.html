@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokémon and Animal Fetcher</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
     <style>
-        /* Styles omitted for brevity, ensure to include the previously added styles */
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Poppins', sans-serif;
             background-image: url('https://wallpaperaccess.com/full/2320946.jpg');
             background-size: cover;
             background-position: center;
@@ -22,28 +22,56 @@
             color: #5A67D8;
         }
 
-        /* Additional styling */
         .animal-card {
-            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px auto;
             padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            background-color: rgba(255, 255, 255, 0.9);
             color: #333;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
             transition: transform 0.3s;
+            width: 300px;
         }
 
         .animal-card:hover {
-            transform: scale(1.02);
+            transform: scale(1.05);
         }
 
         img {
-            max-width: 200px;
+            max-width: 100%;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .animal-details,
+        .pokemon-stats {
+            width: 100%;
+            text-align: left;
+            margin-bottom: 10px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .button {
+            background-color: #5A67D8;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        .button:hover {
+            background-color: #4c51bf;
         }
 
         .error {
-            color: red;
+            color: #e53e3e;
             font-weight: bold;
         }
 
@@ -54,6 +82,7 @@
             width: 40px;
             height: 40px;
             animation: spin 1s linear infinite;
+            margin: 10px auto;
         }
 
         @keyframes spin {
@@ -65,49 +94,56 @@
                 transform: rotate(360deg);
             }
         }
+
+        /* Media queries for responsive design */
+        @media (max-width: 600px) {
+            .animal-card {
+                width: 90%;
+            }
+        }
     </style>
 </head>
 
 <body>
 
     <main>
-        <section aria-labelledby="pokemon-section">
+        <section aria-labelledby="pokémon-section">
             <h2 id="pokemon-section">Pokémon Fetcher</h2>
-            <input type="button" id="randomPokemonBtn" value="Generate Random Pokémon"><br>
+            <button class="button" id="randomPokemonBtn">Generate Random Pokémon</button>
             <div id="pokemonIdSection">
                 <h3>Fetch Pokémon by Name/ID</h3>
                 <input type="text" id="pokemonInput" placeholder="Enter Pokémon Name or ID">
-                <input type="button" id="fetchPokemonBtn" value="Fetch Pokémon"><br>
+                <button class="button" id="fetchPokemonBtn">Fetch Pokémon</button>
                 <div id="pokemonDetails"></div>
                 <p class="error" id="pokemonError" role="alert" style="display:none;"></p>
-                <input type="button" id="toggleShinyBtn" value="Toggle Shiny" style="display:none;">
+                <button class="button" id="toggleShinyBtn" style="display:none;">Toggle Shiny</button>
             </div>
             <div id="myDiv01">Fetch your Pokémon!</div>
         </section>
 
         <section aria-labelledby="animal-section">
             <h2 id="animal-section">Animal Fetcher</h2>
-            <select id="animalTypeSelector">
+            <select id="animalTypeSelector" class="button">
                 <option value="">Select Animal Type</option>
                 <option value="cat">Cat</option>
                 <option value="dog">Dog</option>
                 <option value="rabbit">Rabbit</option>
                 <option value="bird">Bird</option>
                 <option value="fox">Fox</option>
-                <!-- You can add more options as necessary -->
+                <!-- More options -->
             </select>
-            <input type="button" id="randomAnimalBtn" value="Generate Random Animal"><br>
+            <button class="button" id="randomAnimalBtn">Generate Random Animal</button>
             <div id="animalDiv" style="display: none;" class="animal-card" role="region" aria-labelledby="animalDetails">
-                <h3 id="animalName"></h3>
+                <h3 id="animalName" style="margin: 10px 0;"></h3>
                 <img id="animalImage" src="" alt="" style="display: none;">
-                <div id="animalDetails">
+                <div id="animalDetails" class="animal-details">
                     <p><strong>Habitat:</strong> <span id="animalHabitat"></span></p>
                     <p><strong>Diet:</strong> <span id="animalDiet"></span></p>
                     <p><strong>Lifespan:</strong> <span id="animalLifespan"></span></p>
                     <p><strong>Fun Fact:</strong> <span id="animalFunFact"></span></p>
                 </div>
                 <p class="error" id="animalError" role="alert" style="display:none;"></p>
-                <button id="shareAnimalBtn" style="display: none;">Share Animal</button>
+                <button class="button" id="shareAnimalBtn" style="display: none;">Share Animal</button>
             </div>
         </section>
     </main>
@@ -238,14 +274,61 @@
             hideAnimalLoadingIndicator();
         });
 
-        // Function to fetch a random animal facts (Using Animal Facts API)
+        // Function to fetch a random animal facts (Using Sample JSON API)
         const fetchAnimal = async (type) => {
             try {
-                let url = 'https://some-random-api.ml/animal';
-                const response = await fetch(type ? `${url}/${type}` : url); // Modify URL if specific type is selected
-                if (!response.ok) throw new Error("Animal not found");
-                currentAnimal = await response.json();
-                displayAnimalDetails(currentAnimal); // Display animal details
+                // Example JSON data fetching & local data structure simulation (to be replaced with actual API call)
+                // Simulated JSON data for testing - replace with API call in a real case
+                const animalData = [
+                    {
+                        "type": "cat",
+                        "habitat": "Domestic",
+                        "diet": "Carnivore",
+                        "lifespan": "12-15 years",
+                        "fact": "Cats can rotate their ears 180 degrees.",
+                        "image": "https://example.com/images/cat.jpg"
+                    },
+                    {
+                        "type": "dog",
+                        "habitat": "Domestic",
+                        "diet": "Omnivore",
+                        "lifespan": "10-13 years",
+                        "fact": "Dogs can sense human emotions.",
+                        "image": "https://example.com/images/dog.jpg"
+                    },
+                    {
+                        "type": "rabbit",
+                        "habitat": "Burrows or Warrens",
+                        "diet": "Herbivore",
+                        "lifespan": "8-12 years",
+                        "fact": "Rabbits can jump up to three feet high.",
+                        "image": "https://example.com/images/rabbit.jpg"
+                    },
+                    {
+                        "type": "bird",
+                        "habitat": "Nests",
+                        "diet": "Varied",
+                        "lifespan": "5-20 years",
+                        "fact": "Many birds migrate thousands of miles to breed.",
+                        "image": "https://example.com/images/bird.jpg"
+                    },
+                    {
+                        "type": "fox",
+                        "habitat": "Woodlands",
+                        "diet": "Omnivore",
+                        "lifespan": "3-4 years in the wild",
+                        "fact": "Foxes have whiskers to help them sense their surroundings.",
+                        "image": "https://example.com/images/fox.jpg"
+                    }
+                ];
+
+                // Filtering for selected animal type
+                const selectedAnimal = animalData.find(animal => animal.type === type);
+                if (selectedAnimal) {
+                    displayAnimalDetails(selectedAnimal); // Display animal details
+                } else {
+                    throw new Error("Animal not found");
+                }
             } catch (error) {
                 displayAnimalError(error.message); // Display error message
             }
@@ -260,16 +343,16 @@
                 document.getElementById('animalDiet').innerText = animal.diet || 'Unknown Diet';
                 document.getElementById('animalLifespan').innerText = animal.lifespan || 'Unknown Lifespan';
                 document.getElementById('animalFunFact').innerText = "Fun Fact: " + (animal.fact || 'N/A');
-                
+
                 const imgElement = document.getElementById('animalImage');
-                imgElement.src = animal.image || 'https://example.com/fallback.png'; // Placeholder if image is not available
+                imgElement.src = animal.image || 'https://example.com/fallback.png'; // Use the image URL from the JSON
                 imgElement.alt = animal.type + ' Image';
                 imgElement.style.display = 'block'; // Show image
 
                 // Share Button Functionality
                 document.getElementById('shareAnimalBtn').style.display = 'inline';
                 document.getElementById('shareAnimalBtn').onclick = () => shareAnimal(animal);
-                
+
                 // Clear error message if animal fetched successfully 
                 const animalError = document.getElementById('animalError');
                 if (animalError) {
