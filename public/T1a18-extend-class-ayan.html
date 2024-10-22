@@ -26,9 +26,9 @@
 
         .button-container {
             display: flex;
-            justify-content: center; /* Center horizontally */
-            gap: 20px; /* Space between buttons */
-            margin-top: 20px; /* Space above the button container */
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
         }
 
         .card {
@@ -59,16 +59,6 @@
 
         img:hover {
             transform: scale(1.05);
-        }
-
-        .spin-image {
-            transition: transform 0.5s;
-            display: inline-block; /* Required for transform to work properly */
-            margin-top: 10px;
-        }
-
-        .spin-image:hover {
-            transform: rotate(360deg); /* Spins the image */
         }
 
         .pokemon-stats, .animal-stats {
@@ -136,8 +126,8 @@
         <section aria-labelledby="pokemon-section">
             <h2 id="pokemon-section">Pokémon Fetcher</h2>
             <div class="button-container">
-                <button class="button" id="randomPokemonBtn"><i class="fas fa-random"></i>Generate Random Pokémon</button>
-                <button class="button" id="fetchPokemonBtn"><i class="fas fa-search"></i>Fetch Pokémon</button>
+                <button class="button" id="randomPokemonBtn"><i class="fas fa-random"></i> Generate Random Pokémon</button>
+                <button class="button" id="fetchPokemonBtn"><i class="fas fa-search"></i> Fetch Pokémon</button>
             </div>
             <div id="pokemonIdSection">
                 <h3>Fetch Pokémon by Name/ID</h3>
@@ -151,7 +141,7 @@
         <section aria-labelledby="animal-section" style="margin-top: 40px;">
             <h2 id="animal-section">Animal Info Fetcher</h2>
             <div class="button-container">
-                <button class="button" id="fetchAnimalBtn"><i class="fas fa-search"></i>Fetch Random Animal</button>
+                <button class="button" id="fetchAnimalBtn"><i class="fas fa-search"></i> Fetch Random Animal</button>
             </div>
             <div id="animalDetails" class="card"></div>
             <p class="error" id="animalError" role="alert" style="display:none;"></p>
@@ -161,6 +151,70 @@
     <script>
         let currentPokemon = null;
         let isShiny = false;
+
+        // JSON data for animals
+        const animalsData = [
+            {
+                "name": "Tiger",
+                "habitat": "Forests",
+                "diet": "Carnivore",
+                "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/5/56/Tiger.50.jpg"
+            },
+            {
+                "name": "Elephant",
+                "habitat": "Savannahs",
+                "diet": "Herbivore",
+                "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/e/ee/African_Elephant.jpg"
+            },
+            {
+                "name": "Penguin",
+                "habitat": "Antarctica",
+                "diet": "Carnivore",
+                "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a2/African_Penguin_Spheniscus_demersus.jpg"
+            },
+            {
+                "name": "Kangaroo",
+                "habitat": "Grasslands",
+                "diet": "Herbivore",
+                "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/6/6c/Eastern_Grey_Kangaroo.jpg"
+            },
+            {
+                "name": "Panda",
+                "habitat": "Bamboo Forests",
+                "diet": "Herbivore",
+                "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/0/06/Ailuropoda_melanoleuca_%281%29.jpg"
+            },
+            {
+                "name": "Dolphin",
+                "habitat": "Oceans",
+                "diet": "Carnivore",
+                "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/2/20/Common_dolphin_and_calves.jpg"
+            },
+            {
+                "name": "Giraffe",
+                "habitat": "Savannahs",
+                "diet": "Herbivore",
+                "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b6/Giraffa_camelopardalis_camelopardalis.jpg"
+            },
+            {
+                "name": "Wolf",
+                "habitat": "Forests",
+                "diet": "Carnivore",
+                "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/e/e4/Gray_Wolf.jpg"
+            },
+            {
+                "name": "Flamingo",
+                "habitat": "Wetlands",
+                "diet": "Herbivore",
+                "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1d/Flamingo%2C_Griechenland.jpg"
+            },
+            {
+                "name": "Hedgehog",
+                "habitat": "Gardens",
+                "diet": "Insectivore",
+                "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/2/20/European_Hedgehog_at_night.jpg"
+            }
+        ];
 
         // Function to show loading spinner
         const showLoadingIndicator = (targetId) => {
@@ -251,7 +305,6 @@
                     <img src="${shinyImage}" alt="${pokemon.name} Image">
                 </a>
             `;
-
             document.getElementById('toggleShinyBtn').style.display = 'inline';
         };
 
@@ -273,46 +326,11 @@
             }, 300);
         });
 
-        // An example Animal class
-        class Animal {
-            constructor(name, habitat, diet, imageUrl) {
-                this.name = name;
-                this.habitat = habitat;
-                this.diet = diet;
-                this.imageUrl = imageUrl;
-            }
-
-            getInfo() {
-                return `
-                    <h3>${this.name}</h3>
-                    <div class="animal-stats">
-                        <span><strong>Habitat:</strong> ${this.habitat}</span>
-                        <span><strong>Diet:</strong> ${this.diet}</span>
-                    </div>
-                    <img src="${this.imageUrl}" alt="${this.name} Image">
-                `;
-            }
-        }
-
-        // Sample animals with images (use valid URLs)
-        const animals = [
-            new Animal('Tiger', 'Forests', 'Carnivore', 'https://example.com/tiger.png'),
-            new Animal('Elephant', 'Savannahs', 'Herbivore', 'https://upload.wikimedia.org/wikipedia/commons/e/ee/African_Elephant.jpg'),
-            new Animal('Penguin', 'Antarctica', 'Carnivore', 'https://upload.wikimedia.org/wikipedia/commons/a/a2/African_Penguin_Spheniscus_demersus.jpg'),
-            new Animal('Kangaroo', 'Grasslands', 'Herbivore', 'https://upload.wikimedia.org/wikipedia/commons/6/6c/Eastern_Grey_Kangaroo.jpg'),
-            new Animal('Panda', 'Bamboo Forests', 'Herbivore', 'https://upload.wikimedia.org/wikipedia/commons/0/06/Ailuropoda_melanoleuca_%281%29.jpg'),
-            new Animal('Dolphin', 'Oceans', 'Carnivore', 'https://upload.wikimedia.org/wikipedia/commons/2/20/Common_dolphin_and_calves.jpg'),
-            new Animal('Giraffe', 'Savannahs', 'Herbivore', 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Giraffa_camelopardalis_camelopardalis.jpg'),
-            new Animal('Wolf', 'Forests', 'Carnivore', 'https://upload.wikimedia.org/wikipedia/commons/e/e4/Gray_Wolf.jpg'),
-            new Animal('Flamingo', 'Wetlands', 'Herbivore', 'https://upload.wikimedia.org/wikipedia/commons/1/1d/Flamingo%2C_Griechenland.jpg'),
-            new Animal('Hedgehog', 'Gardens', 'Insectivore', 'https://upload.wikimedia.org/wikipedia/commons/2/20/European_Hedgehog_at_night.jpg')
-        ];
-
         // Event listener to fetch a random animal
         document.getElementById('fetchAnimalBtn').addEventListener('click', () => {
             clearErrors('animalError');
             showLoadingIndicator('animalDetails');
-            const randomAnimal = animals[Math.floor(Math.random() * animals.length)];
+            const randomAnimal = animalsData[Math.floor(Math.random() * animalsData.length)];
             displayAnimalDetails(randomAnimal);
             hideLoadingIndicator();
         });
@@ -320,7 +338,14 @@
         // Function to display animal details
         const displayAnimalDetails = (animal) => {
             const animalDetails = document.getElementById('animalDetails');
-            animalDetails.innerHTML = animal.getInfo();
+            animalDetails.innerHTML = `
+                <h3>${animal.name}</h3>
+                <div class="animal-stats">
+                    <span><strong>Habitat:</strong> ${animal.habitat}</span>
+                    <span><strong>Diet:</strong> ${animal.diet}</span>
+                </div>
+                <img src="${animal.imageUrl}" alt="${animal.name} Image">
+            `;
         };
     </script>
 </body>
