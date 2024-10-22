@@ -116,6 +116,10 @@
             }
         }
 
+        img.spinning {
+            animation: spin 1s linear infinite;
+        }
+
         @media (max-width: 600px) {
             .card {
                 width: 90%;
@@ -293,6 +297,11 @@
             const abilities = pokemon.abilities.map(a => a.ability.name).join(', ');
             const types = pokemon.types.map(t => t.type.name).join(', ');
 
+            // Adding the spinning image effect
+            const imgElement = `
+                <img src="${shinyImage}" alt="${pokemon.name} Image" class="spinning" onload="this.classList.remove('spinning');" /> <!-- Remove spinning after load -->
+            `;
+
             pokemonDetails.innerHTML = `
                 <h3>${pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</h3>
                 <div class="pokemon-stats">
@@ -303,11 +312,9 @@
                     <span><strong>Abilities:</strong> ${abilities}</span><br>
                     <span><strong>Types:</strong> ${types}</span>
                 </div>
+                ${imgElement} <!-- Add the spinning image here -->
             `;
 
-            pokemonDetails.innerHTML += `
-                <img src="${shinyImage}" alt="${pokemon.name} Image" />
-            `;
             document.getElementById('toggleShinyBtn').style.display = 'inline'; // Show toggle button
         };
 
