@@ -126,16 +126,9 @@
 
         <section aria-labelledby="animal-section">
             <h2 id="animal-section">Animal Fetcher</h2>
-            <select id="animalTypeSelector" class="button">
-                <option value="">Select Animal Type</option>
-                <option value="cat">Cat</option>
-                <option value="dog">Dog</option>
-                <option value="rabbit">Rabbit</option>
-                <option value="bird">Bird</option>
-                <option value="fox">Fox</option>
-                <!-- More options -->
-            </select>
-            <button class="button" id="randomAnimalBtn">Generate Random Animal</button>
+            <h3>Fetch Animal by Name</h3>
+            <input type="text" id="animalInput" placeholder="Enter Animal Name">
+            <button class="button" id="fetchAnimalBtn">Fetch Animal</button>
             <div id="animalDiv" style="display: none;" class="animal-card" role="region" aria-labelledby="animalDetails">
                 <h3 id="animalName" style="margin: 10px 0;"></h3>
                 <img id="animalImage" src="" alt="" style="display: none;">
@@ -264,18 +257,29 @@
             pokemonError.style.display = 'none';
         };
 
-        // Random Animal Fetching Functionality
-        document.getElementById('randomAnimalBtn').addEventListener('click', async () => {
+        // Fetch Animal by user input
+        document.getElementById('fetchAnimalBtn').addEventListener('click', async () => {
             showAnimalLoadingIndicator();
-            const animalType = document.getElementById('animalTypeSelector').value; // Get selected type
-            await fetchAnimal(animalType); // Pass selected type to the function
+            const animalInput = document.getElementById('animalInput').value.trim();
+            const animalError = document.getElementById('animalError');
+
+            // Validate input
+            if (!animalInput) {
+                animalError.innerText = "Please enter an animal name.";
+                animalError.style.display = 'block';
+                hideAnimalLoadingIndicator();
+                return;
+            }
+            animalError.style.display = 'none'; // Hide error message
+
+            await fetchAnimal(animalInput.toLowerCase());
             hideAnimalLoadingIndicator();
         });
 
-        // Function to fetch a random animal facts (Using Sample JSON API)
-        const fetchAnimal = async (type) => {
+        // Function to fetch animal facts
+        const fetchAnimal = async (name) => {
             try {
-                // Sample JSON data (to be replaced with an actual API call)
+                // Sample JSON data with actual images
                 const animalData = [
                     {
                         "type": "cat",
@@ -283,7 +287,7 @@
                         "diet": "Carnivore",
                         "lifespan": "12-15 years",
                         "fact": "Cats can rotate their ears 180 degrees.",
-                        "image": "https://example.com/images/cat.jpg"
+                        "image": "https://upload.wikimedia.org/wikipedia/commons/0/0e/Cat_poster_1.jpg"
                     },
                     {
                         "type": "dog",
@@ -291,7 +295,7 @@
                         "diet": "Omnivore",
                         "lifespan": "10-13 years",
                         "fact": "Dogs can sense human emotions.",
-                        "image": "https://example.com/images/dog.jpg"
+                        "image": "https://upload.wikimedia.org/wikipedia/commons/5/51/Golden_Retriever.jpg"
                     },
                     {
                         "type": "rabbit",
@@ -299,7 +303,7 @@
                         "diet": "Herbivore",
                         "lifespan": "8-12 years",
                         "fact": "Rabbits can jump up to three feet high.",
-                        "image": "https://example.com/images/rabbit.jpg"
+                        "image": "https://upload.wikimedia.org/wikipedia/commons/5/57/Rabbit.jpg"
                     },
                     {
                         "type": "bird",
@@ -307,7 +311,7 @@
                         "diet": "Varied",
                         "lifespan": "5-20 years",
                         "fact": "Many birds migrate thousands of miles to breed.",
-                        "image": "https://example.com/images/bird.jpg"
+                        "image": "https://upload.wikimedia.org/wikipedia/commons/4/4b/Common_Blackbird_turdus_merula_2013-07-31_001.jpg"
                     },
                     {
                         "type": "fox",
@@ -315,12 +319,12 @@
                         "diet": "Omnivore",
                         "lifespan": "3-4 years in the wild",
                         "fact": "Foxes have whiskers to help them sense their surroundings.",
-                        "image": "https://example.com/images/fox.jpg"
+                        "image": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Vulpes_vulpes_%28red_fox%29.jpg"
                     }
                 ];
 
-                // Filtering for selected animal type
-                const selectedAnimal = animalData.find(animal => animal.type === type);
+                // Find the selected animal type
+                const selectedAnimal = animalData.find(animal => animal.type === name);
                 if (selectedAnimal) {
                     displayAnimalDetails(selectedAnimal); // Display animal details
                 } else {
