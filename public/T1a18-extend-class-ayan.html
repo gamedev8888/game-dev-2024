@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pokémon Fetcher</title>
+    <title>Pokémon & Animal Info Fetcher</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -71,7 +71,7 @@
             transform: rotate(360deg); /* Spins the image */
         }
 
-        .pokemon-stats {
+        .pokemon-stats, .animal-stats {
             display: flex;
             justify-content: space-between;
         }
@@ -147,6 +147,15 @@
                 <button class="button" id="toggleShinyBtn" style="display:none;">Toggle Shiny</button>
             </div>
         </section>
+
+        <section aria-labelledby="animal-section" style="margin-top: 40px;">
+            <h2 id="animal-section">Animal Info Fetcher</h2>
+            <div class="button-container">
+                <button class="button" id="fetchAnimalBtn"><i class="fas fa-search"></i>Fetch Random Animal</button>
+            </div>
+            <div id="animalDetails" class="card"></div>
+            <p class="error" id="animalError" role="alert" style="display:none;"></p>
+        </section>
     </main>
 
     <script>
@@ -162,6 +171,7 @@
         // Function to hide loading spinner
         const hideLoadingIndicator = () => {
             document.getElementById('pokemonError').style.display = 'none';
+            document.getElementById('animalError').style.display = 'none';
         };
 
         // Function to display an error message
@@ -262,6 +272,49 @@
                 }
             }, 300);
         });
+
+        // An example Animal class
+        class Animal {
+            constructor(name, habitat, diet, imageUrl) {
+                this.name = name;
+                this.habitat = habitat;
+                this.diet = diet;
+                this.imageUrl = imageUrl;
+            }
+
+            getInfo() {
+                return `
+                    <h3>${this.name}</h3>
+                    <div class="animal-stats">
+                        <span><strong>Habitat:</strong> ${this.habitat}</span>
+                        <span><strong>Diet:</strong> ${this.diet}</span>
+                    </div>
+                    <img src="${this.imageUrl}" alt="${this.name} Image">
+                `;
+            }
+        }
+
+        // Sample animals
+        const animals = [
+            new Animal('Tiger', 'Forests', 'Carnivore', 'https://example.com/tiger.png'),
+            new Animal('Elephant', 'Savannahs', 'Herbivore', 'https://example.com/elephant.png'),
+            new Animal('Penguin', 'Antarctica', 'Carnivore', 'https://example.com/penguin.png')
+        ];
+
+        // Event listener to fetch a random animal
+        document.getElementById('fetchAnimalBtn').addEventListener('click', () => {
+            clearErrors('animalError');
+            showLoadingIndicator('animalDetails');
+            const randomAnimal = animals[Math.floor(Math.random() * animals.length)];
+            displayAnimalDetails(randomAnimal);
+            hideLoadingIndicator();
+        });
+
+        // Function to display animal details
+        const displayAnimalDetails = (animal) => {
+            const animalDetails = document.getElementById('animalDetails');
+            animalDetails.innerHTML = animal.getInfo();
+        };
     </script>
 </body>
 </html>
