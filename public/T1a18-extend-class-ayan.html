@@ -7,36 +7,146 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* Your CSS styles remain unchanged */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-image: url('https://wallpaperaccess.com/full/2320946.jpg');
+            background-size: cover;
+            background-position: center;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        h2 {
+            color: #5A67D8;
+            margin-bottom: 10px;
+        }
+
+        .card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 15px;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #333;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s, box-shadow 0.3s;
+            width: 300px;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
+        }
+
+        img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            transition: transform 0.3s;
+        }
+
+        img:hover {
+            transform: scale(1.05);
+        }
+
+        .animal-details, .pokemon-stats {
+            width: 100%;
+            text-align: left;
+            margin-bottom: 10px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .pokemon-stats {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .button {
+            background-color: #5A67D8;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .button:hover {
+            background-color: #4c51bf;
+            transform: translateY(-2px);
+        }
+
+        .button i {
+            margin-right: 5px;
+        }
+
+        .error {
+            color: #e53e3e;
+            font-weight: bold;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-left: 4px solid #5A67D8;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 10px auto;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .card {
+                width: 90%;
+            }
+        }
     </style>
 </head>
 <body>
 
-<main>
-    <section aria-labelledby="pokemon-section">
-        <h2 id="pokemon-section">Pokémon Fetcher</h2>
-        <button class="button" id="randomPokemonBtn"><i class="fas fa-random"></i>Generate Random Pokémon</button>
-        <div id="pokemonIdSection">
-            <h3>Fetch Pokémon by Name/ID</h3>
-            <input type="text" id="pokemonInput" placeholder="Enter Pokémon Name or ID">
-            <button class="button" id="fetchPokemonBtn"><i class="fas fa-search"></i>Fetch Pokémon</button>
-            <div id="pokemonDetails" class="card"></div>
-            <p class="error" id="pokemonError" role="alert" style="display:none;"></p>
-            <button class="button" id="toggleShinyBtn" style="display:none;">Toggle Shiny</button>
-        </div>
-    </section>
+    <main>
+        <section aria-labelledby="pokemon-section">
+            <h2 id="pokemon-section">Pokémon Fetcher</h2>
+            <button class="button" id="randomPokemonBtn"><i class="fas fa-random"></i>Generate Random Pokémon</button>
+            <div id="pokemonIdSection">
+                <h3>Fetch Pokémon by Name/ID</h3>
+                <input type="text" id="pokemonInput" placeholder="Enter Pokémon Name or ID">
+                <button class="button" id="fetchPokemonBtn"><i class="fas fa-search"></i>Fetch Pokémon</button>
+                <div id="pokemonDetails" class="card"></div>
+                <p class="error" id="pokemonError" role="alert" style="display:none;"></p>
+                <button class="button" id="toggleShinyBtn" style="display:none;">Toggle Shiny</button>
+            </div>
+        </section>
 
-    <section aria-labelledby="animal-section">
-        <h2 id="animal-section">Animal Fetcher</h2>
-        <button class="button" id="randomAnimalBtn"><i class="fas fa-random"></i>Generate Random Animal</button>
-        <div id="animalIdSection">
+        <section aria-labelledby="animal-section">
+            <h2 id="animal-section">Animal Fetcher</h2>
             <h3>Fetch Animal by Name</h3>
             <input type="text" id="animalInput" placeholder="Enter Animal Name">
-            <button class="button" id="fetchAnimalBtn"><i class="fas fa-search"></i>Fetch Animal</button>
+            <button class="button" id="fetchAnimalBtn"><i class="fas fa-paw"></i>Fetch Animal</button>
             <div id="animalDiv" style="display: none;" class="card" role="region" aria-labelledby="animalDetails">
                 <h3 id="animalName" style="margin: 10px 0;"></h3>
                 <img id="animalImage" src="" alt="" style="display: none;">
-                <div class="animal-details">
+                <div id="animalDetails" class="animal-details">
                     <p><strong>Habitat:</strong> <span id="animalHabitat"></span></p>
                     <p><strong>Diet:</strong> <span id="animalDiet"></span></p>
                     <p><strong>Lifespan:</strong> <span id="animalLifespan"></span></p>
@@ -45,12 +155,200 @@
                 <p class="error" id="animalError" role="alert" style="display:none;"></p>
                 <button class="button" id="shareAnimalBtn" style="display: none;">Share Animal</button>
             </div>
-        </div>
-    </section>
-</main>
+        </section>
+    </main>
 
-<script>
-    // Your JavaScript code with the updates provided above
-</script>
+    <script>
+        let currentPokemon = null;
+        let isShiny = false;
+
+        // Function to show loading spinner
+        const showLoadingIndicator = (targetId) => {
+            const targetElement = document.getElementById(targetId);
+            targetElement.innerHTML = '<div class="spinner"></div>';
+        };
+
+        // Function to hide loading spinner
+        const hideLoadingIndicator = () => {
+            const pokemonError = document.getElementById('pokemonError');
+            const animalError = document.getElementById('animalError');
+            pokemonError.style.display = 'none';
+            animalError.style.display = 'none';
+        };
+
+        // Function to display an error message
+        const displayError = (message, errorId) => {
+            const errorElement = document.getElementById(errorId);
+            errorElement.innerText = message;
+            errorElement.style.display = 'block';
+        };
+
+        // Function to clear error messages
+        const clearErrors = (errorId) => {
+            const errorElement = document.getElementById(errorId);
+            errorElement.style.display = 'none';
+        };
+
+        // Event listener to fetch random Pokémon
+        document.getElementById('randomPokemonBtn').addEventListener('click', async () => {
+            clearErrors('pokemonError');
+            showLoadingIndicator('pokemonDetails');
+            const randomId = Math.floor(Math.random() * 898) + 1; // 898 Pokémon
+            await fetchPokemon(randomId);
+            hideLoadingIndicator();
+        });
+
+        // Event listener to fetch Pokémon by user-input name or ID
+        document.getElementById('fetchPokemonBtn').addEventListener('click', async () => {
+            clearErrors('pokemonError');
+            showLoadingIndicator('pokemonDetails');
+            const pokemonInput = document.getElementById('pokemonInput').value.trim();
+
+            if (!pokemonInput) {
+                displayError("Please enter a Pokémon name or ID.", 'pokemonError');
+                hideLoadingIndicator();
+                return;
+            }
+
+            const isId = /^\d+$/.test(pokemonInput);
+            await fetchPokemon(isId ? pokemonInput : pokemonInput.toLowerCase());
+            hideLoadingIndicator();
+        });
+
+        // Function to fetch Pokémon data from the API
+        const fetchPokemon = async (identifier) => {
+            try {
+                const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${identifier}`);
+                if (!response.ok) throw new Error("Pokémon not found. Please check the name or ID.");
+                currentPokemon = await response.json();
+                displayPokemonDetails(currentPokemon);
+            } catch (error) {
+                displayError(error.message, 'pokemonError');
+                document.getElementById('pokemonDetails').innerHTML = '';
+            }
+        };
+
+        // Function to display Pokémon details
+        const displayPokemonDetails = (pokemon) => {
+            const pokemonDetails = document.getElementById('pokemonDetails');
+            const shinyImage = isShiny ? (pokemon.sprites.front_shiny || 'https://example.com/fallback.png') : (pokemon.sprites.front_default || 'https://example.com/fallback.png');
+            const abilities = pokemon.abilities.map(a => a.ability.name).join(', ');
+            const types = pokemon.types.map(t => t.type.name).join(', ');
+
+            pokemonDetails.innerHTML = `
+                <h3>${pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</h3>
+                <img src="${shinyImage}" alt="${pokemon.name} Image">
+                <div class="pokemon-stats">
+                    <span><strong>Height:</strong> ${pokemon.height} decimetres</span>
+                    <span><strong>Weight:</strong> ${pokemon.weight} hectograms</span>
+                </div>
+                <div>
+                    <span><strong>Abilities:</strong> ${abilities}</span><br>
+                    <span><strong>Types:</strong> ${types}</span>
+                </div>
+            `;
+            document.getElementById('toggleShinyBtn').style.display = 'inline';
+        };
+
+        // Event listener to toggle shiny Pokemon version
+        document.getElementById('toggleShinyBtn').addEventListener('click', () => {
+            isShiny = !isShiny;
+            if (currentPokemon) displayPokemonDetails(currentPokemon);
+        });
+
+        // Event listener to fetch animal data by user input
+        document.getElementById('fetchAnimalBtn').addEventListener('click', async () => {
+            clearErrors('animalError');
+            showLoadingIndicator('animalDiv');
+            const animalInput = document.getElementById('animalInput').value.trim();
+
+            if (!animalInput) {
+                displayError("Please enter an animal name.", 'animalError');
+                hideLoadingIndicator();
+                return;
+            }
+
+            await fetchAnimal(animalInput.toLowerCase());
+            hideLoadingIndicator();
+        });
+
+        // Function to fetch animal data (currently using sample data)
+        const fetchAnimal = async (name) => {
+            try {
+                const animalData = [
+                    {
+                        "type": "cat",
+                        "habitat": "Domestic",
+                        "diet": "Carnivore",
+                        "lifespan": "12-15 years",
+                        "fact": "Cats can rotate their ears 180 degrees.",
+                        "image": "https://upload.wikimedia.org/wikipedia/commons/0/0e/Cat_poster_1.jpg"
+                    },
+                    {
+                        "type": "dog",
+                        "habitat": "Domestic",
+                        "diet": "Omnivore",
+                        "lifespan": "10-13 years",
+                        "fact": "Dogs can sense human emotions.",
+                        "image": "https://upload.wikimedia.org/wikipedia/commons/5/51/Golden_Retriever.jpg"
+                    },
+                    // Additional animals...
+                ];
+
+                const selectedAnimal = animalData.find(animal => animal.type === name);
+                if (!selectedAnimal) throw new Error("Animal not found");
+
+                displayAnimalDetails(selectedAnimal);
+            } catch (error) {
+                displayError(error.message, 'animalError');
+                hideAnimalDetails();
+            }
+        };
+
+        // Function to display animal details
+        const displayAnimalDetails = (animal) => {
+            const animalDiv = document.getElementById('animalDiv');
+            animalDiv.style.display = 'block';
+
+            document.getElementById('animalName').innerText = animal.type.charAt(0).toUpperCase() + animal.type.slice(1);
+            document.getElementById('animalHabitat').innerText = animal.habitat || 'Unknown Habitat';
+            document.getElementById('animalDiet').innerText = animal.diet || 'Unknown Diet';
+            document.getElementById('animalLifespan').innerText = animal.lifespan || 'Unknown Lifespan';
+            document.getElementById('animalFunFact').innerText = animal.fact || 'Fun Fact: N/A';
+
+            const imgElement = document.getElementById('animalImage');
+            imgElement.src = animal.image || 'https://example.com/fallback.png';
+            imgElement.alt = `${animal.type} Image`;
+            imgElement.onload = () => imgElement.style.display = 'block';
+            imgElement.onerror = () => { imgElement.src = 'https://example.com/fallback.png'; };
+            imgElement.style.display = 'block';
+
+            const shareButton = document.getElementById('shareAnimalBtn');
+            shareButton.style.display = 'inline';
+            shareButton.onclick = () => shareAnimal(animal);
+            clearErrors('animalError');
+        };
+
+        const hideAnimalDetails = () => {
+            const animalDiv = document.getElementById('animalDiv');
+            animalDiv.style.display = 'none';
+        };
+
+        const shareAnimal = (animal) => {
+            alert(`Share this great animal fact: ${animal.type} - ${animal.fact}`);
+        };
+
+        // Debounce input for Pokémon fetching
+        let debounceTimer;
+        document.getElementById('pokemonInput').addEventListener('input', () => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                const pokemonInput = document.getElementById('pokemonInput').value.trim();
+                if (pokemonInput) {
+                    document.getElementById('fetchPokemonBtn').click();
+                }
+            }, 300);
+        });
+    </script>
 </body>
 </html>
