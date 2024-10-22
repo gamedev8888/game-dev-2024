@@ -46,7 +46,7 @@
             font-size: 16px;
             transition: background-color 0.3s, transform 0.2s;
             flex: 1 0 150px; /* Respond regarding the container's width */
-            outline: none; 
+            outline: none;
         }
 
         button:hover {
@@ -55,7 +55,7 @@
         }
 
         img {
-            position: relative;
+            position: absolute; /* Changed to absolute position for accurate movement */
             width: 90px;
             height: 100px;
             transition: left 0.1s linear, top 0.1s linear;
@@ -81,13 +81,13 @@
             color: #fff;
             text-align: center;
         }
-        
+
         #speedInput {
             width: 50px;
             text-align: center;
             margin-left: 10px;
         }
-        
+
         .controls {
             display: flex;
             align-items: center;
@@ -98,51 +98,38 @@
             constructor() {
                 this.moveSpeed = 10;
                 this.imageElement = document.getElementById('myImage01');
+                this.imageElement.style.left = '0px';
+                this.imageElement.style.top = '0px';
+                this.autoMoveInterval = null;
                 this.initializeEvents();
-                this.resetPosition();
             }
-            
+
             initializeEvents() {
                 document.getElementById('speedInput').addEventListener('change', (e) => {
                     this.setSpeed(e.target.value);
                 });
 
                 document.addEventListener('keydown', (event) => this.handleKeyboardInput(event));
-                window.addEventListener('touchstart', (e) => this.handleTouchStart(e));
-                window.addEventListener('touchmove', (e) => this.handleTouchMove(e));
             }
 
             moveImage(distanceX, distanceY) {
                 let currentLeft = parseInt(this.imageElement.style.left) || 0;
                 let currentTop = parseInt(this.imageElement.style.top) || 0;
 
-                if (distanceX) {
-                    const newLeft = currentLeft + distanceX;
-                    if (newLeft >= 0 && newLeft <= window.innerWidth - this.imageElement.width) {
-                        this.imageElement.style.left = newLeft + 'px';
-                    }
+                // Calculate new positions
+                const newLeft = currentLeft + distanceX;
+                const newTop = currentTop + distanceY;
+
+                // Check boundaries and update positions
+                if (newLeft >= 0 && newLeft <= window.innerWidth - this.imageElement.width) {
+                    this.imageElement.style.left = newLeft + 'px';
                 }
 
-                if (distanceY) {
-                    const newTop = currentTop + distanceY;
-                    if (newTop >= 0 && newTop <= window.innerHeight - this.imageElement.height) {
-                        this.imageElement.style.top = newTop + 'px';
-                    }
+                if (newTop >= 0 && newTop <= window.innerHeight - this.imageElement.height) {
+                    this.imageElement.style.top = newTop + 'px';
                 }
 
-                this.updateStatus(`Moved to (${parseInt(this.imageElement.style.left)}px, ${parseInt(this.imageElement.style.top)}px)`);
-            }
-
-            autoMove(distanceX, distanceY) {
-                if (this.autoMoveInterval) clearInterval(this.autoMoveInterval);
-                this.autoMoveInterval = setInterval(() => this.moveImage(distanceX, distanceY), 30);
-                this.updateStatus(`Auto-Moving (${distanceX}, ${distanceY})`);
-            }
-
-            resetPosition() {
-                this.imageElement.style.left = '0px';
-                this.imageElement.style.top = '0px';
-                this.updateStatus('Position reset to (0px, 0px)');
+                this.updateStatus(`Moved to (${this.imageElement.style.left}, ${this.imageElement.style.top})`);
             }
 
             setSpeed(value) {
@@ -168,33 +155,13 @@
                     case 'ArrowDown':
                         this.moveImage(0, this.moveSpeed);
                         break;
-                    case ' ':
-                        clearInterval(this.autoMoveInterval);
-                        this.updateStatus('Auto-Move Stopped');
-                        break;
-                    case '+':
-                        this.setSpeed(this.moveSpeed + 1);
-                        break;
-                    case '-':
-                        if (this.moveSpeed > 1) this.setSpeed(this.moveSpeed - 1);
-                        break;
                 }
             }
 
-            handleTouchStart(e) {
-                this.touchStartX = e.touches[0].clientX;
-                this.touchStartY = e.touches[0].clientY;
-                this.touching = true;
-            }
-
-            handleTouchMove(e) {
-                if (!this.touching) return;
-                const deltaX = e.touches[0].clientX - this.touchStartX;
-                const deltaY = e.touches[0].clientY - this.touchStartY;
-                
-                this.moveImage(deltaX, deltaY);
-                this.touchStartX = e.touches[0].clientX; 
-                this.touchStartY = e.touches[0].clientY; 
+            resetPosition() {
+                this.imageElement.style.left = '0px';
+                this.imageElement.style.top = '0px';
+                this.updateStatus('Position reset to (0px, 0px)');
             }
         }
 
@@ -207,7 +174,7 @@
 <body>
 
     <h1>T1a17-move-ayan.html</h1>
-
+    
     <div class="controls">
         <label for="speedInput">Speed:</label>
         <input type="number" id="speedInput" value="10" min="1" aria-label="Set movement speed">
@@ -218,14 +185,6 @@
         <button onclick="mover.moveImage(mover.moveSpeed, 0)" aria-label="Move Right"><i class="fas fa-arrow-right"></i> Move Right</button>
         <button onclick="mover.moveImage(0, -mover.moveSpeed)" aria-label="Move Up"><i class="fas fa-arrow-up"></i> Move Up</button>
         <button onclick="mover.moveImage(0, mover.moveSpeed)" aria-label="Move Down"><i class="fas fa-arrow-down"></i> Move Down</button>
-        <button onclick="mover.autoMove(-mover.moveSpeed, mover.moveSpeed)">Auto Move Down Left</button>
-        <button onclick="mover.autoMove(mover.moveSpeed, mover.moveSpeed)">Auto Move Down Right</button>
-        <button onclick="mover.autoMove(-mover.moveSpeed, -mover.moveSpeed)">Auto Move Right Up</button>
-        <button onclick="mover.autoMove(mover.moveSpeed, -mover.moveSpeed)">Auto Move Right Down</button>
-        <button onclick="mover.autoMove(-mover.moveSpeed, 0)">Auto Move Left</button>
-        <button onclick="mover.autoMove(0, mover.moveSpeed)">Auto Move Down</button>
-        <button onclick="mover.autoMove(0, -mover.moveSpeed)">Auto Move Up</button>
-        <button onclick="clearInterval(mover.autoMoveInterval)">Stop Auto Move</button>
         <button onclick="mover.resetPosition()">Reset Position</button>
     </div>
 
