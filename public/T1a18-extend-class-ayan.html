@@ -1,79 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokémon Fetcher and Animal Class Example</title>
-    <link rel="stylesheet" type="text/css" href="css-ayan.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body {
             background-image: url('https://png.pngtree.com/thumb_back/fw800/background/20231220/pngtree-blue-red-and-white-abstract-painting-image_15529021.png');
-            background-size: cover; /* Ensure the image covers the entire page */
-            background-repeat: no-repeat; /* Prevent the image from repeating */
-            background-position: center; /* Center the image */
-            color: #FFFFFF; /* Set text color to white for better contrast */
-            font-family: Arial, sans-serif; /* Change font family for better readability */
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            color: #FFFFFF;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh; /* Cover the entire viewport height */
         }
 
         h2 {
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Optional: add text shadow for better visibility */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+            margin-bottom: 20px;
         }
 
-        #myDiv01 {
-            background-color: rgba(0, 0, 0, 0.5); /* Optional: semi-transparent background for the output area */
+        .container {
+            max-width: 800px;
+            width: 100%;
+            padding: 20px;
+            background-color: rgba(50, 50, 50, 0.8); /* Darker and more opaque background for better contrast */
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            margin-bottom: 40px;
+        }
+
+        input[type="text"],
+        input[type="number"] {
             padding: 10px;
-            border-radius: 8px;
-            margin-top: 20px;
-            max-width: 500px; /* Limit width */
-            margin-left: auto; /* Center div */
-            margin-right: auto; /* Center div */
+            border-radius: 5px;
+            border: 1px solid #fff;
+            outline: none;
+            transition: border 0.3s;
+            width: calc(100% - 30px);
+            margin: 10px 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
         }
 
-        input[type="text"], input[type="number"], input[type="button"] {
-            margin: 10px; /* Add margin for spacing */
-        }
-
-        input[type="text"], input[type="number"] {
-            padding: 8px; /* Add padding for inputs */
-            border-radius: 4px; /* Rounded corners */
+        input[type="text"]:focus,
+        input[type="number"]:focus {
+            border: 1px solid #ffcc00;
         }
 
         input[type="button"] {
-            background-color: rgba(255, 255, 255, 0.8); /* Slightly opaque button background */
+            background-color: #ffcc00;
             color: #333;
             border: none;
-            border-radius: 4px; /* Rounded corners */
-            cursor: pointer; /* Pointer cursor on hover */
+            border-radius: 5px;
+            cursor: pointer;
+            padding: 10px 15px;
+            transition: background-color 0.3s;
+            width: 100%;
+            margin: 10px 0;
         }
 
         input[type="button"]:hover {
-            background-color: rgba(200, 200, 200, 0.8); /* Change background on hover */
+            background-color: #ffc107;
         }
-        
+
         #pokemonInfo {
             margin-top: 20px;
             display: none;
-            background-color: rgba(0, 0, 0, 0.7); /* Add transparency for visibility */
+            background-color: rgba(255, 255, 255, 0.1);
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+
+        img {
+            max-width: 150px;
+            height: auto;
+            margin-top: 15px;
+            border-radius: 10px;
+            transition: transform 0.2s;
+        }
+
+        img:hover {
+            transform: scale(1.1);
         }
 
         .loading {
             display: none;
+            color: #ffcc00;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        #myDiv01 {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 20px;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .animal-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .section-divider {
+            height: 2px;
+            background-color: #ffcc00;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 600px) {
+            input[type="text"],
+            input[type="number"],
+            input[type="button"] {
+                width: calc(100% - 20px);
+            }
         }
     </style>
 </head>
-<body>
-    <h2 align="center">Pokémon Fetcher & Animal Class Example</h2>
 
-    <div>
+<body>
+    <h2>Pokémon Fetcher & Animal Class Example</h2>
+
+    <div class="container" id="pokemonSection">
         <h3>Pokémon Fetcher</h3>
         <input type="text" id="pokemonInput" placeholder="Enter Pokémon name or ID">
         <input type="button" id="fetchButton" value="Fetch Pokémon">
+        <input type="button" id="randomButton" value="Generate Random Pokémon">
         <input type="button" id="resetButton" value="Reset">
         
         <div class="loading" id="loadingMessage">Loading...</div>
@@ -87,22 +151,24 @@
         </div>
     </div>
 
-    <div>
+    <div class="section-divider"></div>
+
+    <div class="container animal-container">
         <h3>Animal Class Example</h3>
         <input type="text" id="nameInput" placeholder="Enter animal's name">
         <input type="number" id="ageInput" placeholder="Enter animal's age"><br><br>
 
-        <input type="button" value="Example Class Set and Show Class Animal" onClick="{
+        <input type="button" value="Show Animal Class Example" onClick="{
             const name = document.getElementById('nameInput').value;
             const age = document.getElementById('ageInput').value;
-            myDog = new MyAnimal(name || 'Default Dog', age || 0);
+            const myDog = new MyAnimal(name || 'Default Dog', age || 0);
             myDog.myShow();
         }"><br><br>
 
-        <input type="button" value="Example Extend Class Animal as Cat" onClick="{
+        <input type="button" value="Show Cat Example" onClick="{
             const name = document.getElementById('nameInput').value;
             const age = document.getElementById('ageInput').value;
-            myPet = new MyCat(name || 'Default Cat', age || 0);
+            const myPet = new MyCat(name || 'Default Cat', age || 0);
             myPet.myShow();
         }"><br><br>
 
@@ -118,16 +184,15 @@
             myShow() {
                 document.getElementById('myDiv01').innerHTML = 'Hello ' + this.myName + '<br>';
             }
-        } // end class MyAnimal
+        }
 
         class MyCat extends MyAnimal {
             myShow() {
                 document.getElementById('myDiv01').innerHTML = this.myName + ' is a great cat <br>';
             }
-        } // end extended class MyCat
+        }
 
-        document.getElementById('fetchButton').addEventListener('click', async () => {
-            const input = document.getElementById('pokemonInput').value.toLowerCase();
+        const fetchPokemon = async (id) => {
             const pokemonInfoDiv = document.getElementById('pokemonInfo');
             const nameField = document.getElementById('pokemonName');
             const imageField = document.getElementById('pokemonImage');
@@ -140,7 +205,7 @@
             pokemonInfoDiv.style.display = 'none'; // Hide Pokémon info before loading
 
             try {
-                const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${input}`);
+                const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
                 if (!response.ok) {
                     throw new Error('Pokémon not found');
                 }
@@ -171,6 +236,16 @@
             } finally {
                 loadingMessage.style.display = 'none'; // Hide loading message
             }
+        };
+
+        document.getElementById('fetchButton').addEventListener('click', () => {
+            const input = document.getElementById('pokemonInput').value.toLowerCase();
+            fetchPokemon(input);
+        });
+
+        document.getElementById('randomButton').addEventListener('click', () => {
+            const randomId = Math.floor(Math.random() * 1025) + 1; // Generate random number between 1 and 1025
+            fetchPokemon(randomId);
         });
 
         document.getElementById('resetButton').addEventListener('click', () => {
@@ -181,4 +256,5 @@
         });
     </script>
 </body>
+
 </html>
