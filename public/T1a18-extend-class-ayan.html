@@ -1,6 +1,51 @@
 <html>
 <head>
     <link rel="stylesheet" type="text/css" href="css-ayan.css">
+    <style>
+        body {
+            background-image: url('https://png.pngtree.com/thumb_back/fw800/background/20231220/pngtree-blue-red-and-white-abstract-painting-image_15529021.png');
+            background-size: cover; /* Ensure the image covers the entire page */
+            background-repeat: no-repeat; /* Prevent the image from repeating */
+            background-position: center; /* Center the image */
+            color: #FFFFFF; /* Set text color to white for better contrast */
+            font-family: Arial, sans-serif; /* Change font family for better readability */
+        }
+
+        h2 {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Optional: add text shadow for better visibility */
+        }
+
+        #myDiv01 {
+            background-color: rgba(0, 0, 0, 0.5); /* Optional: semi-transparent background for the output area */
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 20px;
+            max-width: 500px; /* Limit width */
+            margin-left: auto; /* Center div */
+            margin-right: auto; /* Center div */
+        }
+
+        input[type="text"], input[type="number"], input[type="button"] {
+            margin: 10px; /* Add margin for spacing */
+        }
+
+        input[type="text"], input[type="number"] {
+            padding: 8px; /* Add padding for inputs */
+            border-radius: 4px; /* Rounded corners */
+        }
+
+        input[type="button"] {
+            background-color: rgba(255, 255, 255, 0.8); /* Slightly opaque button background */
+            color: #333;
+            border: none;
+            border-radius: 4px; /* Rounded corners */
+            cursor: pointer; /* Pointer cursor on hover */
+        }
+
+        input[type="button"]:hover {
+            background-color: rgba(200, 200, 200, 0.8); /* Change background on hover */
+        }
+    </style>
 </head>
 
 <body>
@@ -24,15 +69,20 @@
         } // end extended class MyCat
     </script>
 
+    <input type="text" id="nameInput" placeholder="Enter animal's name">
+    <input type="number" id="ageInput" placeholder="Enter animal's age"><br><br>
+
     <input type="button" value="Example Class Set and Show Class Animal" onClick="{
-        myDog = new MyAnimal('Snickers', 5);
+        const name = document.getElementById('nameInput').value;
+        const age = document.getElementById('ageInput').value;
+        myDog = new MyAnimal(name || 'Default Dog', age || 0);
         myDog.myShow();
     }"><br><br>
 
-    <input type="text" id="myText01" value="may be useful later"><br>
-
     <input type="button" value="Example Extend Class Animal as Cat" onClick="{
-        myPet = new MyCat('Fluffy', 14);
+        const name = document.getElementById('nameInput').value;
+        const age = document.getElementById('ageInput').value;
+        myPet = new MyCat(name || 'Default Cat', age || 0);
         myPet.myShow();
     }"><br><br>
 
