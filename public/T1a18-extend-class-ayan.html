@@ -335,32 +335,67 @@
             }
         };
 
-        // Function to display animal details
-        const displayAnimalDetails = (animal) => {
-            if (animal) {
-                document.getElementById('animalDiv').style.display = 'block';
-                document.getElementById('animalName').innerText = animal.type || 'Unknown Animal';
-                document.getElementById('animalHabitat').innerText = animal.habitat || 'Unknown Habitat';
-                document.getElementById('animalDiet').innerText = animal.diet || 'Unknown Diet';
-                document.getElementById('animalLifespan').innerText = animal.lifespan || 'Unknown Lifespan';
-                document.getElementById('animalFunFact').innerText = "Fun Fact: " + (animal.fact || 'N/A');
+      const displayAnimalDetails = (animal) => {
+    // Show the animal details section
+    const animalDiv = document.getElementById('animalDiv');
+    animalDiv.style.display = 'block';
 
-                const imgElement = document.getElementById('animalImage');
-                imgElement.src = animal.image || 'https://example.com/fallback.png'; // Use the image URL from the JSON
-                imgElement.alt = animal.type + ' Image';
-                imgElement.style.display = 'block'; // Show image
+    // Prepare animal details with fallback values
+    const animalName = (animal.type && typeof animal.type === 'string') ? 
+                        animal.type.charAt(0).toUpperCase() + animal.type.slice(1) : 
+                        'Unknown Animal';
+                        
+    const animalHabitat = (animal.habitat && typeof animal.habitat === 'string') ? 
+                           animal.habitat : 
+                           'Unknown Habitat';
+                           
+    const animalDiet = (animal.diet && typeof animal.diet === 'string') ? 
+                       animal.diet : 
+                       'Unknown Diet';
+                       
+    const animalLifespan = (animal.lifespan && typeof animal.lifespan === 'string') ? 
+                           animal.lifespan : 
+                           'Unknown Lifespan';
+                           
+    const animalFact = (animal.fact && typeof animal.fact === 'string') ? 
+                       `Fun Fact: ${animal.fact}` : 
+                       'Fun Fact: N/A';
 
-                // Share Button Functionality
-                document.getElementById('shareAnimalBtn').style.display = 'inline';
-                document.getElementById('shareAnimalBtn').onclick = () => shareAnimal(animal);
+    // Update the DOM elements with animal details
+    document.getElementById('animalName').innerText = animalName;
+    document.getElementById('animalHabitat').innerText = animalHabitat;
+    document.getElementById('animalDiet').innerText = animalDiet;
+    document.getElementById('animalLifespan').innerText = animalLifespan;
+    document.getElementById('animalFunFact').innerText = animalFact;
 
-                // Clear error message if animal fetched successfully 
-                const animalError = document.getElementById('animalError');
-                if (animalError) {
-                    animalError.style.display = 'none';
-                }
-            }
-        };
+    // Handle the animal image with a fallback
+    const imgElement = document.getElementById('animalImage');
+    const imageUrl = (animal.image && typeof animal.image === 'string') ? 
+                     animal.image : 
+                     'https://example.com/fallback.png'; // Fallback image URL
+                     
+    imgElement.src = imageUrl;
+    imgElement.alt = `${animalName} Image`; // Descriptive alt text for accessibility
+
+    // Image loading error handling
+    imgElement.onerror = () => {
+        imgElement.src = 'https://example.com/fallback.png'; // Fallback image on error
+        imgElement.alt = 'Fallback Image'; // Update alt text for the fallback image
+    };
+
+    imgElement.style.display = 'block'; // Ensure the image is visible
+
+    // Show the share button if animal details are fetched successfully
+    const shareButton = document.getElementById('shareAnimalBtn');
+    shareButton.style.display = 'inline';
+    shareButton.onclick = () => shareAnimal(animal);
+
+    // Clear any previous error messages
+    const animalError = document.getElementById('animalError');
+    if (animalError) {
+        animalError.style.display = 'none'; // Hide error message if present
+    }
+};
 
         // Function to handle sharing the animal information
         const shareAnimal = (animal) => {
