@@ -140,27 +140,74 @@
 
         <section aria-labelledby="animal-section">
             <h2 id="animal-section">Animal Fetcher</h2>
-            <h3>Fetch Animal by Name</h3>
-            <input type="text" id="animalInput" placeholder="Enter Animal Name">
-            <button class="button" id="fetchAnimalBtn"><i class="fas fa-paw"></i>Fetch Animal</button>
-            <div id="animalDiv" style="display: none;" class="card" role="region" aria-labelledby="animalDetails">
-                <h3 id="animalName" style="margin: 10px 0;"></h3>
-                <img id="animalImage" src="" alt="" style="display: none;">
-                <div id="animalDetails" class="animal-details">
-                    <p><strong>Habitat:</strong> <span id="animalHabitat"></span></p>
-                    <p><strong>Diet:</strong> <span id="animalDiet"></span></p>
-                    <p><strong>Lifespan:</strong> <span id="animalLifespan"></span></p>
-                    <p><strong>Fun Fact:</strong> <span id="animalFunFact"></span></p>
+            <button class="button" id="randomAnimalBtn"><i class="fas fa-random"></i>Generate Random Animal</button>
+            <div id="animalIdSection">
+                <h3>Fetch Animal by Name</h3>
+                <input type="text" id="animalInput" placeholder="Enter Animal Name">
+                <button class="button" id="fetchAnimalBtn"><i class="fas fa-search"></i>Fetch Animal</button>
+                <div id="animalDiv" style="display: none;" class="card" role="region" aria-labelledby="animalDetails">
+                    <h3 id="animalName" style="margin: 10px 0;"></h3>
+                    <img id="animalImage" src="" alt="" style="display: none;">
+                    <div id="animalDetails" class="animal-details">
+                        <p><strong>Habitat:</strong> <span id="animalHabitat"></span></p>
+                        <p><strong>Diet:</strong> <span id="animalDiet"></span></p>
+                        <p><strong>Lifespan:</strong> <span id="animalLifespan"></span></p>
+                        <p><strong>Fun Fact:</strong> <span id="animalFunFact"></span></p>
+                    </div>
+                    <p class="error" id="animalError" role="alert" style="display:none;"></p>
+                    <button class="button" id="shareAnimalBtn" style="display: none;">Share Animal</button>
                 </div>
-                <p class="error" id="animalError" role="alert" style="display:none;"></p>
-                <button class="button" id="shareAnimalBtn" style="display: none;">Share Animal</button>
             </div>
         </section>
     </main>
 
     <script>
+        // Pokémon and Animal data
         let currentPokemon = null;
         let isShiny = false;
+
+        const animalData = [
+            {
+                "type": "cat",
+                "habitat": "Domestic",
+                "diet": "Carnivore",
+                "lifespan": "12-15 years",
+                "fact": "Cats can rotate their ears 180 degrees.",
+                "image": "https://upload.wikimedia.org/wikipedia/commons/0/0e/Cat_poster_1.jpg"
+            },
+            {
+                "type": "dog",
+                "habitat": "Domestic",
+                "diet": "Omnivore",
+                "lifespan": "10-13 years",
+                "fact": "Dogs can sense human emotions.",
+                "image": "https://upload.wikimedia.org/wikipedia/commons/5/51/Golden_Retriever.jpg"
+            },
+            {
+                "type": "elephant",
+                "habitat": "Savannah, Forests",
+                "diet": "Herbivore",
+                "lifespan": "60-70 years",
+                "fact": "Elephants are the largest land animals.",
+                "image": "https://upload.wikimedia.org/wikipedia/commons/2/2d/African_Bush_Elephant.jpg"
+            },
+            {
+                "type": "tiger",
+                "habitat": "Forests, Grasslands",
+                "diet": "Carnivore",
+                "lifespan": "10-15 years",
+                "fact": "Tigers are the largest wild cats.",
+                "image": "https://upload.wikimedia.org/wikipedia/commons/a/a2/Tiger.150.png"
+            },
+            {
+                "type": "penguin",
+                "habitat": "Ice and Water",
+                "diet": "Carnivore",
+                "lifespan": "15-20 years",
+                "fact": "Penguins are flightless birds adapted to life in the water.",
+                "image": "https://upload.wikimedia.org/wikipedia/commons/e/e0/Emperor_Penguin_in_Antarctica.jpg"
+            },
+        ];
 
         // Function to show loading spinner
         const showLoadingIndicator = (targetId) => {
@@ -183,7 +230,6 @@
             errorElement.style.display = 'block';
         };
 
-        // Function to clear error messages
         const clearErrors = (errorId) => {
             const errorElement = document.getElementById(errorId);
             errorElement.style.display = 'none';
@@ -193,7 +239,7 @@
         document.getElementById('randomPokemonBtn').addEventListener('click', async () => {
             clearErrors('pokemonError');
             showLoadingIndicator('pokemonDetails');
-            const randomId = Math.floor(Math.random() * 898) + 1; // 898 Pokémon
+            const randomId = Math.floor(Math.random() * 898) + 1;
             await fetchPokemon(randomId);
             hideLoadingIndicator();
         });
@@ -250,14 +296,23 @@
             document.getElementById('toggleShinyBtn').style.display = 'inline';
         };
 
-        // Event listener to toggle shiny Pokemon version
+        // Event listener to toggle shiny Pokémon version
         document.getElementById('toggleShinyBtn').addEventListener('click', () => {
             isShiny = !isShiny;
             if (currentPokemon) displayPokemonDetails(currentPokemon);
         });
 
-        // Event listener to fetch animal data by user input
-        document.getElementById('fetchAnimalBtn').addEventListener('click', async () => {
+        // Event listener to fetch random animal
+        document.getElementById('randomAnimalBtn').addEventListener('click', () => {
+            clearErrors('animalError');
+            showLoadingIndicator('animalDiv');
+            const randomAnimal = getRandomAnimal();
+            displayAnimalDetails(randomAnimal);
+            hideLoadingIndicator();
+        });
+
+        // Event listener to fetch animal by user-input name
+        document.getElementById('fetchAnimalBtn').addEventListener('click', () => {
             clearErrors('animalError');
             showLoadingIndicator('animalDiv');
             const animalInput = document.getElementById('animalInput').value.trim();
@@ -268,41 +323,19 @@
                 return;
             }
 
-            await fetchAnimal(animalInput.toLowerCase());
+            const foundAnimal = animalData.find(animal => animal.type.toLowerCase() === animalInput.toLowerCase());
+            if (foundAnimal) {
+                displayAnimalDetails(foundAnimal);
+            } else {
+                displayError("Animal not found. Please check the name.", 'animalError');
+            }
             hideLoadingIndicator();
         });
 
-        // Function to fetch animal data (currently using sample data)
-        const fetchAnimal = async (name) => {
-            try {
-                const animalData = [
-                    {
-                        "type": "cat",
-                        "habitat": "Domestic",
-                        "diet": "Carnivore",
-                        "lifespan": "12-15 years",
-                        "fact": "Cats can rotate their ears 180 degrees.",
-                        "image": "https://upload.wikimedia.org/wikipedia/commons/0/0e/Cat_poster_1.jpg"
-                    },
-                    {
-                        "type": "dog",
-                        "habitat": "Domestic",
-                        "diet": "Omnivore",
-                        "lifespan": "10-13 years",
-                        "fact": "Dogs can sense human emotions.",
-                        "image": "https://upload.wikimedia.org/wikipedia/commons/5/51/Golden_Retriever.jpg"
-                    },
-                    // Additional animals...
-                ];
-
-                const selectedAnimal = animalData.find(animal => animal.type === name);
-                if (!selectedAnimal) throw new Error("Animal not found");
-
-                displayAnimalDetails(selectedAnimal);
-            } catch (error) {
-                displayError(error.message, 'animalError');
-                hideAnimalDetails();
-            }
+        // Function to get random animal
+        const getRandomAnimal = () => {
+            const randomIndex = Math.floor(Math.random() * animalData.length);
+            return animalData[randomIndex];
         };
 
         // Function to display animal details
@@ -329,26 +362,9 @@
             clearErrors('animalError');
         };
 
-        const hideAnimalDetails = () => {
-            const animalDiv = document.getElementById('animalDiv');
-            animalDiv.style.display = 'none';
-        };
-
         const shareAnimal = (animal) => {
             alert(`Share this great animal fact: ${animal.type} - ${animal.fact}`);
         };
-
-        // Debounce input for Pokémon fetching
-        let debounceTimer;
-        document.getElementById('pokemonInput').addEventListener('input', () => {
-            clearTimeout(debounceTimer);
-            debounceTimer = setTimeout(() => {
-                const pokemonInput = document.getElementById('pokemonInput').value.trim();
-                if (pokemonInput) {
-                    document.getElementById('fetchPokemonBtn').click();
-                }
-            }, 300);
-        });
     </script>
 </body>
 </html>
