@@ -11,45 +11,93 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #000; /* Black background */
+            background: linear-gradient(to right, #000, #333);
+            animation: backgroundAnimation 5s infinite alternate;
             overflow: hidden; /* Prevent scrollbar from appearing */
+        }
+
+        @keyframes backgroundAnimation {
+            0% { background-color: #000; }
+            100% { background-color: #333; }
         }
 
         .dvd-container {
             position: relative;
-            width: 90vw; /* Responsive width */
-            height: 70vh; /* Responsive height */
-            max-width: 800px; /* Max width */
-            max-height: 600px; /* Max height */
+            width: 90vw; 
+            height: 70vh; 
+            max-width: 800px; 
+            max-height: 600px; 
             overflow: hidden;
             border: 1px solid white; /* Optional: for visibility */
         }
 
         #dvd-logo {
             position: absolute;
-            width: 150px; /* Increased size for better visibility */
+            width: 15%;  /* Responsive logo size */
             height: auto;
-            transition: background-color 0.3s, transform 0.2s; /* Smooth transitions */
+            transition: transform 0.1s ease; /* Smooth transition */
             filter: drop-shadow(0 0 5px white); /* Glow effect */
+        }
+
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #444;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #666;
+        }
+
+        @media (max-width: 600px) {
+            #dvd-logo {
+                width: 30%; /* Larger size for small screens */
+            }
+            .dvd-container {
+                width: 100vw;
+                height: 50vh;
+            }
         }
     </style>
 </head>
 <body>
     <div class="dvd-container">
-        <img src="https://cdn.freebiesupply.com/logos/large/2x/dvd-logo-png-transparent.png" alt="DVD Logo" id="dvd-logo">
+        <img src="https://cdn.freebiesupply.com/logos/large/2x/dvd-logo-png-transparent.png" 
+             alt="DVD Logo" id="dvd-logo" aria-label="DVD Logo">
+        
+        <div id="controls">
+            <button id="pause" aria-label="Pause/Resume Animation">Pause</button>
+            <button id="increase-speed" aria-label="Increase Speed">Increase Speed</button>
+            <button id="decrease-speed" aria-label="Decrease Speed">Decrease Speed</button>
+        </div>
     </div>
 
-    <audio id="bounce-sound" src="https://www.soundjay.com/button/sounds/button-16.mp3" preload="auto"></audio>
+    <audio id="bounce-sound" 
+           src="https://www.soundjay.com/button/sounds/button-16.mp3" 
+           preload="auto"></audio>
 
     <script>
         const dvdLogo = document.getElementById('dvd-logo');
         const bounceSound = document.getElementById('bounce-sound');
-        let posX = Math.random() * 800; // Random start position within container width
-        let posY = Math.random() * 600; // Random start position within container height
+        const padding = 10; // Padding from the edges
+        let posX = Math.random() * (window.innerWidth - padding * 2); // Random start position
+        let posY = Math.random() * (window.innerHeight - padding * 2);
         let dirX = 1;
         let dirY = 1;
-
-        const speed = 2; // Speed of the logo movement
+        let speed = 2; // Speed of the logo movement
+        let isPaused = false;
 
         // Generate a smooth color transition
         function getRandomColor() {
@@ -62,6 +110,8 @@
         }
 
         function animate() {
+            if (isPaused) return; // Skip animation if paused
+
             const container = document.querySelector('.dvd-container');
             const containerWidth = container.clientWidth;
             const containerHeight = container.clientHeight;
@@ -72,15 +122,17 @@
             posY += dirY * speed;
 
             // Bounce logic
-            if (posX + logoWidth >= containerWidth || posX <= 0) {
+            if (posX + logoWidth >= containerWidth - padding || posX <= padding) {
                 dirX *= -1; // Change direction
                 bounceSound.currentTime = 0; // Rewind sound
+                bounceSound.volume = Math.random(); // Random volume for each bounce
                 bounceSound.play(); // Play bounce sound
                 dvdLogo.style.backgroundColor = getRandomColor(); // Change color on bounce
             }
-            if (posY + logoHeight >= containerHeight || posY <= 0) {
+            if (posY + logoHeight >= containerHeight - padding || posY <= padding) {
                 dirY *= -1; // Change direction
                 bounceSound.currentTime = 0; // Rewind sound
+                bounceSound.volume = Math.random(); // Random volume for each bounce
                 bounceSound.play(); // Play bounce sound
                 dvdLogo.style.backgroundColor = getRandomColor(); // Change color on bounce
             }
@@ -89,6 +141,18 @@
 
             requestAnimationFrame(animate);
         }
+
+        document.getElementById('pause').addEventListener('click', () => {
+            isPaused = !isPaused; // Toggle pause state
+        });
+
+        document.getElementById('increase-speed').addEventListener('click', () => {
+            speed += 1; // Increase speed
+        });
+
+        document.getElementById('decrease-speed').addEventListener('click', () => {
+            speed = Math.max(1, speed - 1); // Ensure speed does not go below 1
+        });
 
         animate(); // Start the animation
     </script>
