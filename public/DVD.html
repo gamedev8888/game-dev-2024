@@ -11,13 +11,13 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: black; /* Change background color if needed */
+            background-color: black;
         }
 
         .dvd-container {
             position: relative;
-            width: 800px; /* Adjust based on your design */
-            height: 600px; /* Adjust based on your design */
+            width: 800px;
+            height: 600px;
             overflow: hidden;
             border: 1px solid white; /* Optional: for visibility */
         }
@@ -42,7 +42,8 @@
         let dirX = 1;
         let dirY = 1;
 
-        // Function to generate a random color
+        const speed = 2; // Speed of the logo movement
+
         function getRandomColor() {
             const letters = '0123456789ABCDEF';
             let color = '#';
@@ -59,17 +60,16 @@
             const logoWidth = dvdLogo.clientWidth;
             const logoHeight = dvdLogo.clientHeight;
 
-            posX += dirX;
-            posY += dirY;
+            posX += dirX * speed;
+            posY += dirY * speed;
 
-            // Reverse direction if it hits the walls
             if (posX + logoWidth >= containerWidth || posX <= 0) {
-                dirX *= -1; // Change direction
-                dvdLogo.style.backgroundColor = getRandomColor(); // Change color on bounce
+                dirX *= -1; 
+                dvdLogo.style.backgroundColor = getRandomColor(); 
             }
             if (posY + logoHeight >= containerHeight || posY <= 0) {
-                dirY *= -1; // Change direction
-                dvdLogo.style.backgroundColor = getRandomColor(); // Change color on bounce
+                dirY *= -1; 
+                dvdLogo.style.backgroundColor = getRandomColor(); 
             }
 
             dvdLogo.style.transform = `translate(${posX}px, ${posY}px)`;
