@@ -11,13 +11,16 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: black; /* Change background color if needed */
+            background-color: #000; /* Black background */
+            overflow: hidden; /* Prevent scrollbar from appearing */
         }
 
         .dvd-container {
             position: relative;
-            width: 800px; /* Adjust based on your design */
-            height: 600px; /* Adjust based on your design */
+            width: 90vw; /* Responsive width */
+            height: 70vh; /* Responsive height */
+            max-width: 800px; /* Max width */
+            max-height: 600px; /* Max height */
             overflow: hidden;
             border: 1px solid white; /* Optional: for visibility */
         }
@@ -26,7 +29,8 @@
             position: absolute;
             width: 150px; /* Increased size for better visibility */
             height: auto;
-            transition: background-color 0.3s; /* Smooth transition for the color change */
+            transition: background-color 0.3s, transform 0.2s; /* Smooth transitions */
+            filter: drop-shadow(0 0 5px white); /* Glow effect */
         }
     </style>
 </head>
@@ -35,15 +39,19 @@
         <img src="https://cdn.freebiesupply.com/logos/large/2x/dvd-logo-png-transparent.png" alt="DVD Logo" id="dvd-logo">
     </div>
 
+    <audio id="bounce-sound" src="https://www.soundjay.com/button/sounds/button-16.mp3" preload="auto"></audio>
+
     <script>
         const dvdLogo = document.getElementById('dvd-logo');
-        let posX = 0;
-        let posY = 0;
+        const bounceSound = document.getElementById('bounce-sound');
+        let posX = Math.random() * 800; // Random start position within container width
+        let posY = Math.random() * 600; // Random start position within container height
         let dirX = 1;
         let dirY = 1;
 
         const speed = 2; // Speed of the logo movement
 
+        // Generate a smooth color transition
         function getRandomColor() {
             const letters = '0123456789ABCDEF';
             let color = '#';
@@ -63,13 +71,18 @@
             posX += dirX * speed;
             posY += dirY * speed;
 
+            // Bounce logic
             if (posX + logoWidth >= containerWidth || posX <= 0) {
-                dirX *= -1; 
-                dvdLogo.style.backgroundColor = getRandomColor(); 
+                dirX *= -1; // Change direction
+                bounceSound.currentTime = 0; // Rewind sound
+                bounceSound.play(); // Play bounce sound
+                dvdLogo.style.backgroundColor = getRandomColor(); // Change color on bounce
             }
             if (posY + logoHeight >= containerHeight || posY <= 0) {
-                dirY *= -1; 
-                dvdLogo.style.backgroundColor = getRandomColor(); 
+                dirY *= -1; // Change direction
+                bounceSound.currentTime = 0; // Rewind sound
+                bounceSound.play(); // Play bounce sound
+                dvdLogo.style.backgroundColor = getRandomColor(); // Change color on bounce
             }
 
             dvdLogo.style.transform = `translate(${posX}px, ${posY}px)`;
