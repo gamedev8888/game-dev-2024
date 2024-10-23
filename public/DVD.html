@@ -100,8 +100,8 @@
         let speed = 2; // Speed of the logo movement
         let isPaused = false;
         let lastBounceTime = 0; // Timestamp for the last bounce
+        let animationFrameId; // Variable to hold the request animation frame ID
 
-        // Generate a smooth color transition
         function getRandomColor() {
             const letters = '0123456789ABCDEF';
             let color = '#';
@@ -136,7 +136,8 @@
 
             dvdLogo.style.transform = `translate(${posX}px, ${posY}px)`;
 
-            requestAnimationFrame(animate);
+            // Request the next animation frame
+            animationFrameId = requestAnimationFrame(animate);
         }
 
         function playBounceSound(currentTime) {
@@ -150,7 +151,10 @@
         }
 
         document.getElementById('play').addEventListener('click', () => {
-            isPaused = false; // Resume animation
+            if (isPaused) {
+                isPaused = false; // Resume animation
+                animate(); // Start the animation loop if it was previously paused
+            }
         });
 
         document.getElementById('pause').addEventListener('click', () => {
@@ -165,7 +169,8 @@
             speed = Math.max(1, speed - 1); // Ensure speed does not go below 1
         });
 
-        animate(); // Start the animation
+        // Start the animation loop
+        animate(); 
     </script>
 </body>
 </html>
