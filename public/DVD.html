@@ -99,6 +99,7 @@
         let dirY = 1;
         let speed = 2; // Speed of the logo movement
         let isPaused = false;
+        let lastBounceTime = 0; // Timestamp for the last bounce
 
         // Generate a smooth color transition
         function getRandomColor() {
@@ -113,6 +114,7 @@
         function animate() {
             if (isPaused) return; // Skip animation if paused
 
+            const currentTime = Date.now();
             const container = document.querySelector('.dvd-container');
             const containerWidth = container.clientWidth;
             const containerHeight = container.clientHeight;
@@ -124,23 +126,27 @@
 
             // Bounce logic
             if (posX + logoWidth >= containerWidth - padding || posX <= padding) {
-                dirX *= -1; // Change direction
-                bounceSound.currentTime = 0; // Rewind sound
-                bounceSound.volume = Math.random(); // Random volume for each bounce
-                bounceSound.play(); // Play bounce sound
-                dvdLogo.style.backgroundColor = getRandomColor(); // Change color on bounce
+                dirX *= -1; // Change direction for X
+                playBounceSound(currentTime);
             }
             if (posY + logoHeight >= containerHeight - padding || posY <= padding) {
-                dirY *= -1; // Change direction
-                bounceSound.currentTime = 0; // Rewind sound
-                bounceSound.volume = Math.random(); // Random volume for each bounce
-                bounceSound.play(); // Play bounce sound
-                dvdLogo.style.backgroundColor = getRandomColor(); // Change color on bounce
+                dirY *= -1; // Change direction for Y
+                playBounceSound(currentTime);
             }
 
             dvdLogo.style.transform = `translate(${posX}px, ${posY}px)`;
 
             requestAnimationFrame(animate);
+        }
+
+        function playBounceSound(currentTime) {
+            if (currentTime - lastBounceTime > 200) { // Min interval of 200ms
+                bounceSound.currentTime = 0; // Rewind sound
+                bounceSound.volume = Math.random(); // Random volume for each bounce
+                bounceSound.play(); // Play bounce sound
+                lastBounceTime = currentTime; // Update the last bounce time
+                dvdLogo.style.backgroundColor = getRandomColor(); // Change color on bounce
+            }
         }
 
         document.getElementById('play').addEventListener('click', () => {
