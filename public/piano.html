@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Piano</title>
+    <style>
+        body {
+            background-color: #222;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        
+        .piano {
+            display: flex;
+            position: relative;
+        }
+
+        .key {
+            display: inline-block;
+            position: relative;
+            border: 1px solid #000;
+        }
+
+        .white {
+            width: 40px;
+            height: 200px;
+            background: white;
+            z-index: 1;
+        }
+
+        .black {
+            width: 30px;
+            height: 120px;
+            background: black;
+            position: absolute;
+            left: 30px;
+            margin-left: -15px;
+            z-index: 2;
+        }
+
+        .white:nth-child(2) .black { left: 30px; }
+        .white:nth-child(4) .black { left: 30px; }
+        .white:nth-child(6) .black { left: 30px; }
+        .white:nth-child(8) .black { left: 30px; }
+        .white:nth-child(10) .black { left: 30px; }
+    </style>
+</head>
+<body>
+    <div class="piano">
+        <div class="key white" data-note="C"></div>
+        <div class="key black" data-note="C#"></div>
+        <div class="key white" data-note="D"></div>
+        <div class="key black" data-note="D#"></div>
+        <div class="key white" data-note="E"></div>
+        <div class="key white" data-note="F"></div>
+        <div class="key black" data-note="F#"></div>
+        <div class="key white" data-note="G"></div>
+        <div class="key black" data-note="G#"></div>
+        <div class="key white" data-note="A"></div>
+        <div class="key black" data-note="A#"></div>
+        <div class="key white" data-note="B"></div>
+        <div class="key white" data-note="C2"></div>
+    </div>
+
+    <script>
+        const keys = document.querySelectorAll('.key');
+
+        keys.forEach(key => {
+            key.addEventListener('click', () => {
+                const note = key.getAttribute('data-note');
+                playSound(note);
+            });
+        });
+
+        function playSound(note) {
+            const audio = new Audio(`sounds/${note}.mp3`);
+            audio.play();
+        }
+    </script>
+</body>
+</html>
