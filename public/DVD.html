@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bouncing DVD Logo</title>
+    <title>DVD Logo</title>
     <style>
         body {
             display: flex;
@@ -78,7 +78,8 @@
              alt="DVD Logo" id="dvd-logo" aria-label="DVD Logo">
         
         <div id="controls">
-            <button id="pause" aria-label="Pause/Resume Animation">Pause</button>
+            <button id="play" aria-label="Play Animation">Play</button>
+            <button id="pause" aria-label="Pause Animation">Pause</button>
             <button id="increase-speed" aria-label="Increase Speed">Increase Speed</button>
             <button id="decrease-speed" aria-label="Decrease Speed">Decrease Speed</button>
         </div>
@@ -141,6 +142,10 @@
 
             requestAnimationFrame(animate);
         }
+
+        document.getElementById('play').addEventListener('click', () => {
+            isPaused = false; // Resume animation
+        });
 
         document.getElementById('pause').addEventListener('click', () => {
             isPaused = !isPaused; // Toggle pause state
