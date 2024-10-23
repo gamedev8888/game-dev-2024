@@ -22,28 +22,40 @@
             min-height: 100vh; /* Cover the entire viewport height */
         }
 
-        h2 {
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+        h2, h3 {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
             margin-bottom: 20px;
+            font-family: 'Georgia', serif;
+        }
+
+        h3 {
+            color: #ffcc00;
         }
 
         .container {
             max-width: 800px;
             width: 100%;
             padding: 20px;
-            background-color: rgba(50, 50, 50, 0.8); /* Darker and more opaque background for better contrast */
+            background-color: rgba(50, 50, 50, 0.8);
             border-radius: 10px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
             margin-bottom: 40px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
         }
 
         input[type="text"],
-        input[type="number"] {
+        input[type="number"],
+        input[type="button"] {
             padding: 10px;
             border-radius: 5px;
             border: 1px solid #fff;
             outline: none;
-            transition: border 0.3s;
+            transition: border 0.3s, background-color 0.3s;
             width: calc(100% - 30px);
             margin: 10px 0;
             background-color: rgba(255, 255, 255, 0.1);
@@ -53,22 +65,24 @@
         input[type="text"]:focus,
         input[type="number"]:focus {
             border: 1px solid #ffcc00;
+            background-color: rgba(255, 255, 255, 0.2);
         }
 
         input[type="button"] {
             background-color: #ffcc00;
             color: #333;
             border: none;
-            border-radius: 5px;
             cursor: pointer;
             padding: 10px 15px;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, transform 0.2s;
             width: 100%;
             margin: 10px 0;
+            font-weight: bold;
         }
 
         input[type="button"]:hover {
             background-color: #ffc107;
+            transform: scale(1.05);
         }
 
         #pokemonInfo {
@@ -86,11 +100,13 @@
             height: auto;
             margin-top: 15px;
             border-radius: 10px;
-            transition: transform 0.2s;
+            transition: transform 0.2s, box-shadow 0.3s;
+            border: 2px solid rgba(255, 255, 255, 0.5);
         }
 
         img:hover {
             transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(255, 204, 0, 0.6);
         }
 
         .loading {
