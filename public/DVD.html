@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bouncing DVD Logo</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: black; /* Change background color if needed */
+        }
+
+        .dvd-container {
+            position: relative;
+            width: 800px; /* Adjust based on your design */
+            height: 600px; /* Adjust based on your design */
+            overflow: hidden;
+            border: 1px solid white; /* Optional: for visibility */
+        }
+
+        #dvd-logo {
+            position: absolute;
+            width: 100px; /* Adjust based on your design */
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="dvd-container">
+        <img src="dvd-logo.png" alt="DVD Logo" id="dvd-logo">
+    </div>
+
+    <script>
+        const dvdLogo = document.getElementById('dvd-logo');
+        let posX = 0;
+        let posY = 0;
+        let dirX = 1;
+        let dirY = 1;
+
+        function animate() {
+            const container = document.querySelector('.dvd-container');
+            const containerWidth = container.clientWidth;
+            const containerHeight = container.clientHeight;
+            const logoWidth = dvdLogo.clientWidth;
+            const logoHeight = dvdLogo.clientHeight;
+
+            posX += dirX;
+            posY += dirY;
+
+            // Reverse direction if it hits the walls
+            if (posX + logoWidth >= containerWidth || posX <= 0) {
+                dirX *= -1; // Change direction
+            }
+            if (posY + logoHeight >= containerHeight || posY <= 0) {
+                dirY *= -1; // Change direction
+            }
+
+            dvdLogo.style.transform = `translate(${posX}px, ${posY}px)`;
+
+            requestAnimationFrame(animate);
+        }
+
+        animate(); // Start the animation
+    </script>
+</body>
+</html>
