@@ -3,26 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Piano</title>
+    <title>Interactive Piano</title>
     <style>
         body {
-            background-color: #222;
+            background-color: #333;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
+            font-family: Arial, sans-serif;
         }
         
         .piano {
             display: flex;
             position: relative;
+            border: 1px solid #222;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
 
         .key {
             display: inline-block;
             position: relative;
             border: 1px solid #000;
+            transition: background 0.1s ease;
         }
 
         .white {
@@ -40,6 +45,14 @@
             left: 30px;
             margin-left: -15px;
             z-index: 2;
+        }
+
+        .white:hover, .black:hover {
+            background: lightgrey;
+        }
+
+        .active {
+            background: yellow;
         }
 
         .white:nth-child(2) .black { left: 30px; }
@@ -69,17 +82,107 @@
     <script>
         const keys = document.querySelectorAll('.key');
 
+        // Play the sound when the key is clicked
         keys.forEach(key => {
-            key.addEventListener('click', () => {
+            key.addEventListener('mousedown', () => {
                 const note = key.getAttribute('data-note');
                 playSound(note);
+                highlightKey(key);
+            });
+
+            key.addEventListener('mouseup', () => {
+                unhighlightKey(key);
+            });
+
+            key.addEventListener('mouseleave', () => {
+                unhighlightKey(key);
             });
         });
 
+        // Play sound function
         function playSound(note) {
             const audio = new Audio(`sounds/${note}.mp3`);
             audio.play();
         }
+
+        // Highlight key
+        function highlightKey(key) {
+            key.classList.add('active');
+        }
+
+        // Unhighlight key
+        function unhighlightKey(key) {
+            key.classList.remove('active');
+        }
+
+        // Keyboard support
+        document.addEventListener('keydown', (event) => {
+            switch(event.key) {
+                case 'a':
+                    playSound('C');
+                    highlightKey(keys[0]);
+                    break;
+                case 'w':
+                    playSound('C#');
+                    highlightKey(keys[1]);
+                    break;
+                case 's':
+                    playSound('D');
+                    highlightKey(keys[2]);
+                    break;
+                case 'e':
+                    playSound('D#');
+                    highlightKey(keys[3]);
+                    break;
+                case 'd':
+                    playSound('E');
+                    highlightKey(keys[4]);
+                    break;
+                case 'f':
+                    playSound('F');
+                    highlightKey(keys[5]);
+                    break;
+                case 't':
+                    playSound('F#');
+                    highlightKey(keys[6]);
+                    break;
+                case 'g':
+                    playSound('G');
+                    highlightKey(keys[7]);
+                    break;
+                case 'y':
+                    playSound('G#');
+                    highlightKey(keys[8]);
+                    break;
+                case 'h':
+                    playSound('A');
+                    highlightKey(keys[9]);
+                    break;
+                case 'u':
+                    playSound('A#');
+                    highlightKey(keys[10]);
+                    break;
+                case 'j':
+                    playSound('B');
+                    highlightKey(keys[11]);
+                    break;
+                case 'k':
+                    playSound('C2');
+                    highlightKey(keys[12]);
+                    break;
+                default:
+                    return; // Quit when this doesn't handle the key event.
+            }
+            event.preventDefault();
+        });
+
+        // Remove highlight on keyup
+        document.addEventListener('keyup', (event) => {
+            // Release all keys (this can be optimized as needed)
+            for (const key of keys) {
+                unhighlightKey(key);
+            }
+        });
     </script>
 </body>
 </html>
