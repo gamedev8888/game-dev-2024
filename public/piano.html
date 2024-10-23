@@ -105,18 +105,19 @@
             audio.play();
         }
 
-        // Highlight key
+        // Highlight the key
         function highlightKey(key) {
             key.classList.add('active');
         }
 
-        // Unhighlight key
+        // Unhighlight the key
         function unhighlightKey(key) {
             key.classList.remove('active');
         }
 
         // Keyboard support
         document.addEventListener('keydown', (event) => {
+            // Mapping keys to their corresponding notes
             switch(event.key) {
                 case 'a':
                     playSound('C');
@@ -178,7 +179,7 @@
 
         // Remove highlight on keyup
         document.addEventListener('keyup', (event) => {
-            // Release all keys (this can be optimized as needed)
+            // Release all keys
             for (const key of keys) {
                 unhighlightKey(key);
             }
