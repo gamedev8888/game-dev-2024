@@ -27,6 +27,23 @@
 
         let voices = [];
 
+        // Mapping of language codes to full language names
+        const languageNames = {
+            "en-US": "English (United States)",
+            "en-GB": "English (United Kingdom)",
+            "fr-FR": "French (France)",
+            "es-ES": "Spanish (Spain)",
+            "de-DE": "German (Germany)",
+            "it-IT": "Italian (Italy)",
+            "ja-JP": "Japanese (Japan)",
+            "ko-KR": "Korean (South Korea)",
+            "pt-BR": "Portuguese (Brazil)",
+            "ru-RU": "Russian (Russia)",
+            "zh-CN": "Chinese (Mandarin, Simplified)",
+            "ar-SA": "Arabic (Saudi Arabia)",
+            "hi-IN": "Hindi (India)",
+        };
+
         function populateVoiceList() {
             voices = speechSynthesis.getVoices();
             const languageSet = new Set();
@@ -36,18 +53,16 @@
             langSelect.innerHTML = '';
 
             voices.forEach(voice => {
-                const langOption = document.createElement('option');
-                langOption.value = voice.lang;
-                langOption.textContent = voice.lang;
-                languageSet.add(voice.lang);
-            });
+                const langCode = voice.lang;
+                languageSet.add(langCode);
 
-            // Populate languages
-            languageSet.forEach(lang => {
-                const option = document.createElement('option');
-                option.value = lang;
-                option.textContent = lang;
-                langSelect.appendChild(option);
+                if (!document.getElementById(langCode)) {
+                    const option = document.createElement('option');
+                    option.id = langCode;  // Set the option id to the language code
+                    option.value = langCode;
+                    option.textContent = languageNames[langCode] || langCode; // Use full language name or fallback to the code
+                    langSelect.appendChild(option);
+                }
             });
 
             // Populate voices for the selected language
