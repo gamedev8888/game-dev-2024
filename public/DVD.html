@@ -89,7 +89,6 @@
             <button id="decrease-speed" aria-label="Decrease Speed">Decrease Speed</button>
             <button id="mute" aria-label="Mute Sound">Mute</button>
             <div id="current-speed">Speed: <span id="speed-value">2</span></div>
-            <input type="color" id="color-picker" value="#FFFFFF" aria-label="Choose Color" />
         </div>
     </div>
 
@@ -100,7 +99,6 @@
     <script>
         const dvdLogo = document.getElementById('dvd-logo');
         const bounceSound = document.getElementById('bounce-sound');
-        const colorPicker = document.getElementById('color-picker');
         const speedValueDisplay = document.getElementById('speed-value');
         const padding = 10; // Padding from the edges
         let posX = Math.random() * (window.innerWidth - padding * 2);
@@ -133,10 +131,6 @@
             localStorage.setItem('speed', speed);
             localStorage.setItem('isMuted', isMuted);
         };
-
-        function getRandomColor() {
-            return colorPicker.value; // Use color picker value for color changes
-        }
 
         function animate() {
             if (isPaused) return; // Skip animation if paused
@@ -171,7 +165,6 @@
                 bounceSound.volume = Math.random(); // Random volume for each bounce
                 bounceSound.play(); // Play bounce sound
                 lastBounceTime = Date.now(); // Update the last bounce time
-                dvdLogo.style.backgroundColor = getRandomColor(); // Change color on bounce
             }
         }
 
@@ -211,10 +204,6 @@
         window.addEventListener('resize', () => {
             posX = Math.min(posX, window.innerWidth - padding * 2 - dvdLogo.clientWidth);
             posY = Math.min(posY, window.innerHeight - padding * 2 - dvdLogo.clientHeight);
-        });
-
-        colorPicker.addEventListener('input', (event) => {
-            dvdLogo.style.backgroundColor = event.target.value; // Change the logo color interactively
         });
     </script>
 </body>
