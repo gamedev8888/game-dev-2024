@@ -112,9 +112,12 @@
             voices.forEach(voice => {
                 const option = document.createElement('option');
                 option.value = voice.name;
+
+                // Determine gender and accent for display in dropdown
                 const gender = voice.name.toLowerCase().includes('female') ? 'Female' : 'Male';
                 const accent = voice.lang.includes('us') ? 'American' :
                                voice.lang.includes('gb') ? 'British' : 'Other';
+
                 option.textContent = `${voice.name} (${voice.lang}) [${gender}, ${accent}]`;
                 voiceSelect.appendChild(option);
             });
