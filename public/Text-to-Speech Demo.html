@@ -64,104 +64,58 @@
     <h1>Text-to-Speech Demo</h1>
     <textarea id="text-input" rows="5" placeholder="Type your text here..."></textarea>
     
-    <label for="lang-select">Select Language:</label>
-    <select id="lang-select"></select>
-
-    <label for="voice-select">Select Voice:</label>
     <select id="voice-select"></select>
-
-    <div class="btn-container">
-        <button id="speak-button">Speak</button>
-        <button id="stop-button">Stop</button>
-    </div>
     
-    <div id="alert" class="alert"></div>
-
+    <div class="btn-container">
+        <button id="speak-btn">Speak</button>
+        <button id="stop-btn">Stop</button>
+    </div>
+    <div class="alert" id="alert-message"></div>
+    
     <script>
-        const speakButton = document.getElementById('speak-button');
-        const stopButton = document.getElementById('stop-button');
         const textInput = document.getElementById('text-input');
-        const langSelect = document.getElementById('lang-select');
         const voiceSelect = document.getElementById('voice-select');
-        const alertBox = document.getElementById('alert');
-
+        const speakButton = document.getElementById('speak-btn');
+        const stopButton = document.getElementById('stop-btn');
+        const alertMessage = document.getElementById('alert-message');
+        
         let voices = [];
-
-        // Mapping of language codes to full language names
-        const languageNames = {
-            "en-US": "English (United States)",
-            "en-GB": "English (United Kingdom)",
-            "fr-FR": "French (France)",
-            "es-ES": "Spanish (Spain)",
-            "de-DE": "German (Germany)",
-            "it-IT": "Italian (Italy)",
-            "ja-JP": "Japanese (Japan)",
-            "ko-KR": "Korean (South Korea)",
-            "pt-BR": "Portuguese (Brazil)",
-            "ru-RU": "Russian (Russia)",
-            "zh-CN": "Chinese (Mandarin, Simplified)",
-            "ar-SA": "Arabic (Saudi Arabia)",
-            "hi-IN": "Hindi (India)",
-        };
-
+        
         function populateVoiceList() {
             voices = speechSynthesis.getVoices();
-            const languageSet = new Set();
-
-            voiceSelect.innerHTML = '';
-            langSelect.innerHTML = '';
-
+            voiceSelect.innerHTML = ''; // Clear existing options
+            
             voices.forEach(voice => {
-                const langCode = voice.lang;
-                languageSet.add(langCode);
-
-                if (!document.getElementById(langCode)) {
-                    const option = document.createElement('option');
-                    option.id = langCode; 
-                    option.value = langCode;
-                    option.textContent = languageNames[langCode] || langCode;
-                    langSelect.appendChild(option);
-                }
-            });
-
-            updateVoiceList();
-        }
-
-        function updateVoiceList() {
-            const selectedLang = langSelect.value;
-            voiceSelect.innerHTML = '';
-            voices.forEach(voice => {
-                if (voice.lang === selectedLang) {
-                    const option = document.createElement('option');
-                    option.textContent = `${voice.name} (${voice.lang})`;
-                    option.value = voice.name;
-                    voiceSelect.appendChild(option);
-                }
+                const option = document.createElement('option');
+                option.value = voice.name;
+                option.textContent = `${voice.name} (${voice.lang}) - ${voice.default ? 'Default' : ''}`;
+                // Add additional descriptions for voices:
+                const gender = voice.name.includes('Female') ? 'Female' : 'Male';
+                const accent = voice.lang.includes('us') ? 'American' :
+                              voice.lang.includes('gb') ? 'British' : 'Other';
+                option.textContent += ` [${gender}, ${accent}]`;
+                voiceSelect.appendChild(option);
             });
         }
-
+        
         speechSynthesis.onvoiceschanged = populateVoiceList;
-
-        langSelect.addEventListener('change', updateVoiceList);
-
-        speakButton.addEventListener('click', () => {
+        
+        speakButton.onclick = () => {
             const text = textInput.value;
-            alertBox.textContent = ""; // Clear previous alerts
-            if (text) {
-                const utterance = new SpeechSynthesisUtterance(text);
-                const selectedVoice = voices.find(voice => voice.name === voiceSelect.value);
-                if (selectedVoice) {
-                    utterance.voice = selectedVoice;
-                }
-                speechSynthesis.speak(utterance);
-            } else {
-                alertBox.textContent = "Please enter some text to speak.";
+            if (text === '') {
+                alertMessage.textContent = 'Please enter some text.';
+                return;
             }
-        });
-
-        stopButton.addEventListener('click', () => {
+            alertMessage.textContent = '';
+            const utterance = new SpeechSynthesisUtterance(text);
+            const selectedVoice = voices.find(voice => voice.name === voiceSelect.value);
+            utterance.voice = selectedVoice;
+            speechSynthesis.speak(utterance);
+        };
+        
+        stopButton.onclick = () => {
             speechSynthesis.cancel();
-        });
+        };
     </script>
 </body>
 </html>
