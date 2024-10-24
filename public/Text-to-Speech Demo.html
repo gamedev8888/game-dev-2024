@@ -7,36 +7,40 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f8ff;
-            color: #333;
+            background-color: black;
+            color: blue; /* Change text color to blue */
             max-width: 600px;
             margin: 0 auto;
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
         }
         h1 {
             text-align: center;
-            color: #4a90e2;
+            color: blue; /* Ensure heading text is also blue */
         }
         textarea {
             width: 100%;
             padding: 10px;
-            border: 1px solid #ccc;
+            border: 1px solid blue; /* Blue border for the textarea */
             border-radius: 4px;
             resize: none;
             margin-bottom: 10px;
+            background-color: #333; /* Darker background for the textarea */
+            color: white; /* White text on textarea */
         }
         select, input {
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
-            border: 1px solid #ccc;
+            border: 1px solid blue; /* Blue border for select/input elements */
             border-radius: 4px;
+            background-color: #333; /* Dark background for select/input */
+            color: white; /* White text for select/input */
         }
         button {
-            background-color: #4a90e2;
-            color: white;
+            background-color: blue; /* Button background */
+            color: white; /* Button text color */
             border: none;
             padding: 10px 15px;
             border-radius: 4px;
@@ -46,20 +50,21 @@
             transition: background-color 0.3s;
         }
         button:hover {
-            background-color: #357ab8;
+            background-color: #357ab8; /* Lighter blue on hover */
         }
         .btn-container {
             display: flex;
             justify-content: space-between;
         }
         .alert {
-            color: red;
+            color: red; /* Keep alert messages red for emphasis */
             font-weight: bold;
             text-align: center;
             margin-top: 10px;
         }
         .control-label {
             margin-bottom: 5px;
+            color: white; /* White text for labels */
         }
         .slider {
             margin-bottom: 20px;
@@ -112,14 +117,11 @@
             voices.forEach(voice => {
                 const option = document.createElement('option');
                 option.value = voice.name;
-                
-                // For descriptive purposes, use keywords to identify gender
                 const gender = (voice.name.toLowerCase().includes('female') || 
                                 voice.name.toLowerCase().includes('woman')) ? 
                                 'Female' : 'Male';
                 const accent = voice.lang.includes('us') ? 'American' :
                                voice.lang.includes('gb') ? 'British' : 'Other';
-
                 option.textContent = `${voice.name} (${voice.lang}) [${gender}, ${accent}]`;
                 voiceSelect.appendChild(option);
             });
