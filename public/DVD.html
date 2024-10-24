@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DVD Logo</title>
+    <title>DVD Logo Animation</title>
     <style>
         body {
             display: flex;
@@ -23,19 +23,19 @@
 
         .dvd-container {
             position: relative;
-            width: 90vw; 
-            height: 70vh; 
-            max-width: 800px; 
-            max-height: 600px; 
+            width: 90vw;
+            height: 70vh;
+            max-width: 800px;
+            max-height: 600px;
             overflow: hidden;
             border: 1px solid white; /* Optional: for visibility */
         }
 
         #dvd-logo {
             position: absolute;
-            width: 15%;  /* Responsive logo size */
+            width: 15%;
             height: auto;
-            transition: transform 0.1s ease; /* Smooth transition */
+            transition: transform 0.1s ease, background-color 0.1s ease; /* Smooth transition */
             filter: drop-shadow(0 0 5px white); /* Glow effect */
         }
 
@@ -43,6 +43,7 @@
             position: absolute;
             bottom: 20px;
             display: flex;
+            flex-wrap: wrap;
             gap: 10px;
         }
 
@@ -59,6 +60,10 @@
 
         button:hover {
             background-color: #666;
+        }
+
+        #current-speed {
+            margin-left: 20px;
         }
 
         @media (max-width: 600px) {
@@ -82,6 +87,9 @@
             <button id="pause" aria-label="Pause Animation">Pause</button>
             <button id="increase-speed" aria-label="Increase Speed">Increase Speed</button>
             <button id="decrease-speed" aria-label="Decrease Speed">Decrease Speed</button>
+            <button id="mute" aria-label="Mute Sound">Mute</button>
+            <div id="current-speed">Speed: <span id="speed-value">2</span></div>
+            <input type="color" id="color-picker" value="#FFFFFF" aria-label="Choose Color" />
         </div>
     </div>
 
@@ -92,6 +100,8 @@
     <script>
         const dvdLogo = document.getElementById('dvd-logo');
         const bounceSound = document.getElementById('bounce-sound');
+        const colorPicker = document.getElementById('color-picker');
+        const speedValueDisplay = document.getElementById('speed-value');
         const padding = 10; // Padding from the edges
         let posX = Math.random() * (window.innerWidth - padding * 2); // Random start position
         let posY = Math.random() * (window.innerHeight - padding * 2);
@@ -99,22 +109,38 @@
         let dirY = 1;
         let speed = 2; // Speed of the logo movement
         let isPaused = false;
+        let isMuted = false;
         let lastBounceTime = 0; // Timestamp for the last bounce
         let animationFrameId; // Variable to hold the request animation frame ID
 
-        function getRandomColor() {
-            const letters = '0123456789ABCDEF';
-            let color = '#';
-            for (let i = 0; i < 6; i++) {
-                color += letters[Math.floor(Math.random() * 16)];
+        // Load saved state from local storage
+        window.onload = () => {
+            const savedSpeed = localStorage.getItem('speed');
+            if (savedSpeed) {
+                speed = parseInt(savedSpeed);
+                speedValueDisplay.textContent = speed;
             }
-            return color;
+            const mutedState = localStorage.getItem('isMuted');
+            if (mutedState === 'true') {
+                isMuted = true;
+                document.getElementById('mute').textContent = 'Unmute';
+            }
+            animate();
+        };
+
+        // Save state to local storage
+        const saveState = () => {
+            localStorage.setItem('speed', speed);
+            localStorage.setItem('isMuted', isMuted);
+        };
+
+        function getRandomColor() {
+            return colorPicker.value; // Use color picker value for color changes
         }
 
         function animate() {
             if (isPaused) return; // Skip animation if paused
-
-            const currentTime = Date.now();
+            
             const container = document.querySelector('.dvd-container');
             const containerWidth = container.clientWidth;
             const containerHeight = container.clientHeight;
@@ -127,25 +153,24 @@
             // Bounce logic
             if (posX + logoWidth >= containerWidth - padding || posX <= padding) {
                 dirX *= -1; // Change direction for X
-                playBounceSound(currentTime);
+                playBounceSound();
             }
             if (posY + logoHeight >= containerHeight - padding || posY <= padding) {
                 dirY *= -1; // Change direction for Y
-                playBounceSound(currentTime);
+                playBounceSound();
             }
 
             dvdLogo.style.transform = `translate(${posX}px, ${posY}px)`;
 
-            // Request the next animation frame
             animationFrameId = requestAnimationFrame(animate);
         }
 
-        function playBounceSound(currentTime) {
-            if (currentTime - lastBounceTime > 200) { // Min interval of 200ms
+        function playBounceSound() {
+            if (!isMuted && (Date.now() - lastBounceTime > 200)) { // Min interval of 200ms
                 bounceSound.currentTime = 0; // Rewind sound
                 bounceSound.volume = Math.random(); // Random volume for each bounce
                 bounceSound.play(); // Play bounce sound
-                lastBounceTime = currentTime; // Update the last bounce time
+                lastBounceTime = Date.now(); // Update the last bounce time
                 dvdLogo.style.backgroundColor = getRandomColor(); // Change color on bounce
             }
         }
@@ -154,23 +179,43 @@
             if (isPaused) {
                 isPaused = false; // Resume animation
                 animate(); // Start the animation loop if it was previously paused
+                document.getElementById('play').disabled = true;
+                document.getElementById('pause').disabled = false;
             }
         });
 
         document.getElementById('pause').addEventListener('click', () => {
             isPaused = !isPaused; // Toggle pause state
+            document.getElementById('pause').disabled = !isPaused;
+            document.getElementById('play').disabled = isPaused;
         });
 
         document.getElementById('increase-speed').addEventListener('click', () => {
             speed += 1; // Increase speed
+            speedValueDisplay.textContent = speed;
+            saveState();
         });
 
         document.getElementById('decrease-speed').addEventListener('click', () => {
             speed = Math.max(1, speed - 1); // Ensure speed does not go below 1
+            speedValueDisplay.textContent = speed;
+            saveState();
         });
 
-        // Start the animation loop
-        animate(); 
+        document.getElementById('mute').addEventListener('click', () => {
+            isMuted = !isMuted; // Toggle mute state
+            document.getElementById('mute').textContent = isMuted ? 'Unmute' : 'Mute';
+            saveState();
+        });
+
+        window.addEventListener('resize', () => {
+            posX = Math.min(posX, window.innerWidth - padding * 2 - dvdLogo.clientWidth);
+            posY = Math.min(posY, window.innerHeight - padding * 2 - dvdLogo.clientHeight);
+        });
+
+        colorPicker.addEventListener('input', (event) => {
+            dvdLogo.style.backgroundColor = event.target.value; // Change the logo color interactively
+        });
     </script>
 </body>
 </html>
