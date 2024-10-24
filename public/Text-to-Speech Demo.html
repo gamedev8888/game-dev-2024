@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text-to-Speech Demo</title>
+</head>
+<body>
+    <h1>Text-to-Speech Demo</h1>
+    <textarea id="text-input" rows="5" cols="30" placeholder="Type your text here..."></textarea><br><br>
+
+    <label for="lang-select">Select Language:</label>
+    <select id="lang-select"></select><br><br>
+
+    <label for="voice-select">Select Voice:</label>
+    <select id="voice-select"></select><br><br>
+
+    <button id="speak-button">Speak</button>
+    <button id="stop-button">Stop</button>
+
+    <script>
+        const speakButton = document.getElementById('speak-button');
+        const stopButton = document.getElementById('stop-button');
+        const textInput = document.getElementById('text-input');
+        const langSelect = document.getElementById('lang-select');
+        const voiceSelect = document.getElementById('voice-select');
+
+        let voices = [];
+
+        function populateVoiceList() {
+            voices = speechSynthesis.getVoices();
+            const languageSet = new Set();
+
+            // Clear the current list of voices and languages
+            voiceSelect.innerHTML = '';
+            langSelect.innerHTML = '';
+
+            voices.forEach(voice => {
+                const langOption = document.createElement('option');
+                langOption.value = voice.lang;
+                langOption.textContent = voice.lang;
+                languageSet.add(voice.lang);
+            });
+
+            // Populate languages
+            languageSet.forEach(lang => {
+                const option = document.createElement('option');
+                option.value = lang;
+                option.textContent = lang;
+                langSelect.appendChild(option);
+            });
+
+            // Populate voices for the selected language
+            updateVoiceList();
+        }
+
+        function updateVoiceList() {
+            const selectedLang = langSelect.value;
+            voiceSelect.innerHTML = '';
+            voices.forEach(voice => {
+                if (voice.lang === selectedLang) {
+                    const option = document.createElement('option');
+                    option.textContent = `${voice.name} (${voice.lang})`;
+                    option.value = voice.name;
+                    voiceSelect.appendChild(option);
+                }
+            });
+        }
+
+        speechSynthesis.onvoiceschanged = populateVoiceList;
+
+        langSelect.addEventListener('change', updateVoiceList);
+
+        speakButton.addEventListener('click', () => {
+            const text = textInput.value;
+            if (text) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                const selectedVoice = voices.find(voice => voice.name === voiceSelect.value);
+                if (selectedVoice) {
+                    utterance.voice = selectedVoice;
+                }
+                speechSynthesis.speak(utterance);
+            } else {
+                alert("Please enter some text to speak.");
+            }
+        });
+
+        stopButton.addEventListener('click', () => {
+            speechSynthesis.cancel();
+        });
+    </script>
+</body>
+</html>
