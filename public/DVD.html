@@ -103,7 +103,7 @@
         const colorPicker = document.getElementById('color-picker');
         const speedValueDisplay = document.getElementById('speed-value');
         const padding = 10; // Padding from the edges
-        let posX = Math.random() * (window.innerWidth - padding * 2); // Random start position
+        let posX = Math.random() * (window.innerWidth - padding * 2);
         let posY = Math.random() * (window.innerHeight - padding * 2);
         let dirX = 1;
         let dirY = 1;
@@ -153,11 +153,11 @@
             // Bounce logic
             if (posX + logoWidth >= containerWidth - padding || posX <= padding) {
                 dirX *= -1; // Change direction for X
-                playBounceSound();
+                playBounceSound(); // Play sound on bounce
             }
             if (posY + logoHeight >= containerHeight - padding || posY <= padding) {
                 dirY *= -1; // Change direction for Y
-                playBounceSound();
+                playBounceSound(); // Play sound on bounce
             }
 
             dvdLogo.style.transform = `translate(${posX}px, ${posY}px)`;
@@ -185,9 +185,9 @@
         });
 
         document.getElementById('pause').addEventListener('click', () => {
-            isPaused = !isPaused; // Toggle pause state
-            document.getElementById('pause').disabled = !isPaused;
-            document.getElementById('play').disabled = isPaused;
+            isPaused = true; // Pause animation
+            document.getElementById('pause').disabled = true;
+            document.getElementById('play').disabled = false;
         });
 
         document.getElementById('increase-speed').addEventListener('click', () => {
