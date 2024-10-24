@@ -101,15 +101,24 @@
         const bounceSound = document.getElementById('bounce-sound');
         const speedValueDisplay = document.getElementById('speed-value');
         const padding = 10; // Padding from the edges
-        let posX = Math.random() * (window.innerWidth - padding * 2);
-        let posY = Math.random() * (window.innerHeight - padding * 2);
-        let dirX = 1;
-        let dirY = 1;
+        let posX, posY; 
+        let dirX = 1; 
+        let dirY = 1; 
         let speed = 2; // Speed of the logo movement
-        let isPaused = false;
-        let isMuted = false;
+        let isPaused = false; 
+        let isMuted = false; 
         let lastBounceTime = 0; // Timestamp for the last bounce
         let animationFrameId; // Variable to hold the request animation frame ID
+
+        // Function to set initial position
+        function setRandomPosition(containerWidth, containerHeight) {
+            const logoWidth = dvdLogo.clientWidth;
+            const logoHeight = dvdLogo.clientHeight;
+
+            posX = Math.random() * (containerWidth - logoWidth - padding * 2) + padding;
+            posY = Math.random() * (containerHeight - logoHeight - padding * 2) + padding;
+            dvdLogo.style.transform = `translate(${posX}px, ${posY}px)`;
+        }
 
         // Load saved state from local storage
         window.onload = () => {
@@ -123,7 +132,13 @@
                 isMuted = true;
                 document.getElementById('mute').textContent = 'Unmute';
             }
-            animate();
+            
+            const container = document.querySelector('.dvd-container');
+            const containerWidth = container.clientWidth;
+            const containerHeight = container.clientHeight;
+            // Set initial position based on the container size
+            setRandomPosition(containerWidth, containerHeight);
+            animate(); // Start the animation
         };
 
         // Save state to local storage
@@ -131,6 +146,11 @@
             localStorage.setItem('speed', speed);
             localStorage.setItem('isMuted', isMuted);
         };
+
+        function getRandomColor() {
+            const randomColor = Math.floor(Math.random() * 16777215).toString(16);
+            return `#${randomColor.padStart(6, '0')}`; // Generate a random hex color
+        }
 
         function animate() {
             if (isPaused) return; // Skip animation if paused
@@ -165,6 +185,7 @@
                 bounceSound.volume = Math.random(); // Random volume for each bounce
                 bounceSound.play(); // Play bounce sound
                 lastBounceTime = Date.now(); // Update the last bounce time
+                dvdLogo.style.backgroundColor = getRandomColor(); // Change color on bounce
             }
         }
 
@@ -202,8 +223,10 @@
         });
 
         window.addEventListener('resize', () => {
-            posX = Math.min(posX, window.innerWidth - padding * 2 - dvdLogo.clientWidth);
-            posY = Math.min(posY, window.innerHeight - padding * 2 - dvdLogo.clientHeight);
+            const container = document.querySelector('.dvd-container');
+            const containerWidth = container.clientWidth;
+            const containerHeight = container.clientHeight;
+            setRandomPosition(containerWidth, containerHeight); // Reset position on resize
         });
     </script>
 </body>
