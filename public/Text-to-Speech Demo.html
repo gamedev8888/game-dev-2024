@@ -112,9 +112,11 @@
             voices.forEach(voice => {
                 const option = document.createElement('option');
                 option.value = voice.name;
-
-                // Determine gender and accent for display in dropdown
-                const gender = voice.name.toLowerCase().includes('female') ? 'Female' : 'Male';
+                
+                // For descriptive purposes, use keywords to identify gender
+                const gender = (voice.name.toLowerCase().includes('female') || 
+                                voice.name.toLowerCase().includes('woman')) ? 
+                                'Female' : 'Male';
                 const accent = voice.lang.includes('us') ? 'American' :
                                voice.lang.includes('gb') ? 'British' : 'Other';
 
@@ -178,8 +180,8 @@
                 volumeInput.value = savedVolume;
             }
 
-            // Remove redundant values
-            savePreferences(); // Also save preferences for the first time
+            // Save preferences for the first time
+            savePreferences();
         };
         
         // Save preferences on change
