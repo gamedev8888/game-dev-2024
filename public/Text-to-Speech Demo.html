@@ -27,7 +27,7 @@
             resize: none;
             margin-bottom: 10px;
         }
-        select {
+        select, input {
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
@@ -58,6 +58,12 @@
             text-align: center;
             margin-top: 10px;
         }
+        .control-label {
+            margin-bottom: 5px;
+        }
+        .slider {
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -66,10 +72,24 @@
     
     <select id="voice-select"></select>
     
+    <div>
+        <label class="control-label">Rate:</label>
+        <input class="slider" type="range" id="rate" min="0.1" max="10" step="0.1" value="1">
+        
+        <label class="control-label">Pitch:</label>
+        <input class="slider" type="range" id="pitch" min="0" max="2" step="0.1" value="1">
+        
+        <label class="control-label">Volume:</label>
+        <input class="slider" type="range" id="volume" min="0" max="1" step="0.1" value="1">
+    </div>
+    
     <div class="btn-container">
         <button id="speak-btn">Speak</button>
         <button id="stop-btn">Stop</button>
     </div>
+    
+    <button id="clear-btn">Clear Text</button>
+    
     <div class="alert" id="alert-message"></div>
     
     <script>
@@ -77,7 +97,11 @@
         const voiceSelect = document.getElementById('voice-select');
         const speakButton = document.getElementById('speak-btn');
         const stopButton = document.getElementById('stop-btn');
+        const clearButton = document.getElementById('clear-btn');
         const alertMessage = document.getElementById('alert-message');
+        const rateInput = document.getElementById('rate');
+        const pitchInput = document.getElementById('pitch');
+        const volumeInput = document.getElementById('volume');
         
         let voices = [];
         
@@ -88,12 +112,10 @@
             voices.forEach(voice => {
                 const option = document.createElement('option');
                 option.value = voice.name;
-                option.textContent = `${voice.name} (${voice.lang}) - ${voice.default ? 'Default' : ''}`;
-                // Add additional descriptions for voices:
-                const gender = voice.name.includes('Female') ? 'Female' : 'Male';
+                const gender = voice.name.toLowerCase().includes('female') ? 'Female' : 'Male';
                 const accent = voice.lang.includes('us') ? 'American' :
-                              voice.lang.includes('gb') ? 'British' : 'Other';
-                option.textContent += ` [${gender}, ${accent}]`;
+                               voice.lang.includes('gb') ? 'British' : 'Other';
+                option.textContent = `${voice.name} (${voice.lang}) [${gender}, ${accent}]`;
                 voiceSelect.appendChild(option);
             });
         }
@@ -110,12 +132,58 @@
             const utterance = new SpeechSynthesisUtterance(text);
             const selectedVoice = voices.find(voice => voice.name === voiceSelect.value);
             utterance.voice = selectedVoice;
+            utterance.rate = rateInput.value;
+            utterance.pitch = pitchInput.value;
+            utterance.volume = volumeInput.value;
             speechSynthesis.speak(utterance);
         };
         
         stopButton.onclick = () => {
             speechSynthesis.cancel();
         };
+
+        clearButton.onclick = () => {
+            textInput.value = '';
+            alertMessage.textContent = '';
+        };
+
+        // Save preferences
+        function savePreferences() {
+            localStorage.setItem('selectedVoice', voiceSelect.value);
+            localStorage.setItem('speechRate', rateInput.value);
+            localStorage.setItem('speechPitch', pitchInput.value);
+            localStorage.setItem('speechVolume', volumeInput.value);
+        }
+
+        // Load preferences when the page is loaded
+        window.onload = () => {
+            const savedVoice = localStorage.getItem('selectedVoice');
+            const savedRate = localStorage.getItem('speechRate');
+            const savedPitch = localStorage.getItem('speechPitch');
+            const savedVolume = localStorage.getItem('speechVolume');
+
+            if (savedVoice) {
+                voiceSelect.value = savedVoice;
+            }
+            if (savedRate) {
+                rateInput.value = savedRate;
+            }
+            if (savedPitch) {
+                pitchInput.value = savedPitch;
+            }
+            if (savedVolume) {
+                volumeInput.value = savedVolume;
+            }
+
+            // Remove redundant values
+            savePreferences(); // Also save preferences for the first time
+        };
+        
+        // Save preferences on change
+        voiceSelect.onchange = savePreferences;
+        rateInput.oninput = savePreferences;
+        pitchInput.oninput = savePreferences;
+        volumeInput.oninput = savePreferences;
     </script>
 </body>
 </html>
