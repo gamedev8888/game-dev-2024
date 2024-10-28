@@ -106,7 +106,7 @@
                 const newLeft = currentLeft + distanceX;
                 if (newLeft >= 0 && newLeft <= window.innerWidth - img.width) {
                     img.style.left = newLeft + 'px';
-                    moveSound.play(); // Play sound upon movement
+                    if (moveSound) moveSound.play(); // Play sound upon movement
                 }
             }
 
@@ -114,39 +114,11 @@
                 const newTop = currentTop + distanceY;
                 if (newTop >= 0 && newTop <= window.innerHeight - img.height) {
                     img.style.top = newTop + 'px';
-                    moveSound.play(); // Play sound upon movement
+                    if (moveSound) moveSound.play(); // Play sound upon movement
                 }
             }
 
             updateStatus(`Moved to (${parseInt(img.style.left)}px, ${parseInt(img.style.top)}px)`);
-        }
-
-        // Handle Left Move Button
-        const moveLeftButton = document.getElementById('moveLeftButton');
-
-        moveLeftButton.addEventListener('mousedown', () => {
-            moveImage(-moveSpeed, 0); // Initial move
-            moveInterval = setInterval(() => {
-                moveImage(-moveSpeed, 0); // Continue moving while pressed
-            }, 100); // Move every 100 milliseconds
-            moveLeftButton.classList.add('active'); // Add active style
-        });
-
-        moveLeftButton.addEventListener('mouseup', () => {
-            clearInterval(moveInterval);
-            moveLeftButton.classList.remove('active'); // Remove active style
-        });
-
-        moveLeftButton.addEventListener('mouseleave', () => {
-            clearInterval(moveInterval);
-            moveLeftButton.classList.remove('active'); // Remove active style if mouse leaves
-        });
-
-        // Auto-move function
-        function autoMove(distanceX, distanceY) {
-            clearInterval(myClock02);
-            myClock02 = setInterval(() => moveImage(distanceX, distanceY), 30);
-            updateStatus(`Auto-Moving (${distanceX}, ${distanceY})`);
         }
 
         // Reset function
@@ -200,9 +172,7 @@
     <h1>T1a17-move-ayan.html</h1>
 
     <div class="buttons-container">
-        <button id="moveLeftButton" aria-label="Move Left">
-            <i class="fas fa-arrow-left"></i> Move Left
-        </button>
+        <!-- Moved left button removed -->
         <button onclick="moveImage(moveSpeed, 0)" aria-label="Move Right"><i class="fas fa-arrow-right"></i> Move Right</button>
         <button onclick="moveImage(0, -moveSpeed)" aria-label="Move Up"><i class="fas fa-arrow-up"></i> Move Up</button>
         <button onclick="moveImage(0, moveSpeed)" aria-label="Move Down"><i class="fas fa-arrow-down"></i> Move Down</button>
