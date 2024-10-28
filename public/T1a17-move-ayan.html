@@ -63,6 +63,8 @@
             width: 90px;
             height: 100px;
             transition: left 0.1s linear, top 0.1s linear;
+            left: 0; /* Set initial left position */
+            top: 0; /* Set initial top position */
             touch-action: none; /* Prevent touch gestures */
         }
 
@@ -86,7 +88,6 @@
         }
     </style>
     <script>
-        let myClock02;
         let moveSpeed = 10; // Movement speed
         let moveInterval;
 
@@ -96,11 +97,8 @@
         // Move image function
         function moveImage(distanceX, distanceY) {
             const img = document.getElementById('myImage01');
-            img.style.left = img.style.left || '0px';
-            img.style.top = img.style.top || '0px';
-
-            let currentLeft = parseInt(img.style.left);
-            let currentTop = parseInt(img.style.top);
+            let currentLeft = parseInt(img.style.left) || 0;
+            let currentTop = parseInt(img.style.top) || 0;
 
             if (distanceX) {
                 const newLeft = currentLeft + distanceX;
@@ -151,7 +149,7 @@
                     break;
                 case ' ':
                     event.preventDefault(); // Prevent default scrolling on spacebar
-                    clearInterval(myClock02);
+                    clearInterval(moveInterval); // Stopping auto-move should be handled correctly
                     updateStatus('Auto-Move Stopped');
                     break;
                 case '+':
@@ -164,6 +162,12 @@
                     break;
             }
         });
+
+        function autoMove(distanceX, distanceY) {
+            moveInterval = setInterval(() => {
+                moveImage(distanceX, distanceY);
+            }, 100); // Adjust the interval as necessary
+        }
     </script>
 </head>
 
@@ -172,7 +176,6 @@
     <h1>T1a17-move-ayan.html</h1>
 
     <div class="buttons-container">
-        <!-- Moved left button removed -->
         <button onclick="moveImage(moveSpeed, 0)" aria-label="Move Right"><i class="fas fa-arrow-right"></i> Move Right</button>
         <button onclick="moveImage(0, -moveSpeed)" aria-label="Move Up"><i class="fas fa-arrow-up"></i> Move Up</button>
         <button onclick="moveImage(0, moveSpeed)" aria-label="Move Down"><i class="fas fa-arrow-down"></i> Move Down</button>
@@ -188,7 +191,7 @@
         <button onclick="autoMove(0, moveSpeed)">Auto Move Down</button>
         <button onclick="autoMove(-moveSpeed, 0)">Auto Move Left</button>
         <button onclick="autoMove(0, -moveSpeed)">Auto Move Up</button>
-        <button onclick="clearInterval(myClock02)">Stop Auto Move</button>
+        <button onclick="clearInterval(moveInterval)">Stop Auto Move</button>
         <button onclick="resetPosition()">Reset Position</button>
     </div>
 
