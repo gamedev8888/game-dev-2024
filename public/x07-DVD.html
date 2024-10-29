@@ -87,7 +87,10 @@
             <button id="pause" aria-label="Pause Animation">Pause</button>
             <button id="increase-speed" aria-label="Increase Speed">Increase Speed</button>
             <button id="decrease-speed" aria-label="Decrease Speed">Decrease Speed</button>
-            <button id="mute" aria-label="Mute Sound">Mute</button>
+            <button id="mute" aria-label="Mute Sound" onclick="{
+              let sound = new Audio('vinyl-stop-sound-effect-241388.mp3');
+              sound.play();
+            }">Mute</button>
             <div id="current-speed">Speed: <span id="speed-value">2</span></div>
         </div>
     </div>
