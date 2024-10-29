@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DVD Logo Animation with Shuffle Background Music</title>
+    <title>DVD Logo Animation</title>
     <style>
         body {
             display: flex;
@@ -13,7 +13,7 @@
             margin: 0;
             background: linear-gradient(to right, #000, #333);
             animation: backgroundAnimation 5s infinite alternate;
-            overflow: hidden;
+            overflow: hidden; /* Prevent scrollbar from appearing */
         }
 
         @keyframes backgroundAnimation {
@@ -35,8 +35,8 @@
             position: absolute;
             width: 15%;
             height: auto;
-            transition: transform 0.1s ease, background-color 0.1s ease;
-            filter: drop-shadow(0 0 5px white);
+            transition: transform 0.1s ease, background-color 0.1s ease; /* Smooth transition */
+            filter: drop-shadow(0 0 5px white); /* Glow effect */
         }
 
         #controls {
@@ -87,22 +87,26 @@
             <button id="pause" aria-label="Pause Animation">Pause</button>
             <button id="increase-speed" aria-label="Increase Speed">Increase Speed</button>
             <button id="decrease-speed" aria-label="Decrease Speed">Decrease Speed</button>
-            <button id="mute" aria-label="Mute Sound">Mute</button>
+            <button id="mute" aria-label="Mute Sound" onclick="{
+              let sound = new Audio('vinyl-stop-sound-effect-241388.mp3');
+              sound.play();
+            }">Mute</button>
             <div id="current-speed">Speed: <span id="speed-value">2</span></div>
         </div>
     </div>
 
-    <audio id="background-music" preload="auto" loop></audio>
+    <audio id="bounce-sound" 
+           src="https://www.soundjay.com/button/sounds/button-16.mp3" 
+           preload="auto"></audio>
+    <audio id="stop-sound" 
+           src="vinyl-stop-sound-effect-241388.mp3" 
+           preload="auto"></audio> <!-- Add vinyl stop sound effect -->
 
     <script>
         const dvdLogo = document.getElementById('dvd-logo');
+        const bounceSound = document.getElementById('bounce-sound');
+        const stopSound = document.getElementById('stop-sound'); // Reference to stop sound
         const speedValueDisplay = document.getElementById('speed-value');
-        const backgroundMusic = document.getElementById('background-music');
-        const musicTracks = [
-            'url_to_your_first_track.mp3', // Replace with actual track URLs
-            'url_to_your_second_track.mp3',
-            'url_to_your_third_track.mp3'
-        ];
         const padding = 10; // Padding from the edges
         let posX, posY; 
         let dirX = 1; 
@@ -110,43 +114,10 @@
         let speed = 2; // Speed of the logo movement
         let isPaused = false; 
         let isMuted = false; 
+        let lastBounceTime = 0; // Timestamp for the last bounce
+        let animationFrameId; // Variable to hold the request animation frame ID
 
-        // Function to play a random track
-        function playRandomTrack() {
-            const randomIndex = Math.floor(Math.random() * musicTracks.length);
-            backgroundMusic.src = musicTracks[randomIndex];
-            backgroundMusic.play();
-        }
-
-        // Load initial state
-        function loadInitialState() {
-            const savedSpeed = localStorage.getItem('speed');
-            if (savedSpeed) {
-                speed = parseInt(savedSpeed, 10);
-                speedValueDisplay.textContent = speed;
-            }
-
-            const mutedState = localStorage.getItem('isMuted');
-            if (mutedState === 'true') {
-                isMuted = true;
-                document.getElementById('mute').textContent = 'Unmute';
-                backgroundMusic.muted = true;
-            }
-
-            const container = document.querySelector('.dvd-container');
-            const containerWidth = container.clientWidth;
-            const containerHeight = container.clientHeight;
-
-            setRandomPosition(containerWidth, containerHeight);
-            playRandomTrack(); // Play a random track at startup
-            
-            setInterval(() => {
-                if (!isMuted) {
-                    playRandomTrack();
-                }
-            }, 10000); // Change track every 10 seconds
-        }
-
+        // Function to set initial position
         function setRandomPosition(containerWidth, containerHeight) {
             const logoWidth = dvdLogo.clientWidth;
             const logoHeight = dvdLogo.clientHeight;
@@ -156,14 +127,41 @@
             dvdLogo.style.transform = `translate(${posX}px, ${posY}px)`;
         }
 
+        // Load saved state from local storage
+        window.onload = () => {
+            const savedSpeed = localStorage.getItem('speed');
+            if (savedSpeed) {
+                speed = parseInt(savedSpeed);
+                speedValueDisplay.textContent = speed;
+            }
+            const mutedState = localStorage.getItem('isMuted');
+            if (mutedState === 'true') {
+                isMuted = true;
+                document.getElementById('mute').textContent = 'Unmute';
+            }
+            
+            const container = document.querySelector('.dvd-container');
+            const containerWidth = container.clientWidth;
+            const containerHeight = container.clientHeight;
+            // Set initial position based on the container size
+            setRandomPosition(containerWidth, containerHeight);
+            animate(); // Start the animation
+        };
+
+        // Save state to local storage
+        const saveState = () => {
+            localStorage.setItem('speed', speed);
+            localStorage.setItem('isMuted', isMuted);
+        };
+
         function getRandomColor() {
             const randomColor = Math.floor(Math.random() * 16777215).toString(16);
-            return `#${randomColor.padStart(6, '0')}`;
+            return `#${randomColor.padStart(6, '0')}`; // Generate a random hex color
         }
 
         function animate() {
-            if (isPaused) return;
-
+            if (isPaused) return; // Skip animation if paused
+            
             const container = document.querySelector('.dvd-container');
             const containerWidth = container.clientWidth;
             const containerHeight = container.clientHeight;
@@ -176,60 +174,68 @@
             // Bounce logic
             if (posX + logoWidth >= containerWidth - padding || posX <= padding) {
                 dirX *= -1; // Change direction for X
-                dvdLogo.style.backgroundColor = getRandomColor(); // Change color on bounce
+                playBounceSound(); // Play sound on bounce
             }
             if (posY + logoHeight >= containerHeight - padding || posY <= padding) {
                 dirY *= -1; // Change direction for Y
-                dvdLogo.style.backgroundColor = getRandomColor(); // Change color on bounce
+                playBounceSound(); // Play sound on bounce
             }
 
             dvdLogo.style.transform = `translate(${posX}px, ${posY}px)`;
 
-            requestAnimationFrame(animate);
+            animationFrameId = requestAnimationFrame(animate);
+        }
+
+        function playBounceSound() {
+            if (!isMuted && (Date.now() - lastBounceTime > 200)) { // Min interval of 200ms
+                bounceSound.currentTime = 0; // Rewind sound
+                bounceSound.volume = Math.random(); // Random volume for each bounce
+                bounceSound.play(); // Play bounce sound
+                lastBounceTime = Date.now(); // Update the last bounce time
+                dvdLogo.style.backgroundColor = getRandomColor(); // Change color on bounce
+            }
         }
 
         document.getElementById('play').addEventListener('click', () => {
             if (isPaused) {
-                isPaused = false;
-                animate();
+                isPaused = false; // Resume animation
+                animate(); // Start the animation loop if it was previously paused
                 document.getElementById('play').disabled = true;
                 document.getElementById('pause').disabled = false;
             }
         });
 
         document.getElementById('pause').addEventListener('click', () => {
-            isPaused = true;
+            isPaused = true; // Pause animation
+            stopSound.play(); // Play stop sound when paused
             document.getElementById('pause').disabled = true;
             document.getElementById('play').disabled = false;
         });
 
         document.getElementById('increase-speed').addEventListener('click', () => {
-            speed += 1;
+            speed += 1; // Increase speed
             speedValueDisplay.textContent = speed;
-            localStorage.setItem('speed', speed); // Save speed to local storage
+            saveState();
         });
 
         document.getElementById('decrease-speed').addEventListener('click', () => {
-            speed = Math.max(1, speed - 1);
+            speed = Math.max(1, speed - 1); // Ensure speed does not go below 1
             speedValueDisplay.textContent = speed;
-            localStorage.setItem('speed', speed); // Save speed to local storage
+            saveState();
         });
 
         document.getElementById('mute').addEventListener('click', () => {
-            isMuted = !isMuted;
+            isMuted = !isMuted; // Toggle mute state
             document.getElementById('mute').textContent = isMuted ? 'Unmute' : 'Mute';
-            localStorage.setItem('isMuted', isMuted); // Save mute state to local storage
-            backgroundMusic.muted = isMuted; // Mute/unmute the background music
+            saveState();
         });
 
         window.addEventListener('resize', () => {
             const container = document.querySelector('.dvd-container');
             const containerWidth = container.clientWidth;
             const containerHeight = container.clientHeight;
-            setRandomPosition(containerWidth, containerHeight);
+            setRandomPosition(containerWidth, containerHeight); // Reset position on resize
         });
-
-        window.onload = loadInitialState; // Initialize the application state
     </script>
 </body>
 </html>
