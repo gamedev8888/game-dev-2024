@@ -95,10 +95,14 @@
     <audio id="bounce-sound" 
            src="https://www.soundjay.com/button/sounds/button-16.mp3" 
            preload="auto"></audio>
+    <audio id="stop-sound" 
+           src="vinyl-stop-sound-effect-241388.mp3" 
+           preload="auto"></audio> <!-- Add vinyl stop sound effect -->
 
     <script>
         const dvdLogo = document.getElementById('dvd-logo');
         const bounceSound = document.getElementById('bounce-sound');
+        const stopSound = document.getElementById('stop-sound'); // Reference to stop sound
         const speedValueDisplay = document.getElementById('speed-value');
         const padding = 10; // Padding from the edges
         let posX, posY; 
@@ -200,6 +204,7 @@
 
         document.getElementById('pause').addEventListener('click', () => {
             isPaused = true; // Pause animation
+            stopSound.play(); // Play stop sound when paused
             document.getElementById('pause').disabled = true;
             document.getElementById('play').disabled = false;
         });
