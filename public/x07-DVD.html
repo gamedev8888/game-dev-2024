@@ -87,21 +87,26 @@
             <button id="pause" aria-label="Pause Animation">Pause</button>
             <button id="increase-speed" aria-label="Increase Speed">Increase Speed</button>
             <button id="decrease-speed" aria-label="Decrease Speed">Decrease Speed</button>
+            <button id="play-music" aria-label="Play Background Music">Play Music</button>
+            <button id="pause-music" aria-label="Pause Background Music" disabled>Pause Music</button>
             <div id="current-speed">Speed: <span id="speed-value">2</span></div>
         </div>
     </div>
 
+    <!-- Audio Elements -->
     <audio id="bounce-sound" 
            src="https://www.soundjay.com/button/sounds/button-16.mp3" 
            preload="auto"></audio>
     <audio id="stop-sound" 
            src="vinyl-stop-sound-effect-241388.mp3" 
            preload="auto"></audio> <!-- Add vinyl stop sound effect -->
+    <audio id="background-music" src="URL_TO_YOUR_AUDIO_FILE.mp3" preload="auto" loop></audio>
 
     <script>
         const dvdLogo = document.getElementById('dvd-logo');
         const bounceSound = document.getElementById('bounce-sound');
-        const stopSound = document.getElementById('stop-sound'); // Reference to stop sound
+        const stopSound = document.getElementById('stop-sound');
+        const backgroundMusic = document.getElementById('background-music');
         const speedValueDisplay = document.getElementById('speed-value');
         const padding = 10; // Padding from the edges
         let posX, posY; 
@@ -133,7 +138,6 @@
             const container = document.querySelector('.dvd-container');
             const containerWidth = container.clientWidth;
             const containerHeight = container.clientHeight;
-            // Set initial position based on the container size
             setRandomPosition(containerWidth, containerHeight);
             animate(); // Start the animation
         };
@@ -211,6 +215,19 @@
             speed = Math.max(1, speed - 1); // Ensure speed does not go below 1
             speedValueDisplay.textContent = speed;
             saveState();
+        });
+
+        // Music controls
+        document.getElementById('play-music').addEventListener('click', () => {
+            backgroundMusic.play();
+            document.getElementById('play-music').disabled = true; // Disable play button
+            document.getElementById('pause-music').disabled = false; // Enable pause button
+        });
+
+        document.getElementById('pause-music').addEventListener('click', () => {
+            backgroundMusic.pause();
+            document.getElementById('pause-music').disabled = true; // Disable pause button
+            document.getElementById('play-music').disabled = false; // Enable play button
         });
 
         window.addEventListener('resize', () => {
