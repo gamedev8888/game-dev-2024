@@ -3,121 +3,233 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Music Player with DVD Logo</title>
+    <title>DVD Logo Animation with Shuffle Background Music</title>
     <style>
         body {
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-            background-image: url('https://example.com/path/to/background.png'); /* Replace with your background image */
-            background-size: cover;
-            background-position: center;
-            animation: gradientAnimation 5s ease infinite;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(to right, #000, #333);
+            animation: backgroundAnimation 5s infinite alternate;
+            overflow: hidden;
         }
 
-        #dvdLogo {
-            width: 100px; /* Adjust size as needed */
-            animation: bounce 1s infinite;
+        @keyframes backgroundAnimation {
+            0% { background-color: #000; }
+            100% { background-color: #333; }
         }
-        
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
+
+        .dvd-container {
+            position: relative;
+            width: 90vw;
+            height: 70vh;
+            max-width: 800px;
+            max-height: 600px;
+            overflow: hidden;
+            border: 1px solid white; /* Optional: for visibility */
         }
-        
-        /* Button styles */
+
+        #dvd-logo {
+            position: absolute;
+            width: 15%;
+            height: auto;
+            transition: transform 0.1s ease, background-color 0.1s ease;
+            filter: drop-shadow(0 0 5px white);
+        }
+
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
         button {
-            padding: 10px 20px;
+            padding: 10px;
             font-size: 16px;
-            margin: 5px;
             cursor: pointer;
+            background-color: #444;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
         }
 
-        /* Responsive Design */
+        button:hover {
+            background-color: #666;
+        }
+
+        #current-speed {
+            margin-left: 20px;
+        }
+
         @media (max-width: 600px) {
-            button {
-                padding: 15px;
-                font-size: 18px;
+            #dvd-logo {
+                width: 30%; /* Larger size for small screens */
             }
-        }
-
-        /* Gradient animation */
-        @keyframes gradientAnimation {
-            0% { background-color: #ff7e5f; }
-            50% { background-color: #feb47b; }
-            100% { background-color: #ff7e5f; }
+            .dvd-container {
+                width: 100vw;
+                height: 50vh;
+            }
         }
     </style>
 </head>
 <body>
-    <img id="dvdLogo" src="https://example.com/path/to/logo.png" alt="DVD Logo"> <!-- Replace with your logo URL -->
-    
-    <audio id="background-music" loop>
-        <source src="" type="audio/mp3">
-        Your browser does not support the audio element.
-    </audio>
-    
-    <div>
-        <button id="play">Play</button>
-        <button id="pause">Pause</button>
-        <button id="mute">Mute</button>
+    <div class="dvd-container">
+        <img src="https://cdn.freebiesupply.com/logos/large/2x/dvd-logo-png-transparent.png" 
+             alt="DVD Logo" id="dvd-logo" aria-label="DVD Logo">
+        
+        <div id="controls">
+            <button id="play" aria-label="Play Animation">Play</button>
+            <button id="pause" aria-label="Pause Animation">Pause</button>
+            <button id="increase-speed" aria-label="Increase Speed">Increase Speed</button>
+            <button id="decrease-speed" aria-label="Decrease Speed">Decrease Speed</button>
+            <button id="mute" aria-label="Mute Sound">Mute</button>
+            <div id="current-speed">Speed: <span id="speed-value">2</span></div>
+        </div>
     </div>
 
-    <script>
-        const musicTracks = [
-            'https://example.com/path/to/Bye_Bye_Bye.mp3', // Replace with actual URL
-            'https://example.com/path/to/FEIN.mp3',         // Replace with actual URL
-            'https://example.com/path/to/Blinding_Lights.mp3' // Replace with actual URL
-        ];
-        
-        const backgroundMusic = document.getElementById('background-music');
-        let isMuted = false; // Mute state default to false
-        let isPaused = true; // Initial play state
+    <audio id="background-music" preload="auto" loop></audio>
 
+    <script>
+        const dvdLogo = document.getElementById('dvd-logo');
+        const speedValueDisplay = document.getElementById('speed-value');
+        const backgroundMusic = document.getElementById('background-music');
+        const musicTracks = [
+            'url_to_your_first_track.mp3', // Replace with actual track URLs
+            'url_to_your_second_track.mp3',
+            'url_to_your_third_track.mp3'
+        ];
+        const padding = 10; // Padding from the edges
+        let posX, posY; 
+        let dirX = 1; 
+        let dirY = 1; 
+        let speed = 2; // Speed of the logo movement
+        let isPaused = false; 
+        let isMuted = false; 
+
+        // Function to play a random track
         function playRandomTrack() {
             const randomIndex = Math.floor(Math.random() * musicTracks.length);
-            backgroundMusic.src = musicTracks[randomIndex]; // Set a random track
-            backgroundMusic.muted = isMuted; // Enforce the muted state
-            backgroundMusic.play().catch(error => {
-                console.error('Error playing audio:', error);
-                playRandomTrack(); // Try to play a new track if there's an error
-            });
+            backgroundMusic.src = musicTracks[randomIndex];
+            backgroundMusic.play();
+        }
+
+        // Load initial state
+        function loadInitialState() {
+            const savedSpeed = localStorage.getItem('speed');
+            if (savedSpeed) {
+                speed = parseInt(savedSpeed, 10);
+                speedValueDisplay.textContent = speed;
+            }
+
+            const mutedState = localStorage.getItem('isMuted');
+            if (mutedState === 'true') {
+                isMuted = true;
+                document.getElementById('mute').textContent = 'Unmute';
+                backgroundMusic.muted = true;
+            }
+
+            const container = document.querySelector('.dvd-container');
+            const containerWidth = container.clientWidth;
+            const containerHeight = container.clientHeight;
+
+            setRandomPosition(containerWidth, containerHeight);
+            playRandomTrack(); // Play a random track at startup
+            
+            setInterval(() => {
+                if (!isMuted) {
+                    playRandomTrack();
+                }
+            }, 10000); // Change track every 10 seconds
+        }
+
+        function setRandomPosition(containerWidth, containerHeight) {
+            const logoWidth = dvdLogo.clientWidth;
+            const logoHeight = dvdLogo.clientHeight;
+
+            posX = Math.random() * (containerWidth - logoWidth - padding * 2) + padding;
+            posY = Math.random() * (containerHeight - logoHeight - padding * 2) + padding;
+            dvdLogo.style.transform = `translate(${posX}px, ${posY}px)`;
+        }
+
+        function getRandomColor() {
+            const randomColor = Math.floor(Math.random() * 16777215).toString(16);
+            return `#${randomColor.padStart(6, '0')}`;
+        }
+
+        function animate() {
+            if (isPaused) return;
+
+            const container = document.querySelector('.dvd-container');
+            const containerWidth = container.clientWidth;
+            const containerHeight = container.clientHeight;
+            const logoWidth = dvdLogo.clientWidth;
+            const logoHeight = dvdLogo.clientHeight;
+
+            posX += dirX * speed;
+            posY += dirY * speed;
+
+            // Bounce logic
+            if (posX + logoWidth >= containerWidth - padding || posX <= padding) {
+                dirX *= -1; // Change direction for X
+                dvdLogo.style.backgroundColor = getRandomColor(); // Change color on bounce
+            }
+            if (posY + logoHeight >= containerHeight - padding || posY <= padding) {
+                dirY *= -1; // Change direction for Y
+                dvdLogo.style.backgroundColor = getRandomColor(); // Change color on bounce
+            }
+
+            dvdLogo.style.transform = `translate(${posX}px, ${posY}px)`;
+
+            requestAnimationFrame(animate);
         }
 
         document.getElementById('play').addEventListener('click', () => {
-            backgroundMusic.muted = isMuted; // Ensure muted state
-            backgroundMusic.play();
-            isPaused = false;
-            playRandomTrack(); // Start playing random track
-        });
-
-        document.getElementById('pause').addEventListener('click', () => {
-            backgroundMusic.pause();
-            isPaused = true;
-        });
-
-        document.getElementById('mute').addEventListener('click', () => {
-            isMuted = !isMuted; // Toggle mute state
-            backgroundMusic.muted = isMuted; // Set muted state in audio
-        });
-
-        document.addEventListener('keydown', (event) => {
-            if (event.code === 'Space') {
-                event.preventDefault(); 
-                if (isPaused) {
-                    document.getElementById('play').click();
-                } else {
-                    document.getElementById('pause').click();
-                }
+            if (isPaused) {
+                isPaused = false;
+                animate();
+                document.getElementById('play').disabled = true;
+                document.getElementById('pause').disabled = false;
             }
         });
 
-        window.onload = () => {
-            playRandomTrack(); // Play an initial random track
-        };
+        document.getElementById('pause').addEventListener('click', () => {
+            isPaused = true;
+            document.getElementById('pause').disabled = true;
+            document.getElementById('play').disabled = false;
+        });
+
+        document.getElementById('increase-speed').addEventListener('click', () => {
+            speed += 1;
+            speedValueDisplay.textContent = speed;
+            localStorage.setItem('speed', speed); // Save speed to local storage
+        });
+
+        document.getElementById('decrease-speed').addEventListener('click', () => {
+            speed = Math.max(1, speed - 1);
+            speedValueDisplay.textContent = speed;
+            localStorage.setItem('speed', speed); // Save speed to local storage
+        });
+
+        document.getElementById('mute').addEventListener('click', () => {
+            isMuted = !isMuted;
+            document.getElementById('mute').textContent = isMuted ? 'Unmute' : 'Mute';
+            localStorage.setItem('isMuted', isMuted); // Save mute state to local storage
+            backgroundMusic.muted = isMuted; // Mute/unmute the background music
+        });
+
+        window.addEventListener('resize', () => {
+            const container = document.querySelector('.dvd-container');
+            const containerWidth = container.clientWidth;
+            const containerHeight = container.clientHeight;
+            setRandomPosition(containerWidth, containerHeight);
+        });
+
+        window.onload = loadInitialState; // Initialize the application state
     </script>
 </body>
 </html>
