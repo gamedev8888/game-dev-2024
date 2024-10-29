@@ -87,10 +87,6 @@
             <button id="pause" aria-label="Pause Animation">Pause</button>
             <button id="increase-speed" aria-label="Increase Speed">Increase Speed</button>
             <button id="decrease-speed" aria-label="Decrease Speed">Decrease Speed</button>
-            <button id="mute" aria-label="Mute Sound" onclick="{
-              let sound = new Audio('vinyl-stop-sound-effect-241388.mp3');
-              sound.play();
-            }">Mute</button>
             <div id="current-speed">Speed: <span id="speed-value">2</span></div>
         </div>
     </div>
@@ -113,7 +109,6 @@
         let dirY = 1; 
         let speed = 2; // Speed of the logo movement
         let isPaused = false; 
-        let isMuted = false; 
         let lastBounceTime = 0; // Timestamp for the last bounce
         let animationFrameId; // Variable to hold the request animation frame ID
 
@@ -134,11 +129,6 @@
                 speed = parseInt(savedSpeed);
                 speedValueDisplay.textContent = speed;
             }
-            const mutedState = localStorage.getItem('isMuted');
-            if (mutedState === 'true') {
-                isMuted = true;
-                document.getElementById('mute').textContent = 'Unmute';
-            }
             
             const container = document.querySelector('.dvd-container');
             const containerWidth = container.clientWidth;
@@ -151,7 +141,6 @@
         // Save state to local storage
         const saveState = () => {
             localStorage.setItem('speed', speed);
-            localStorage.setItem('isMuted', isMuted);
         };
 
         function getRandomColor() {
@@ -187,7 +176,7 @@
         }
 
         function playBounceSound() {
-            if (!isMuted && (Date.now() - lastBounceTime > 200)) { // Min interval of 200ms
+            if (Date.now() - lastBounceTime > 200) { // Min interval of 200ms
                 bounceSound.currentTime = 0; // Rewind sound
                 bounceSound.volume = Math.random(); // Random volume for each bounce
                 bounceSound.play(); // Play bounce sound
@@ -221,12 +210,6 @@
         document.getElementById('decrease-speed').addEventListener('click', () => {
             speed = Math.max(1, speed - 1); // Ensure speed does not go below 1
             speedValueDisplay.textContent = speed;
-            saveState();
-        });
-
-        document.getElementById('mute').addEventListener('click', () => {
-            isMuted = !isMuted; // Toggle mute state
-            document.getElementById('mute').textContent = isMuted ? 'Unmute' : 'Mute';
             saveState();
         });
 
