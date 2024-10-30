@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Retro Vibes Music Player</title>
     <style>
-        /* (CSS styling as previously described) */
         body {
             background-color: #f0e68c;
             font-family: 'Comic Sans MS', cursive, sans-serif;
@@ -36,7 +35,18 @@
             background-color: #ffaf40;
         }
         audio {
-            display: none; /* Hide audio element */
+            display: block; /* Show audio controls */
+            margin: 10px auto;
+        }
+        .track-list {
+            margin-top: 20px;
+            text-align: left;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .search {
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -54,7 +64,12 @@
             <button onclick="nextMusic()">Next</button>
             <button onclick="prevMusic()">Previous</button>
         </div>
-        <div id="track-list"></div>
+        <div class="track-list" id="track-list"></div>
+        
+        <div class="search">
+            <input type="text" id="search-input" placeholder="Search for a song...">
+            <button onclick="searchYouTube()">Search YouTube</button>
+        </div>
     </div>
     
     <script>
@@ -80,11 +95,13 @@
         let currentTrack = 0;
         const audioElement = document.getElementById('audio');
         const currentSongTitle = document.getElementById('current-song-title');
+        const trackListDiv = document.getElementById('track-list');
 
         function loadTrack(trackIndex) {
             const track = tracks[trackIndex];
             audioElement.src = track.src;
             currentSongTitle.innerText = `${track.title} - ${track.artist}`;
+            audioElement.currentTime = 0; // Reset to start
         }
 
         function playMusic() {
@@ -112,8 +129,34 @@
             playMusic();
         }
 
-        // Load the first track initially
+        function populateTrackList() {
+            tracks.forEach((track, index) => {
+                const trackElement = document.createElement('div');
+                trackElement.innerText = `${index + 1}. ${track.title} - ${track.artist}`;
+                trackElement.onclick = () => {
+                    currentTrack = index;
+                    loadTrack(currentTrack);
+                    playMusic();
+                };
+                trackListDiv.appendChild(trackElement);
+            });
+        }
+
+        audioElement.addEventListener('ended', nextMusic);
+
+        function searchYouTube() {
+            const query = document.getElementById('search-input').value;
+            if (query) {
+                const url = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
+                window.open(url, '_blank'); // Open YouTube search in a new tab
+            } else {
+                alert("Please enter a search term.");
+            }
+        }
+
+        // Load the first track and populate the track list initially
         loadTrack(currentTrack);
+        populateTrackList();
     </script>
 </body>
 </html>
