@@ -12,16 +12,19 @@
             text-align: center;
             padding: 50px;
         }
+
         .music-player {
             background-color: #2f3640;
             border-radius: 15px;
             padding: 20px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         }
+
         .title {
             font-size: 24px;
             margin-bottom: 20px;
         }
+
         button {
             background-color: #fdc830;
             border: none;
@@ -29,15 +32,18 @@
             margin: 5px;
             cursor: pointer;
             border-radius: 5px;
-            transition: 0.3s;
+            transition: background-color 0.3s;
         }
+
         button:hover {
             background-color: #ffaf40;
         }
+
         audio {
             display: block;
             margin: 10px auto;
         }
+
         .track-list {
             margin-top: 20px;
             text-align: left;
@@ -46,11 +52,35 @@
             margin-right: auto;
             cursor: pointer;
         }
+
         .track-list div:hover {
             color: #ffaf40; /* Hover effect for track items */
         }
+
         .search {
             margin-top: 20px;
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: #ddd;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .progress {
+            height: 10px;
+            background-color: #fdc830;
+            border-radius: 5px;
+            width: 0%;
+        }
+
+        .time-display {
+            margin-top: 10px;
+        }
+
+        .volume-control {
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -62,11 +92,11 @@
             Your browser does not support the audio element.
         </audio>
         <div>
-            <button onclick="playMusic()">Play</button>
-            <button onclick="pauseMusic()">Pause</button>
-            <button onclick="stopMusic()">Stop</button>
-            <button onclick="nextMusic()">Next</button>
-            <button onclick="prevMusic()">Previous</button>
+            <button title="Play" onclick="playMusic()">Play</button>
+            <button title="Pause" onclick="pauseMusic()">Pause</button>
+            <button title="Stop" onclick="stopMusic()">Stop</button>
+            <button title="Next" onclick="nextMusic()">Next</button>
+            <button title="Previous" onclick="prevMusic()">Previous</button>
         </div>
         <div class="track-list" id="track-list"></div>
         
@@ -74,34 +104,46 @@
             <input type="text" id="search-input" placeholder="Search for a song...">
             <button onclick="searchYouTube()">Search YouTube</button>
         </div>
+
+        <div class="progress-container">
+            <div class="progress" id="progress-bar"></div>
+        </div>
+        
+        <div class="time-display" id="time-display">0:00 / 0:00</div>
+
+        <div class="volume-control">
+            <label for="volume">Volume: </label>
+            <input type="range" id="volume" name="volume" min="0" max="1" step="0.01" value="1" onchange="setVolume(this.value)">
+        </div>
     </div>
-    
+
     <script>
         const tracks = [
             {
                 title: "FEIN",
                 artist: "Travis Scott",
-                src: "path/to/your/audio/Travis_Scott_FE!N.mp3"
+                src: "audio/Travis_Scott_FE!N.mp3" // Update this path
             },
             {
                 title: "Bye Bye Bye",
                 artist: "NSYNC",
-                src: "path/to/your/audio/NSYNC_Bye_Bye_Bye.mp3"
+                src: "audio/NSYNC_Bye_Bye_Bye.mp3" // Update this path
             },
-            // Add more songs here with valid paths
         ];
 
         let currentTrack = 0;
         const audioElement = document.getElementById('audio');
         const currentSongTitle = document.getElementById('current-song-title');
         const trackListDiv = document.getElementById('track-list');
+        const progressBar = document.getElementById('progress-bar');
+        const timeDisplay = document.getElementById('time-display');
 
         function loadTrack(trackIndex) {
             const track = tracks[trackIndex];
             audioElement.src = track.src;
             currentSongTitle.innerText = `${track.title} - ${track.artist}`;
             audioElement.currentTime = 0;
-            audioElement.play(); // Autoplay the loaded track
+            audioElement.play();
         }
 
         function playMusic() {
@@ -118,12 +160,12 @@
         }
 
         function nextMusic() {
-            currentTrack = (currentTrack + 1) % tracks.length;
+            currentTrack = (currentTrack + 1) % tracks.length; 
             loadTrack(currentTrack);
         }
 
         function prevMusic() {
-            currentTrack = (currentTrack - 1 + tracks.length) % tracks.length;
+            currentTrack = (currentTrack - 1 + tracks.length) % tracks.length; 
             loadTrack(currentTrack);
         }
 
@@ -139,7 +181,25 @@
             });
         }
 
+        function updateProgressBar() {
+            const progressPercent = (audioElement.currentTime / audioElement.duration) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+
+            // Update time display
+            const currentMinutes = Math.floor(audioElement.currentTime / 60);
+            const currentSeconds = Math.floor(audioElement.currentTime % 60);
+            const durationMinutes = Math.floor(audioElement.duration / 60);
+            const durationSeconds = Math.floor(audioElement.duration % 60);
+
+            timeDisplay.innerText = `${currentMinutes}:${currentSeconds < 10 ? '0' + currentSeconds : currentSeconds} / ${durationMinutes}:${durationSeconds < 10 ? '0' + durationSeconds : durationSeconds}`;
+        }
+
+        function setVolume(value) {
+            audioElement.volume = value;
+        }
+
         audioElement.addEventListener('ended', nextMusic);
+        audioElement.addEventListener('timeupdate', updateProgressBar);
 
         function searchYouTube() {
             const query = document.getElementById('search-input').value;
