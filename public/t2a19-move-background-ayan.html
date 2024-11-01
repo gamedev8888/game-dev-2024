@@ -179,6 +179,24 @@
             image.style.top = '0px';
             image.style.left = '0px';
         }
+
+        // Control image movement with arrow keys
+        document.addEventListener('keydown', function (event) {
+            switch (event.key) {
+                case 'ArrowUp':
+                    moveImageUp();
+                    break;
+                case 'ArrowDown':
+                    moveImageDown();
+                    break;
+                case 'ArrowLeft':
+                    moveImageLeft();
+                    break;
+                case 'ArrowRight':
+                    moveImageRight();
+                    break;
+            }
+        });
     </script>
 
 </body>
