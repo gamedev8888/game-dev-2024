@@ -3,108 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Move Background</title>
+    <title>Background Movement Demo</title>
     <style>
+        /* Basic body styles */
         body {
-            background-repeat: repeat; /* Allow the background to repeat */
-            background-size: auto; /* Maintain the original size of the background image */
             background-image: url('https://wallpapercave.com/wp/E2IYilg.jpg');
-            height: 100vh; /* Ensures the body takes the full height of the viewport */
+            background-repeat: repeat; /* Allow the background to repeat */
+            background-size: auto; /* Maintain original size */
+            height: 100vh; /* Full viewport height */
             margin: 0; /* Remove default margin */
         }
+
+        /* Center the heading */
         h1 {
             text-align: center;
+            margin: 20px 0;
         }
+
+        /* Style buttons */
         button {
             margin: 5px;
+        }
+
+        /* Container for buttons */
+        .button-container {
+            text-align: center;
+            margin-bottom: 20px;
         }
     </style>
 </head>
 <body id="myBody">
 
-<h1>Move Background Demo</h1>
+    <h1>Move Background Demo</h1>
 
-<!-- Left Background Movement -->
-<input id="myButton01" type="button" value="Move Background Left" onclick="moveBackgroundLeft()">
-<input type="button" value="Auto Move Background Left Faster" onclick="autoMoveBackgroundLeftFaster()">
-<input type="button" value="Auto Move Background Left Slower" onclick="autoMoveBackgroundLeftSlower()">
+    <!-- Button container for background movement -->
+    <div class="button-container">
+        <button onclick="moveBackgroundLeft()">Move Background Left</button>
+        <button onclick="autoMoveBackgroundLeftFaster()">Auto Move Background Left Faster</button>
+        <button onclick="autoMoveBackgroundLeftSlower()">Auto Move Background Left Slower</button>
 
-<!-- Right Background Movement -->
-<input type="button" value="Auto Move Background Right Faster" onclick="autoMoveBackgroundRightFaster()">
-<input type="button" value="Auto Move Background Right Slower" onclick="autoMoveBackgroundRightSlower()">
-<input type="button" value="Stop Auto Move Background" onclick="stopAutoMoveBackground()">
+        <button onclick="autoMoveBackgroundRightFaster()">Auto Move Background Right Faster</button>
+        <button onclick="autoMoveBackgroundRightSlower()">Auto Move Background Right Slower</button>
+        <button onclick="stopAutoMoveBackground()">Stop Auto Move Background</button>
+    </div>
 
-<br><br>
+    <!-- Button container for image movement -->
+    <div class="button-container">
+        <button onclick="moveImageRight()">Move Image Right</button>
+        <button onclick="autoMoveImageLeft()">Auto Move Image Left</button>
+    </div>
 
-<!-- Image Movement -->
-<input type="button" id="myButton02" value="Move Image Right" onclick="moveImageRight()">
-<input type="button" value="Auto Move Image Left" onclick="autoMoveImageLeft()">
+    <img id="myImage01" style="position: relative; width: 100px; height: 80px; top: 0; left: 0;" src="https://wallpapercave.com/wp/E2IYilg.jpg" alt="Image">
 
-<img id="myImage01" style="position: relative; width: 100px; height: 80px; top: 0px; left: 0px;" src="https://wallpapercave.com/wp/E2IYilg.jpg">
+    <script>
+        let myGlobalX = 0;
+        let myClock01; // Timer for background movement
+        let myClock02; // Timer for image movement
+        let mySpeed01 = 400; // Background movement speed
 
-<script>
-    let myGlobalX = 0;
-    let myClock01;
-    let myClock02;
-    let mySpeed01 = 400;
+        // Move Background Left
+        function moveBackgroundLeft() {
+            myGlobalX -= 5;
+            document.getElementById('myBody').style.backgroundPosition = `${myGlobalX}px 0px`;
+        }
 
-    // Move Background Left
-    function moveBackgroundLeft() {
-        myGlobalX -= 5;
-        document.getElementById('myBody').style.backgroundPosition = myGlobalX + 'px 0px';
-    }
+        // Move Background Right
+        function moveBackgroundRight() {
+            myGlobalX += 5;
+            document.getElementById('myBody').style.backgroundPosition = `${myGlobalX}px 0px`;
+        }
 
-    // Move Background Right
-    function moveBackgroundRight() {
-        myGlobalX += 5;
-        document.getElementById('myBody').style.backgroundPosition = myGlobalX + 'px 0px';
-    }
+        // Auto Move Background Left Faster
+        function autoMoveBackgroundLeftFaster() {
+            clearInterval(myClock01);
+            mySpeed01 = Math.max(10, mySpeed01 - 30);
+            myClock01 = setInterval(moveBackgroundLeft, mySpeed01);
+        }
 
-    // Auto Move Background Left Faster
-    function autoMoveBackgroundLeftFaster() {
-        clearInterval(myClock01);
-        mySpeed01 = Math.max(10, mySpeed01 - 30);
-        myClock01 = setInterval(moveBackgroundLeft, mySpeed01);
-    }
+        // Auto Move Background Left Slower
+        function autoMoveBackgroundLeftSlower() {
+            clearInterval(myClock01);
+            mySpeed01 = Math.min(1000, mySpeed01 + 30);
+            myClock01 = setInterval(moveBackgroundLeft, mySpeed01);
+        }
 
-    // Auto Move Background Left Slower
-    function autoMoveBackgroundLeftSlower() {
-        clearInterval(myClock01);
-        mySpeed01 = Math.min(1000, mySpeed01 + 30);
-        myClock01 = setInterval(moveBackgroundLeft, mySpeed01);
-    }
+        // Auto Move Background Right Faster
+        function autoMoveBackgroundRightFaster() {
+            clearInterval(myClock01);
+            mySpeed01 = Math.max(10, mySpeed01 - 30);
+            myClock01 = setInterval(moveBackgroundRight, mySpeed01);
+        }
 
-    // Auto Move Background Right Faster
-    function autoMoveBackgroundRightFaster() {
-        clearInterval(myClock01);
-        mySpeed01 = Math.max(10, mySpeed01 - 30);
-        myClock01 = setInterval(moveBackgroundRight, mySpeed01);
-    }
+        // Auto Move Background Right Slower
+        function autoMoveBackgroundRightSlower() {
+            clearInterval(myClock01);
+            mySpeed01 = Math.min(1000, mySpeed01 + 30);
+            myClock01 = setInterval(moveBackgroundRight, mySpeed01);
+        }
 
-    // Auto Move Background Right Slower
-    function autoMoveBackgroundRightSlower() {
-        clearInterval(myClock01);
-        mySpeed01 = Math.min(1000, mySpeed01 + 30);
-        myClock01 = setInterval(moveBackgroundRight, mySpeed01);
-    }
+        // Stop Auto Move Background
+        function stopAutoMoveBackground() {
+            clearInterval(myClock01);
+        }
 
-    // Stop Auto Move Background
-    function stopAutoMoveBackground() {
-        clearInterval(myClock01);
-    }
+        // Move Image Right
+        function moveImageRight() {
+            const image = document.getElementById('myImage01');
+            image.style.left = `${parseInt(image.style.left) + 10}px`;
+        }
 
-    // Move Image Right
-    function moveImageRight() {
-        const image = document.getElementById('myImage01');
-        image.style.left = (parseInt(image.style.left) + 10) + 'px';
-    }
-
-    // Auto Move Image Left
-    function autoMoveImageLeft() {
-        clearInterval(myClock02);
-        myClock02 = setInterval(moveImageRight, 30);
-    }
-</script>
+        // Auto Move Image Left
+        function autoMoveImageLeft() {
+            clearInterval(myClock02);
+            myClock02 = setInterval(moveImageRight, 30);
+        }
+    </script>
 
 </body>
 </html>
