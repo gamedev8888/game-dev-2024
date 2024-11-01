@@ -41,7 +41,6 @@
         <button onclick="moveBackgroundLeft()">Move Background Left</button>
         <button onclick="autoMoveBackgroundLeftFaster()">Auto Move Background Left Faster</button>
         <button onclick="autoMoveBackgroundLeftSlower()">Auto Move Background Left Slower</button>
-
         <button onclick="autoMoveBackgroundRightFaster()">Auto Move Background Right Faster</button>
         <button onclick="autoMoveBackgroundRightSlower()">Auto Move Background Right Slower</button>
         <button onclick="stopAutoMoveBackground()">Stop Auto Move Background</button>
@@ -57,13 +56,14 @@
         <button onclick="autoMoveImageRight()">Auto Move Image Right</button>
         <button onclick="moveImageLeft()">Move Image Left</button>
         <button onclick="autoMoveImageLeft()">Auto Move Image Left</button>
+        <button onclick="resetImagePosition()">Reset Image Position</button> <!-- Reset button -->
     </div>
 
     <img id="myImage01" style="position: relative; width: 100px; height: 80px; top: 0; left: 0;" src="https://wallpapercave.com/wp/E2IYilg.jpg" alt="Image">
 
     <script>
         let myGlobalX = 0;
-        let myGlobalY = 0; // Added for vertical movement
+        let myGlobalY = 0;
         let myClock01; // Timer for background movement
         let myClock02; // Timer for image movement
         let mySpeed01 = 400; // Background movement speed
@@ -159,6 +159,13 @@
         function autoMoveImageUp() {
             clearInterval(myClock02);
             myClock02 = setInterval(moveImageUp, 30); // Move image up every 30 milliseconds
+        }
+
+        // Reset Image Position
+        function resetImagePosition() {
+            const image = document.getElementById('myImage01');
+            image.style.top = '0px';
+            image.style.left = '0px';
         }
     </script>
 
