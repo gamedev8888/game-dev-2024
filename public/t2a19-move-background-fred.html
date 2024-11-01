@@ -8,24 +8,31 @@
         body {
             background-repeat: repeat;
             background-size: 80%;
-            background-image: url('https://th.bing.com/th/id/R.2e1873ededb9e3a769b024de01286035?rik=HT7tDCkrGhhy2A&riu=http%3a%2f%2fwallpapercave.com%2fwp%2fwQiRgcl.jpg&ehk=7F0oPwI93g4ndKKopBE6X5BHCzmOeL76vmQTvvPYNDM%3d&risl=&pid=ImgRaw&r=0');
+            background-image: url('https://wallpapercave.com/wp/E2IYilg.jpg');
+        }
+        h1 {
+            text-align: center;
+        }
+        button {
+            margin: 5px;
         }
     </style>
 </head>
 <body id="myBody">
 
-<h1 align="center">t2a19-move-background-fred.html</h1>
+<h1>Move Background Demo</h1>
 
-<input id="myButton01" type="button" value="Background Move Left" onclick="moveBackgroundLeft()">
-<input type="button" value="Auto Background Left Faster" onclick="autoMoveBackgroundLeftFaster()">
-<input type="button" value="Auto Background Left Slower" onclick="autoMoveBackgroundLeftSlower()">
+<input id="myButton01" type="button" value="Move Background Left" onclick="moveBackgroundLeft()">
+<input type="button" value="Auto Move Background Left Faster" onclick="autoMoveBackgroundLeftFaster()">
+<input type="button" value="Auto Move Background Left Slower" onclick="autoMoveBackgroundLeftSlower()">
+<input type="button" value="Stop Auto Move Background" onclick="stopAutoMoveBackground()">
 
 <br><br>
 
-<input type="button" id="myButton02" value="Image Right" onclick="moveImageRight()"><br><br>
-<input type="button" value="Auto Move Left" onclick="autoMoveImageLeft()">
+<input type="button" id="myButton02" value="Move Image Right" onclick="moveImageRight()">
+<input type="button" value="Auto Move Image Left" onclick="autoMoveImageLeft()">
 
-<img id="myImage01" style="position: relative; width: 100px; height: 80px; top: 0px; left: 0px;" src="https://th.bing.com/th/id/R.2e1873ededb9e3a769b024de01286035?rik=HT7tDCkrGhhy2A&riu=http%3a%2f%2fwallpapercave.com%2fwp%2fwQiRgcl.jpg&ehk=7F0oPwI93g4ndKKopBE6X5BHCzmOeL76vmQTvvPYNDM%3d&risl=&pid=ImgRaw&r=0">
+<img id="myImage01" style="position: relative; width: 100px; height: 80px; top: 0px; left: 0px;" src="https://wallpapercave.com/wp/E2IYilg.jpg">
 
 <script>
     let myGlobalX = 0;
@@ -35,22 +42,23 @@
 
     function moveBackgroundLeft() {
         myGlobalX -= 5;
-        const myTemp = myGlobalX + 'px 0px';
-        document.getElementById('myBody').style.backgroundPosition = myTemp;
+        document.getElementById('myBody').style.backgroundPosition = myGlobalX + 'px 0px';
     }
 
     function autoMoveBackgroundLeftFaster() {
         clearInterval(myClock01);
-        mySpeed01 -= 30;
-        if (mySpeed01 < 10) { mySpeed01 = 10; }
+        mySpeed01 = Math.max(10, mySpeed01 - 30);
         myClock01 = setInterval(moveBackgroundLeft, mySpeed01);
     }
 
     function autoMoveBackgroundLeftSlower() {
         clearInterval(myClock01);
-        mySpeed01 += 30;
-        if (mySpeed01 > 1000) { mySpeed01 = 1000; }
+        mySpeed01 = Math.min(1000, mySpeed01 + 30);
         myClock01 = setInterval(moveBackgroundLeft, mySpeed01);
+    }
+
+    function stopAutoMoveBackground() {
+        clearInterval(myClock01);
     }
 
     function moveImageRight() {
