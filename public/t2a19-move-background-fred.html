@@ -6,9 +6,11 @@
     <title>Move Background</title>
     <style>
         body {
-            background-repeat: repeat;
-            background-size: 80%;
+            background-repeat: no-repeat; /* Prevent the background from repeating */
+            background-size: cover; /* Ensure the background image covers the entire viewport */
             background-image: url('https://wallpapercave.com/wp/E2IYilg.jpg');
+            height: 100vh; /* Ensures the body takes the full height of the viewport */
+            margin: 0; /* Remove default margin */
         }
         h1 {
             text-align: center;
@@ -22,13 +24,19 @@
 
 <h1>Move Background Demo</h1>
 
+<!-- Left Background Movement -->
 <input id="myButton01" type="button" value="Move Background Left" onclick="moveBackgroundLeft()">
 <input type="button" value="Auto Move Background Left Faster" onclick="autoMoveBackgroundLeftFaster()">
 <input type="button" value="Auto Move Background Left Slower" onclick="autoMoveBackgroundLeftSlower()">
+
+<!-- Right Background Movement -->
+<input type="button" value="Auto Move Background Right Faster" onclick="autoMoveBackgroundRightFaster()">
+<input type="button" value="Auto Move Background Right Slower" onclick="autoMoveBackgroundRightSlower()">
 <input type="button" value="Stop Auto Move Background" onclick="stopAutoMoveBackground()">
 
 <br><br>
 
+<!-- Image Movement -->
 <input type="button" id="myButton02" value="Move Image Right" onclick="moveImageRight()">
 <input type="button" value="Auto Move Image Left" onclick="autoMoveImageLeft()">
 
@@ -40,32 +48,58 @@
     let myClock02;
     let mySpeed01 = 400;
 
+    // Move Background Left
     function moveBackgroundLeft() {
         myGlobalX -= 5;
         document.getElementById('myBody').style.backgroundPosition = myGlobalX + 'px 0px';
     }
 
+    // Move Background Right
+    function moveBackgroundRight() {
+        myGlobalX += 5;
+        document.getElementById('myBody').style.backgroundPosition = myGlobalX + 'px 0px';
+    }
+
+    // Auto Move Background Left Faster
     function autoMoveBackgroundLeftFaster() {
         clearInterval(myClock01);
         mySpeed01 = Math.max(10, mySpeed01 - 30);
         myClock01 = setInterval(moveBackgroundLeft, mySpeed01);
     }
 
+    // Auto Move Background Left Slower
     function autoMoveBackgroundLeftSlower() {
         clearInterval(myClock01);
         mySpeed01 = Math.min(1000, mySpeed01 + 30);
         myClock01 = setInterval(moveBackgroundLeft, mySpeed01);
     }
 
+    // Auto Move Background Right Faster
+    function autoMoveBackgroundRightFaster() {
+        clearInterval(myClock01);
+        mySpeed01 = Math.max(10, mySpeed01 - 30);
+        myClock01 = setInterval(moveBackgroundRight, mySpeed01);
+    }
+
+    // Auto Move Background Right Slower
+    function autoMoveBackgroundRightSlower() {
+        clearInterval(myClock01);
+        mySpeed01 = Math.min(1000, mySpeed01 + 30);
+        myClock01 = setInterval(moveBackgroundRight, mySpeed01);
+    }
+
+    // Stop Auto Move Background
     function stopAutoMoveBackground() {
         clearInterval(myClock01);
     }
 
+    // Move Image Right
     function moveImageRight() {
         const image = document.getElementById('myImage01');
         image.style.left = (parseInt(image.style.left) + 10) + 'px';
     }
 
+    // Auto Move Image Left
     function autoMoveImageLeft() {
         clearInterval(myClock02);
         myClock02 = setInterval(moveImageRight, 30);
