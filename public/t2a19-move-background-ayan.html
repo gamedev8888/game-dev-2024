@@ -49,7 +49,13 @@
 
     <!-- Button container for image movement -->
     <div class="button-container">
+        <button onclick="moveImageDown()">Move Image Down</button>
+        <button onclick="autoMoveImageDown()">Auto Move Image Down</button>
+        <button onclick="moveImageUp()">Move Image Up</button>
+        <button onclick="autoMoveImageUp()">Auto Move Image Up</button>
         <button onclick="moveImageRight()">Move Image Right</button>
+        <button onclick="autoMoveImageRight()">Auto Move Image Right</button>
+        <button onclick="moveImageLeft()">Move Image Left</button>
         <button onclick="autoMoveImageLeft()">Auto Move Image Left</button>
     </div>
 
@@ -57,6 +63,7 @@
 
     <script>
         let myGlobalX = 0;
+        let myGlobalY = 0; // Added for vertical movement
         let myClock01; // Timer for background movement
         let myClock02; // Timer for image movement
         let mySpeed01 = 400; // Background movement speed
@@ -112,10 +119,46 @@
             image.style.left = `${parseInt(image.style.left) + 10}px`;
         }
 
+        // Move Image Left
+        function moveImageLeft() {
+            const image = document.getElementById('myImage01');
+            image.style.left = `${parseInt(image.style.left) - 10}px`;
+        }
+
+        // Move Image Down
+        function moveImageDown() {
+            const image = document.getElementById('myImage01');
+            image.style.top = `${parseInt(image.style.top) + 10}px`; // Move down by 10 pixels
+        }
+
+        // Move Image Up
+        function moveImageUp() {
+            const image = document.getElementById('myImage01');
+            image.style.top = `${parseInt(image.style.top) - 10}px`; // Move up by 10 pixels
+        }
+
+        // Auto Move Image Right
+        function autoMoveImageRight() {
+            clearInterval(myClock02);
+            myClock02 = setInterval(moveImageRight, 30); // Move image every 30 milliseconds
+        }
+
         // Auto Move Image Left
         function autoMoveImageLeft() {
             clearInterval(myClock02);
-            myClock02 = setInterval(moveImageRight, 30);
+            myClock02 = setInterval(moveImageLeft, 30); // Move image every 30 milliseconds left
+        }
+
+        // Auto Move Image Down
+        function autoMoveImageDown() {
+            clearInterval(myClock02);
+            myClock02 = setInterval(moveImageDown, 30); // Move image down every 30 milliseconds
+        }
+
+        // Auto Move Image Up
+        function autoMoveImageUp() {
+            clearInterval(myClock02);
+            myClock02 = setInterval(moveImageUp, 30); // Move image up every 30 milliseconds
         }
     </script>
 
