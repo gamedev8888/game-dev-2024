@@ -24,10 +24,10 @@
         }
         .container {
             max-width: 600px;
-            background: rgb(28 14 213 / 48%); /* Slightly transparent for better blending */
+            background: rgba(255, 255, 255, 0.2);
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgb(28 14 213 / 48%);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
         textarea {
             width: 100%;
@@ -36,8 +36,8 @@
             border: 1px solid rgba(255, 255, 255, 0.5);
             margin-bottom: 10px;
             font-size: 16px;
-            color: rgba(255, 255, 255, 0.9); /* Light color for better visibility */
-            background: rgba(0, 0, 0, 0.7); /* Dark background for contrast */
+            color: rgba(255, 255, 255, 0.9);
+            background: rgba(0, 0, 0, 0.7);
         }
         input[type="button"] {
             padding: 10px 15px;
@@ -64,16 +64,16 @@
 <div class="container">
     <h1>Text Encryptor/Decryptor</h1>
 
-    <textarea id="myArea01" rows="4" placeholder="Enter text here..."></textarea>
+    <textarea id="myArea01" rows="4" placeholder="Enter text here...">Hello, World!</textarea>
     <input type="button" value="Encrypt" onclick="encryptText()">
     <input type="button" value="Decrypt" onclick="decryptText()">
     <input type="button" value="Clear" onclick="clearFields()">
     
     <h3>Encrypted Text:</h3>
-    <textarea id="myArea02" rows="4" placeholder="Encrypted text will appear here..." readonly></textarea>
+    <textarea id="myArea02" rows="4" placeholder="Encrypted text will appear here..." readonly>Hello, World!</textarea>
     
     <h3>Decrypted Text:</h3>
-    <textarea id="myArea03" rows="4" placeholder="Decrypted text will appear here..." readonly></textarea>
+    <textarea id="myArea03" rows="4" placeholder="Decrypted text will appear here..." readonly>Khoor, Zruog!</textarea>
     
     <div id="message" class="message"></div>
 </div>
@@ -106,9 +106,9 @@
     }
 
     function clearFields() {
-        document.getElementById('myArea01').value = '';
-        document.getElementById('myArea02').value = '';
-        document.getElementById('myArea03').value = '';
+        document.getElementById('myArea01').value = 'Hello, World!';
+        document.getElementById('myArea02').value = 'Encrypted text will appear here...';
+        document.getElementById('myArea03').value = 'Decrypted text will appear here...';
         showMessage("");
     }
 
