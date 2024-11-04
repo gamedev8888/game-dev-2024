@@ -7,25 +7,24 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            /* Set the background image and ensure it covers the entire background */
             background-image: url('https://wallpaperaccess.com/full/113027.jpg');
-            background-size: cover; /* Cover the entire background */
-            background-position: center; /* Center the background image */
+            background-size: cover;
+            background-position: center;
             margin: 0;
             padding: 20px;
-            color: white; /* Change text color to white for better contrast */
-            height: 100vh; /* Ensure the body takes the full height of the viewport */
+            color: white;
+            height: 100vh;
             display: flex;
-            align-items: center; /* Center the container vertically */
-            justify-content: center; /* Center the container horizontally */
+            align-items: center;
+            justify-content: center;
         }
         h1 {
             text-align: center;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* Add a shadow for better readability */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
         }
         .container {
             max-width: 600px;
-            background: rgba(255, 255, 255, 0.8); /* White background with some transparency */
+            background: rgba(255, 255, 255, 0.2); /* Slightly transparent for better blending */
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
@@ -34,9 +33,11 @@
             width: 100%;
             padding: 10px;
             border-radius: 4px;
-            border: 1px solid #ccc;
+            border: 1px solid rgba(255, 255, 255, 0.5);
             margin-bottom: 10px;
             font-size: 16px;
+            color: rgba(255, 255, 255, 0.9); /* Light color for better visibility */
+            background: rgba(0, 0, 0, 0.7); /* Dark background for contrast */
         }
         input[type="button"] {
             padding: 10px 15px;
@@ -51,6 +52,11 @@
         input[type="button"]:hover {
             background-color: #0056b3;
         }
+        .message {
+            margin-top: 10px;
+            color: #ff0000;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -61,35 +67,66 @@
     <textarea id="myArea01" rows="4" placeholder="Enter text here..."></textarea>
     <input type="button" value="Encrypt" onclick="encryptText()">
     <input type="button" value="Decrypt" onclick="decryptText()">
+    <input type="button" value="Clear" onclick="clearFields()">
     
     <h3>Encrypted Text:</h3>
     <textarea id="myArea02" rows="4" placeholder="Encrypted text will appear here..." readonly></textarea>
     
     <h3>Decrypted Text:</h3>
     <textarea id="myArea03" rows="4" placeholder="Decrypted text will appear here..." readonly></textarea>
+    
+    <div id="message" class="message"></div>
 </div>
 
 <script>
+    const shift = 3;
+
     function encryptText() {
         let inputText = document.getElementById('myArea01').value;
-        // Add any additional characters to encrypt if necessary
-        let encryptedText = inputText
-            .replace(/e/g, 'f')
-            .replace(/h/g, 'i');
-        
+        if (!inputText) {
+            showMessage("Please enter text to encrypt.");
+            return;
+        }
+        let encryptedText = caesarCipher(inputText, shift);
         document.getElementById('myArea02').value = encryptedText;
-        document.getElementById('myArea01').value = ''; // Clear input after encryption
+        document.getElementById('myArea01').value = '';
+        showMessage("Text encrypted successfully!");
     }
 
     function decryptText() {
         let encryptedText = document.getElementById('myArea02').value;
-        // Add any additional characters to decrypt if necessary
-        let decryptedText = encryptedText
-            .replace(/f/g, 'e')
-            .replace(/i/g, 'h');
-        
+        if (!encryptedText) {
+            showMessage("Please enter text to decrypt.");
+            return;
+        }
+        let decryptedText = caesarCipher(encryptedText, -shift);
         document.getElementById('myArea03').value = decryptedText;
-        document.getElementById('myArea02').value = ''; // Clear encrypted output after decryption
+        document.getElementById('myArea02').value = '';
+        showMessage("Text decrypted successfully!");
+    }
+
+    function clearFields() {
+        document.getElementById('myArea01').value = '';
+        document.getElementById('myArea02').value = '';
+        document.getElementById('myArea03').value = '';
+        showMessage("");
+    }
+
+    function caesarCipher(text, shift) {
+        return text.split('').map(char => {
+            let code = char.charCodeAt(0);
+            if (char.match(/[a-z]/i)) {
+                let base = char.charCodeAt(0) < 91 ? 65 : 97; // Uppercase or lowercase
+                return String.fromCharCode((code - base + shift + 26) % 26 + base);
+            }
+            return char; // Non-alphabetic characters are unchanged
+        }).join('');
+    }
+
+    function showMessage(message) {
+        const messageDiv = document.getElementById('message');
+        messageDiv.textContent = message;
+        setTimeout(() => messageDiv.textContent = '', 3000); // Clear message after 3 seconds
     }
 </script>
 
