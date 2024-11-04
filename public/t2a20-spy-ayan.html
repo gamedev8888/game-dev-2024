@@ -1,26 +1,85 @@
-<h1 align=center>t2a20-spy-ayan.html</h1>
-<textarea id="myArea01" rows=4 cols=70>Hello how are you</textarea><br> 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Encryptor/Decryptor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+        input[type="button"] {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        input[type="button"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
 
+<div class="container">
+    <h1>Text Encryptor/Decryptor</h1>
 
-<input type=button value="encrypt" onclick="{
-   let myTemp = ''
-   myString = document.getElementById('myArea01').value.toLowerCase().split('')
-   for (let myLoop=0;   myLoop < myString.length; myLoop++){
-      myTemp = myString[myLoop]
-      if (myString[myLoop] == 'e') {myTemp  = 'f'} 
-      if (myString[myLoop] == 'h') {myTemp  = 'i'} 
-      myString[myLoop] = myTemp
-   }
-   document.getElementById('myArea02').value = myString.join('')
-}"><br><br>
+    <textarea id="myArea01" rows="4" placeholder="Enter text here..."></textarea>
+    <input type="button" value="Encrypt" onclick="encryptText()">
+    <input type="button" value="Decrypt" onclick="decryptText()">
+    
+    <h3>Encrypted Text:</h3>
+    <textarea id="myArea02" rows="4" placeholder="Encrypted text will appear here..." readonly></textarea>
+    
+    <h3>Decrypted Text:</h3>
+    <textarea id="myArea03" rows="4" placeholder="Decrypted text will appear here..." readonly></textarea>
+</div>
 
+<script>
+    function encryptText() {
+        let inputText = document.getElementById('myArea01').value;
+        let encryptedText = inputText
+            .replace(/e/g, 'f')
+            .replace(/h/g, 'i');
+        
+        document.getElementById('myArea02').value = encryptedText;
+        document.getElementById('myArea01').value = ''; // Clear input after encryption
+    }
 
+    function decryptText() {
+        let encryptedText = document.getElementById('myArea02').value;
+        let decryptedText = encryptedText
+            .replace(/f/g, 'e')
+            .replace(/i/g, 'h');
+        
+        document.getElementById('myArea03').value = decryptedText;
+        document.getElementById('myArea02').value = ''; // Clear encrypted output after decryption
+    }
+</script>
 
-<textarea id="myArea02" rows=4 cols=70></textarea><br> 
-
-<input type=button value="decrypt" onclick="{
-   alert('Sorry, you have to do this!')
-}"><br><br>
-
-
-<textarea id="myArea03" rows=4 cols=70></textarea><br> 
+</body>
+</html>
