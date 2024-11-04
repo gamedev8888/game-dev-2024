@@ -6,18 +6,24 @@
     <title>Music Player</title>
     <style>
         body {
-            background-color: #f0e68c;
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-            color: blue;
-            text-align: center;
-            padding: 50px;
+            background-image: url('https://wallpaperaccess.com/full/9226846.gif');
+            background-size: cover; /* Ensure the image covers the entire background */
+            background-repeat: no-repeat; /* Prevent repeating */
+            background-position: center; /* Center the image */
+            margin: 0; /* Remove default margin */
+            height: 100vh; /* Full height */
+            display: flex; /* Use flexbox for centering */
+            align-items: center; /* Center vertically */
+            justify-content: center; /* Center horizontally */
         }
 
         .music-player {
-            background-color: #2f3640;
+            background-color: rgba(47, 54, 64, 0.8); /* Slightly transparent for visibility */
             border-radius: 15px;
             padding: 20px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            color: white; /* Change text color to white for better contrast */
+            text-align: center;
         }
 
         .title {
@@ -73,6 +79,7 @@
             background-color: #fdc830;
             border-radius: 5px;
             width: 0%;
+            transition: width 0.2s ease; /* Smooth transition for progress */
         }
 
         .time-display {
@@ -118,38 +125,38 @@
     </div>
 
     <script>
-const tracks = [
-    {
-        title: "FEIN",
-        artist: "Travis Scott",
-        src: "Travis Scott - FE!N (Official Audio) ft. Playboi Carti [ ezmp3.cc ].mp3" // Update this path
-    },
-    {
-        title: "Smooth Criminal",
-        artist: "Michael Jackson",
-        src: "Michael Jackson - Smooth Criminal (Lyrics) [ ezmp3.cc ].mp3" // Update this path
-    },
-    {
-        title: "Bye, Bye, Bye",
-        artist: "N'Sync",
-        src: "Bye, Bye, Bye - N Sync (Lyrics) 🎵 [ ezmp3.cc ].mp3" // Update this path
-    },
-    {
-        title: "Billie Jean",
-        artist: "Michael Jackson",
-        src: "Billie Jean [ ezmp3.cc ].mp3" // Update this path
-    },
-    {
-        title: "Sweet Child O' Mine",
-        artist: "Guns N' Roses",
-        src: "Guns N' Roses - Sweet Child O' Mine (Lyrics) [ ezmp3.cc ].mp3" // Update this path
-    },
-    {
-        title: "Thunderstruck",
-        artist: "AC/DC",
-        src: "ACDC - Thunderstruck (Lyrics) [ ezmp3.cc ].mp3" // Update this path
-    }
-];
+        const tracks = [
+            {
+                title: "FEIN",
+                artist: "Travis Scott",
+                src: "Travis Scott - FE!N (Official Audio) ft. Playboi Carti [ ezmp3.cc ].mp3" // Update this path
+            },
+            {
+                title: "Smooth Criminal",
+                artist: "Michael Jackson",
+                src: "Michael Jackson - Smooth Criminal (Lyrics) [ ezmp3.cc ].mp3" // Update this path
+            },
+            {
+                title: "Bye, Bye, Bye",
+                artist: "N'Sync",
+                src: "Bye, Bye, Bye - N Sync (Lyrics) 🎵 [ ezmp3.cc ].mp3" // Update this path
+            },
+            {
+                title: "Billie Jean",
+                artist: "Michael Jackson",
+                src: "Billie Jean [ ezmp3.cc ].mp3" // Update this path
+            },
+            {
+                title: "Sweet Child O' Mine",
+                artist: "Guns N' Roses",
+                src: "Guns N' Roses - Sweet Child O' Mine (Lyrics) [ ezmp3.cc ].mp3" // Update this path
+            },
+            {
+                title: "Thunderstruck",
+                artist: "AC/DC",
+                src: "ACDC - Thunderstruck (Lyrics) [ ezmp3.cc ].mp3" // Update this path
+            }
+        ];
         let currentTrack = 0;
         const audioElement = document.getElementById('audio');
         const currentSongTitle = document.getElementById('current-song-title');
