@@ -5,59 +5,136 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Text Encryptor/Decryptor</title>
     <style>
+        /* Global Reset and Body Styling */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
             background-image: url('https://wallpaperaccess.com/full/113027.jpg');
             background-size: cover;
             background-position: center;
             margin: 0;
             padding: 20px;
-            color: blue;
+            color: #fff;
             height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            background-color: #0d0d0d;
+            overflow: hidden;
         }
+
         h1 {
             text-align: center;
-            color: blue; /* Main text color */
-            text-shadow: 0 0 15px #00f, 0 0 30px #00f, 0 0 45px #00f; /* Blue glow effect */
+            font-size: 36px;
+            color: #00c6ff;
+            text-shadow: 0 0 15px #00f, 0 0 30px #00f, 0 0 45px #00f;
+            letter-spacing: 3px;
         }
+
         .container {
-            max-width: 600px;
-            background: rgb(15 65 209 / 48%);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgb(15 65 209 / 48%);
+            background: rgba(15, 65, 209, 0.8);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 0, 255, 0.5);
+            width: 100%;
+            max-width: 650px;
+            text-align: center;
         }
+
         textarea {
             width: 100%;
-            padding: 10px;
-            border-radius: 4px;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            margin-bottom: 10px;
-            font-size: 16px;
-            color: blue; /* Text color */
-            background: rgba(0, 0, 0, 0.7);
-            text-shadow: 0 0 10px #00f, 0 0 20px #00f; /* Blue glow effect */
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            font-size: 18px;
+            color: #00c6ff;
+            background: rgba(0, 0, 0, 0.8);
+            resize: vertical;
+            line-height: 1.5;
+            text-shadow: 0 0 10px #00f, 0 0 20px #00f;
+            transition: all 0.3s ease;
         }
+
+        textarea:focus {
+            outline: none;
+            border-color: #00c6ff;
+            box-shadow: 0 0 8px rgba(0, 200, 255, 0.8);
+        }
+
         input[type="button"] {
-            padding: 10px 15px;
+            padding: 12px 20px;
+            background: linear-gradient(145deg, #00c6ff, #0099cc);
             border: none;
-            border-radius: 4px;
-            background-color: #3c00ff38;
-            color: #0600ff;
-            cursor: pointer;
-            margin-right: 10px;
+            border-radius: 30px;
+            color: #fff;
             font-size: 16px;
-        }
-        input[type="button"]:hover {
-            background-color: #0056b3;
-        }
-        .message {
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+            margin-right: 15px;
+            width: 150px;
             margin-top: 10px;
-            color: #ff0000;
+        }
+
+        input[type="button"]:hover {
+            background: linear-gradient(145deg, #0099cc, #00c6ff);
+            transform: translateY(-3px);
+        }
+
+        input[type="button"]:active {
+            transform: translateY(2px);
+        }
+
+        .message {
+            margin-top: 15px;
+            font-size: 18px;
+            color: #ff007f;
             text-align: center;
+            transition: opacity 0.5s ease-out;
+        }
+
+        @keyframes glow {
+            0% {
+                text-shadow: 0 0 5px #00c6ff, 0 0 10px #00c6ff, 0 0 15px #00c6ff;
+            }
+            50% {
+                text-shadow: 0 0 20px #ff007f, 0 0 30px #ff007f, 0 0 40px #ff007f;
+            }
+            100% {
+                text-shadow: 0 0 5px #00c6ff, 0 0 10px #00c6ff, 0 0 15px #00c6ff;
+            }
+        }
+
+        h3 {
+            font-size: 22px;
+            margin-bottom: 10px;
+            color: #00c6ff;
+            animation: glow 1.5s infinite alternate;
+        }
+
+        .container .message {
+            opacity: 0;
+        }
+
+        .container .message.show {
+            opacity: 1;
+        }
+
+        /* Responsive Design for Mobile Devices */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                width: 100%;
+            }
+
+            textarea {
+                font-size: 16px;
+                padding: 10px;
+            }
+
+            input[type="button"] {
+                font-size: 14px;
+                width: 130px;
+            }
         }
     </style>
 </head>
@@ -67,9 +144,11 @@
     <h1>Text Encryptor/Decryptor</h1>
 
     <textarea id="myArea01" rows="4" placeholder="Enter text here...">Hello, World!</textarea>
-    <input type="button" value="Encrypt" onclick="encryptText()">
-    <input type="button" value="Decrypt" onclick="decryptText()">
-    <input type="button" value="Clear" onclick="clearFields()">
+    <div>
+        <input type="button" value="Encrypt" onclick="encryptText()">
+        <input type="button" value="Decrypt" onclick="decryptText()">
+        <input type="button" value="Clear" onclick="clearFields()">
+    </div>
     
     <h3>Encrypted Text:</h3>
     <textarea id="myArea02" rows="4" placeholder="Encrypted text will appear here..." readonly>Hello, World!</textarea>
@@ -162,7 +241,10 @@
     function showMessage(message) {
         const messageDiv = document.getElementById('message');
         messageDiv.textContent = message;
-        setTimeout(() => messageDiv.textContent = '', 3000); // Clear message after 3 seconds
+        messageDiv.classList.add('show');
+        setTimeout(() => {
+            messageDiv.classList.remove('show');
+        }, 3000); // Message fades out after 3 seconds
     }
 </script>
 
