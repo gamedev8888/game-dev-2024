@@ -83,30 +83,62 @@
 <script>
     const shift = 3;
 
+    // Function to generate random salt
+    function generateSalt(length = 8) {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let salt = '';
+        for (let i = 0; i < length; i++) {
+            const randomIndex = Math.floor(Math.random() * chars.length);
+            salt += chars[randomIndex];
+        }
+        return salt;
+    }
+
+    // Encrypt the input text with salt
     function encryptText() {
         let inputText = document.getElementById('myArea01').value;
         if (!inputText) {
             showMessage("Please enter text to encrypt.");
             return;
         }
-        let encryptedText = caesarCipher(inputText, shift);
-        document.getElementById('myArea02').value = encryptedText;
+
+        // Generate a random salt and append it to the text
+        let salt = generateSalt();
+        let saltedText = inputText + salt;  // Append the salt to the input text
+
+        let encryptedText = caesarCipher(saltedText, shift);
+        // Store the salt in the encrypted text for later use during decryption
+        document.getElementById('myArea02').value = encryptedText + ":" + salt;
         document.getElementById('myArea01').value = '';
         showMessage("Text encrypted successfully!");
     }
 
+    // Decrypt the encrypted text with salt
     function decryptText() {
         let encryptedText = document.getElementById('myArea02').value;
         if (!encryptedText) {
             showMessage("Please enter text to decrypt.");
             return;
         }
-        let decryptedText = caesarCipher(encryptedText, -shift);
-        document.getElementById('myArea03').value = decryptedText;
+
+        // Extract the salt and the encrypted text
+        let parts = encryptedText.split(":");
+        if (parts.length !== 2) {
+            showMessage("Invalid encrypted text format.");
+            return;
+        }
+
+        let cipherText = parts[0];
+        let salt = parts[1];
+
+        // Decrypt the ciphered text
+        let decryptedText = caesarCipher(cipherText, -shift);
+        document.getElementById('myArea03').value = decryptedText.replace(salt, '');  // Remove salt from decrypted text
         document.getElementById('myArea02').value = '';
         showMessage("Text decrypted successfully!");
     }
 
+    // Clear all fields
     function clearFields() {
         document.getElementById('myArea01').value = 'Hello, World!';
         document.getElementById('myArea02').value = 'Encrypted text will appear here...';
@@ -114,6 +146,7 @@
         showMessage("");
     }
 
+    // Caesar cipher encryption and decryption logic
     function caesarCipher(text, shift) {
         return text.split('').map(char => {
             let code = char.charCodeAt(0);
@@ -125,6 +158,7 @@
         }).join('');
     }
 
+    // Display a message
     function showMessage(message) {
         const messageDiv = document.getElementById('message');
         messageDiv.textContent = message;
