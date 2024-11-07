@@ -61,18 +61,19 @@
 
     <h2>Interactive Canvas Paint</h2>
     <div class="button-container">
-        <input type="button" value="Paint" id="paintButton"> <!-- Paint Toggle Button -->
-        <input type="button" value="LineTo">
-        <input type="button" value="Arc">
-        <input type="button" value="Text">
-        <input type="button" value="Quadratic Curve">
-        <input type="button" value="Linear Gradient">
-        <input type="button" value="Clear">
-        <input type="button" value="Animate Circle">
-        <input type="button" value="Animate Triangle" id="animateTriangleButton">
-        <input type="button" value="Animate Square" id="animateSquareButton">
-        <input type="color" id="penColor" value="#ff0000"> <!-- Color Picker for Pen -->
-    </div>
+    <input type="button" value="Paint" id="paintButton">
+    <input type="button" value="LineTo">
+    <input type="button" value="Arc">
+    <input type="button" value="Text">
+    <input type="button" value="Quadratic Curve">
+    <input type="button" value="Linear Gradient">
+    <input type="button" value="Clear">
+    <input type="button" value="Animate Circle">
+    <input type="button" value="Animate Triangle" id="animateTriangleButton">
+    <input type="button" value="Animate Square" id="animateSquareButton">
+    <input type="color" id="penColor" value="#ff0000"> <!-- Color Picker for Pen -->
+    <input type="range" id="lineWidth" min="1" max="20" value="5" title="Line Width"> <!-- Line Width Slider -->
+</div>
 
     <canvas id="myCoolTag" width="800" height="600"></canvas>
 
