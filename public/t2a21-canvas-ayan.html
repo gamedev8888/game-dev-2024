@@ -7,21 +7,25 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+            background-color: #282c34;
+            color: #ffffff;
             text-align: center;
+            overflow: hidden;
         }
 
         canvas {
-            background-color: #fff;
+            background-color: #ffffff;
             border: 1px solid #000;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
             margin: 20px;
+            border-radius: 5px;
         }
 
         .button-container {
             display: flex;
-            flex-wrap: wrap;
             justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
             gap: 10px;
             margin-bottom: 20px;
         }
@@ -29,20 +33,27 @@
         input[type="button"] {
             padding: 10px 20px;
             font-size: 14px;
-            background-color: #4CAF50;
-            color: white;
+            background-color: #61dafb;
+            color: #282c34;
             border: none;
             cursor: pointer;
             border-radius: 5px;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
         input[type="button"]:hover {
-            background-color: #45a049;
+            background-color: #21a1f1;
+            transform: scale(1.05);
         }
 
-        .button-container input[type="button"]:active {
-            background-color: #3e8e41;
+        input[type="button"]:active {
+            background-color: #1890e3;
+            transform: scale(0.95);
+        }
+
+        input[type="color"] {
+            padding: 10px;
+            margin: 10px;
         }
     </style>
 </head>
@@ -50,43 +61,45 @@
 
     <h2>Interactive Canvas Fun</h2>
     <div class="button-container">
-        <input type="button" value=".lineTo(30,200)">
-        <input type="button" value=".arc(95, 50, 40, 0, 2 * Math.PI)">
-        <input type="button" value=".fillText('Hello World', 400, 100)">
-        <input type="button" value=".quadraticCurveTo(100,220,240,110)">
-        <input type="button" value=".createLinearGradient(100, 300, 200, 400)">
-        <input type="button" value="Clear all">
-        <input type="button" value="Toggle Drawing Pen"> <!-- New button for drawing mode -->
-        <input type="button" value="Animate Circle"> <!-- Animate Circle button -->
+        <input type="button" value="LineTo">
+        <input type="button" value="Arc">
+        <input type="button" value="Text">
+        <input type="button" value="Quadratic Curve">
+        <input type="button" value="Linear Gradient">
+        <input type="button" value="Clear">
+        <input type="button" value="Toggle Drawing Pen">
+        <input type="button" value="Animate Circle">
+        <input type="color" id="penColor" value="#ff0000"> <!-- Color Picker for Pen -->
     </div>
 
     <canvas id="myCoolTag" width="1000" height="600"></canvas>
 
     <script>
-        // Set up global variables
         const myCanvas = document.getElementById('myCoolTag');
         const myContext = myCanvas.getContext('2d');
-
-        let isDrawing = false; // Track the drawing state
+        
+        let isDrawing = false;
         let lastX, lastY;
+        let isAnimating = false;
+        let animationFrameId;
+        let angle = 0;
 
-        let isAnimating = false; // Track if the circle animation is running
-        let animationFrameId; // To store the requestAnimationFrame ID
-        let angle = 0; // Angle for the moving circle
+        const penColorInput = document.getElementById('penColor');
+        let currentPenColor = penColorInput.value;
 
-        // Utility function to get random colors
+        const gradientColors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+
         function getRandomColor() {
-            const letters = '0123456789ABCDEF';
-            let color = '#';
-            for (let i = 0; i < 6; i++) {
-                color += letters[Math.floor(Math.random() * 16)];
-            }
-            return color;
+            return gradientColors[Math.floor(Math.random() * gradientColors.length)];
         }
+
+        penColorInput.addEventListener('input', (e) => {
+            currentPenColor = e.target.value;
+        });
 
         // Button actions
         const buttons = document.querySelectorAll('.button-container input[type="button"]');
-
+        
         buttons[0].addEventListener('click', () => {
             myContext.beginPath();
             myContext.moveTo(20, 10);
@@ -109,11 +122,6 @@
         buttons[2].addEventListener('click', () => {
             myContext.font = '20px Arial';
             myContext.fillText('Hello World', 400, 100);
-            myContext.translate(400, 100);
-            myContext.rotate(60 * Math.PI / 180);
-            myContext.fillText('Hello World', 10, 10);
-            myContext.stroke();
-            myContext.resetTransform();
         });
 
         buttons[3].addEventListener('click', () => {
@@ -128,31 +136,29 @@
         buttons[4].addEventListener('click', () => {
             const myGradient = myContext.createLinearGradient(100, 300, 200, 400);
             myGradient.addColorStop(0, getRandomColor());
-            myGradient.addColorStop(0.5, getRandomColor());
             myGradient.addColorStop(1, getRandomColor());
 
             myContext.fillStyle = myGradient;
             myContext.fillRect(100, 300, 200, 400);
-            myContext.fillStyle = 'black';  // Reset fill style
         });
 
         buttons[5].addEventListener('click', () => {
             myContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
-            stopAnimation(); // Stop animation if clear is pressed
+            stopAnimation();
         });
 
         buttons[6].addEventListener('click', () => {
-            isDrawing = !isDrawing; // Toggle drawing mode
-            buttons[6].value = isDrawing ? "Stop Drawing" : "Toggle Drawing Pen"; // Update button label
+            isDrawing = !isDrawing;
+            buttons[6].value = isDrawing ? "Stop Drawing" : "Toggle Drawing Pen";
         });
 
         buttons[7].addEventListener('click', () => {
             if (isAnimating) {
                 stopAnimation();
-                buttons[7].value = "Animate Circle"; // Change button text
+                buttons[7].value = "Animate Circle";
             } else {
                 startAnimation();
-                buttons[7].value = "Stop Animation"; // Change button text
+                buttons[7].value = "Stop Animation";
             }
         });
 
@@ -161,18 +167,24 @@
 
             function animateCircle() {
                 myContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
-                
-                let x = 500 + 100 * Math.cos(angle);
-                let y = 300 + 100 * Math.sin(angle);
+                drawBackground();
+
+                const gradient = myContext.createRadialGradient(500 + 100 * Math.cos(angle), 300 + 100 * Math.sin(angle), 0, 500 + 100 * Math.cos(angle), 300 + 100 * Math.sin(angle), 30);
+                gradient.addColorStop(0, 'rgba(255, 255, 255, 0.8)');
+                gradient.addColorStop(1, 'rgba(0, 0, 255, 0)');
 
                 myContext.beginPath();
-                myContext.arc(x, y, 30, 0, 2 * Math.PI);
-                myContext.fillStyle = 'blue';
+                myContext.arc(500 + 100 * Math.cos(angle), 300 + 100 * Math.sin(angle), 30, 0, 2 * Math.PI);
+                myContext.fillStyle = gradient;
                 myContext.fill();
-                myContext.strokeStyle = 'black';
+                myContext.shadowColor = 'rgba(0, 0, 255, 0.5)';
+                myContext.shadowBlur = 20;
+                myContext.shadowOffsetX = 0;
+                myContext.shadowOffsetY = 0;
+                myContext.strokeStyle = 'blue';
                 myContext.stroke();
 
-                angle += 0.05; // Increment angle for animation
+                angle += 0.05;
                 animationFrameId = requestAnimationFrame(animateCircle);
             }
 
@@ -182,6 +194,14 @@
         function stopAnimation() {
             isAnimating = false;
             cancelAnimationFrame(animationFrameId);
+        }
+
+        function drawBackground() {
+            const gradientBackground = myContext.createLinearGradient(0, 0, 0, myCanvas.height);
+            gradientBackground.addColorStop(0, '#ffcc00');
+            gradientBackground.addColorStop(1, '#ff6699');
+            myContext.fillStyle = gradientBackground;
+            myContext.fillRect(0, 0, myCanvas.width, myCanvas.height);
         }
 
         // Setup the drawing pen functionality
@@ -198,9 +218,13 @@
                 myContext.beginPath();
                 myContext.moveTo(lastX, lastY);
                 myContext.lineTo(e.offsetX, e.offsetY);
-                myContext.strokeStyle = getRandomColor();
-                myContext.lineWidth = 2; // Adjust pen width if needed
+                myContext.strokeStyle = currentPenColor;
+                myContext.lineWidth = 2;
                 myContext.stroke();
+
+                // Create particle effect
+                createParticleEffect(e.offsetX, e.offsetY);
+
                 lastX = e.offsetX;
                 lastY = e.offsetY;
             }
@@ -208,14 +232,30 @@
 
         myCanvas.addEventListener('mouseup', () => {
             if (isDrawing) {
+                myContext.beginPath();
                 isDrawing = false;
-                myContext.beginPath(); // Reset the path for smoother transitions
             }
         });
 
         myCanvas.addEventListener('mouseout', () => {
-            isDrawing = false; // Stop drawing if the mouse leaves the canvas
+            isDrawing = false;
         });
+
+        function createParticleEffect(x, y) {
+            const particles = 5; // Number of particles
+            for (let i = 0; i < particles; i++) {
+                const particleColor = getRandomColor();
+                myContext.beginPath();
+                myContext.arc(x + (Math.random() - 0.5) * 10, y + (Math.random() - 0.5) * 10, 3, 0, 2 * Math.PI);
+                myContext.fillStyle = particleColor;
+                myContext.fill();
+
+                // Optional: Fade out effect for particles over time
+                setTimeout(() => {
+                    myContext.clearRect(x - 5, y - 5, 10, 10); // Remove particle effect
+                }, 500); // Adjust timing for fade out
+            }
+        }
 
     </script>
 </body>
