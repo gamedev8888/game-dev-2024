@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Canvas Fun!</title>
+    <title>Canvas Paint</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -30,49 +30,49 @@
             margin-bottom: 20px;
         }
 
-        input[type="button"] {
+        input[type="button"], input[type="color"] {
             padding: 10px 20px;
-            font-size: 14px;
-            background-color: #61dafb;
-            color: #282c34;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            font-size: 14px; 
+            background-color: #61dafb; 
+            color: #282c34; 
+            border: none; 
+            cursor: pointer; 
+            border-radius: 5px; 
+            transition: background-color 0.3s ease, transform 0.2s ease; 
         }
 
         input[type="button"]:hover {
-            background-color: #21a1f1;
+            background-color: #21a1f1; 
             transform: scale(1.05);
         }
 
         input[type="button"]:active {
-            background-color: #1890e3;
-            transform: scale(0.95);
+            background-color: #1890e3; 
+            transform: scale(0.95);  
         }
 
         input[type="color"] {
-            padding: 10px;
-            margin: 10px;
+            padding: 10px; 
+            margin: 10px; 
         }
     </style>
 </head>
 <body>
 
-    <h2>Interactive Canvas Fun</h2>
+    <h2>Interactive Canvas Paint</h2>
     <div class="button-container">
+        <input type="button" value="Paint" id="paintButton"> <!-- Paint Toggle Button -->
         <input type="button" value="LineTo">
         <input type="button" value="Arc">
         <input type="button" value="Text">
         <input type="button" value="Quadratic Curve">
         <input type="button" value="Linear Gradient">
         <input type="button" value="Clear">
-        <input type="button" value="Toggle Drawing Pen">
         <input type="button" value="Animate Circle">
         <input type="color" id="penColor" value="#ff0000"> <!-- Color Picker for Pen -->
     </div>
 
-    <canvas id="myCoolTag" width="1000" height="600"></canvas>
+    <canvas id="myCoolTag" width="800" height="600"></canvas>
 
     <script>
         const myCanvas = document.getElementById('myCoolTag');
@@ -83,15 +83,10 @@
         let isAnimating = false;
         let animationFrameId;
         let angle = 0;
+        let paintMode = false; // Track paint mode state
 
         const penColorInput = document.getElementById('penColor');
         let currentPenColor = penColorInput.value;
-
-        const gradientColors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
-
-        function getRandomColor() {
-            return gradientColors[Math.floor(Math.random() * gradientColors.length)];
-        }
 
         penColorInput.addEventListener('input', (e) => {
             currentPenColor = e.target.value;
@@ -101,6 +96,11 @@
         const buttons = document.querySelectorAll('.button-container input[type="button"]');
         
         buttons[0].addEventListener('click', () => {
+            paintMode = !paintMode; // Toggle paint mode
+            buttons[0].value = paintMode ? "Stop Painting" : "Paint"; // Update button text
+        });
+
+        buttons[1].addEventListener('click', () => {
             myContext.beginPath();
             myContext.moveTo(20, 10);
             myContext.lineTo(30, 200);
@@ -109,7 +109,7 @@
             myContext.stroke();
         });
 
-        buttons[1].addEventListener('click', () => {
+        buttons[2].addEventListener('click', () => {
             myContext.beginPath();
             myContext.arc(95, 50, 40, 0, 2 * Math.PI);
             myContext.lineWidth = 5;
@@ -119,12 +119,12 @@
             myContext.fill();
         });
 
-        buttons[2].addEventListener('click', () => {
+        buttons[3].addEventListener('click', () => {
             myContext.font = '20px Arial';
             myContext.fillText('Hello World', 400, 100);
         });
 
-        buttons[3].addEventListener('click', () => {
+        buttons[4].addEventListener('click', () => {
             myContext.beginPath();
             myContext.moveTo(300, 100);
             myContext.quadraticCurveTo(100, 220, 240, 110);
@@ -133,7 +133,7 @@
             myContext.stroke();
         });
 
-        buttons[4].addEventListener('click', () => {
+        buttons[5].addEventListener('click', () => {
             const myGradient = myContext.createLinearGradient(100, 300, 200, 400);
             myGradient.addColorStop(0, getRandomColor());
             myGradient.addColorStop(1, getRandomColor());
@@ -142,14 +142,9 @@
             myContext.fillRect(100, 300, 200, 400);
         });
 
-        buttons[5].addEventListener('click', () => {
+        buttons[6].addEventListener('click', () => {
             myContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
             stopAnimation();
-        });
-
-        buttons[6].addEventListener('click', () => {
-            isDrawing = !isDrawing;
-            buttons[6].value = isDrawing ? "Stop Drawing" : "Toggle Drawing Pen";
         });
 
         buttons[7].addEventListener('click', () => {
@@ -204,26 +199,23 @@
             myContext.fillRect(0, 0, myCanvas.width, myCanvas.height);
         }
 
-        // Setup the drawing pen functionality
+        // Paint function
         myCanvas.addEventListener('mousedown', (e) => {
-            if (isDrawing) {
+            if (paintMode) {
+                isDrawing = true;
                 lastX = e.offsetX;
                 lastY = e.offsetY;
-                isDrawing = true;
             }
         });
 
         myCanvas.addEventListener('mousemove', (e) => {
-            if (isDrawing) {
+            if (isDrawing && paintMode) {
                 myContext.beginPath();
                 myContext.moveTo(lastX, lastY);
                 myContext.lineTo(e.offsetX, e.offsetY);
                 myContext.strokeStyle = currentPenColor;
-                myContext.lineWidth = 2;
+                myContext.lineWidth = 5; // You can adjust the thickness
                 myContext.stroke();
-
-                // Create particle effect
-                createParticleEffect(e.offsetX, e.offsetY);
 
                 lastX = e.offsetX;
                 lastY = e.offsetY;
@@ -231,32 +223,13 @@
         });
 
         myCanvas.addEventListener('mouseup', () => {
-            if (isDrawing) {
-                myContext.beginPath();
-                isDrawing = false;
-            }
+            isDrawing = false;
+            myContext.beginPath(); // Reset the path
         });
 
         myCanvas.addEventListener('mouseout', () => {
-            isDrawing = false;
+            isDrawing = false; // Stop drawing when mouse leaves the canvas
         });
-
-        function createParticleEffect(x, y) {
-            const particles = 5; // Number of particles
-            for (let i = 0; i < particles; i++) {
-                const particleColor = getRandomColor();
-                myContext.beginPath();
-                myContext.arc(x + (Math.random() - 0.5) * 10, y + (Math.random() - 0.5) * 10, 3, 0, 2 * Math.PI);
-                myContext.fillStyle = particleColor;
-                myContext.fill();
-
-                // Optional: Fade out effect for particles over time
-                setTimeout(() => {
-                    myContext.clearRect(x - 5, y - 5, 10, 10); // Remove particle effect
-                }, 500); // Adjust timing for fade out
-            }
-        }
-
     </script>
 </body>
 </html>
