@@ -1,68 +1,164 @@
-<h2 align=center>t2a21-canvas-ayan.html</h2>
-You use loops and variables to make fast fancy drawings <br><br>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas Fun!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+        }
 
-<input type=button value=".lineTo(30,200)" onclick="{
-   myContext.beginPath();
-   myContext.lineWidth = 1;   
-   myContext.moveTo(20,10);
-   myContext.lineTo(30,200);
-   myContext.stroke();
-}">
+        canvas {
+            background-color: #fff;
+            border: 1px solid #000;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+        }
 
-<input type=button value=".arc(95, 50, 40, 0, 2 * Math.PI)" onclick="{
-   myContext.beginPath();
-   myContext.lineWidth = 10;
-   myContext.strokeStyle = 'green';
-   myContext.arc(95, 50, 40, 0, 2 * Math.PI);
-   myContext.stroke();
-}">
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
 
-<input type=button value=".fillText('Hello World', 400, 100)" onclick="{
-   myContext.font = '20px Arial';
-   myContext.fillText('Hello World', 400, 100);
-   myContext.translate(400, 100);  
-   myContext.rotate(60 * Math.PI / 180); 
-   myContext.fillText('Hello World', 10, 10);
-   myContext.stroke();
-   myContext.resetTransform();  
-   //myContext.rotate(-60 * Math.PI / 180); 
-}">
+        input[type="button"] {
+            padding: 10px 20px;
+            font-size: 14px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
 
-<input type=button value=".quadraticCurveTo(100,220,240,110)" onclick="{
-   myContext.beginPath();
-   myContext.moveTo(300,100);
-   myContext.quadraticCurveTo(100,220,240,110);
-   myContext.stroke();
+        input[type="button"]:hover {
+            background-color: #45a049;
+        }
 
-}">
+        .button-container input[type="button"]:active {
+            background-color: #3e8e41;
+        }
+    </style>
+</head>
+<body>
 
+    <h2>Interactive Canvas Fun</h2>
+    <div class="button-container">
+        <input type="button" value=".lineTo(30,200)">
+        <input type="button" value=".arc(95, 50, 40, 0, 2 * Math.PI)">
+        <input type="button" value=".fillText('Hello World', 400, 100)">
+        <input type="button" value=".quadraticCurveTo(100,220,240,110)">
+        <input type="button" value=".createLinearGradient(100, 300, 200, 400)">
+        <input type="button" value="clearRect(20, 20, 50, 50)">
+        <input type="button" value="Clear all">
+        <input type="button" value="Animate Circle">
+    </div>
 
+    <canvas id="myCoolTag" width="1000" height="600"></canvas>
 
-<input type=button value=".createLinearGradient(100, 300, 200, 400)" onclick="{
-   let myGradient = myContext.createLinearGradient(100, 300, 200, 400);
-   myGradient.addColorStop(0, 'red');
-   myGradient.addColorStop(0.5, 'blue');
-   myGradient.addColorStop(1, 'yellow');
+    <script>
+        // Set up global variables
+        const myCanvas = document.getElementById('myCoolTag');
+        const myContext = myCanvas.getContext('2d');
 
-   myContext.fillStyle = myGradient;
-   myContext.fillRect(100, 300, 200, 400);
+        // Utility function to get random colors
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
 
-   // reset fillstyle
-   myContext.fillStyle = 'black';
-}"><br><br>
+        // Button actions
+        const buttons = document.querySelectorAll('.button-container input[type="button"]');
 
-<input type=button value="clearRect(20, 20, 50, 50)" onclick="{
-   myContext.clearRect(20, 20, 50, 50);
-}">
+        buttons[0].addEventListener('click', () => {
+            myContext.beginPath();
+            myContext.moveTo(20, 10);
+            myContext.lineTo(30, 200);
+            myContext.lineWidth = 2;
+            myContext.strokeStyle = getRandomColor();
+            myContext.stroke();
+        });
 
-<input type=button value="Clear all" onclick="{
-   myContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
-}"><br><br>
+        buttons[1].addEventListener('click', () => {
+            myContext.beginPath();
+            myContext.arc(95, 50, 40, 0, 2 * Math.PI);
+            myContext.lineWidth = 5;
+            myContext.strokeStyle = getRandomColor();
+            myContext.stroke();
+            myContext.fillStyle = getRandomColor();
+            myContext.fill();
+        });
 
-<canvas id="myCoolTag" width="1000" height="600" style="border:1px solid #000000;"></canvas>
+        buttons[2].addEventListener('click', () => {
+            myContext.font = '20px Arial';
+            myContext.fillText('Hello World', 400, 100);
+            myContext.translate(400, 100);  
+            myContext.rotate(60 * Math.PI / 180); 
+            myContext.fillText('Hello World', 10, 10);
+            myContext.stroke();
+            myContext.resetTransform();  
+        });
 
-<script>
-   // set up global variables
-   let myCanvas=document.getElementById('myCoolTag');
-   let myContext=myCanvas.getContext('2d');
-</script>
+        buttons[3].addEventListener('click', () => {
+            myContext.beginPath();
+            myContext.moveTo(300, 100);
+            myContext.quadraticCurveTo(100, 220, 240, 110);
+            myContext.lineWidth = 2;
+            myContext.strokeStyle = getRandomColor();
+            myContext.stroke();
+        });
+
+        buttons[4].addEventListener('click', () => {
+            const myGradient = myContext.createLinearGradient(100, 300, 200, 400);
+            myGradient.addColorStop(0, getRandomColor());
+            myGradient.addColorStop(0.5, getRandomColor());
+            myGradient.addColorStop(1, getRandomColor());
+
+            myContext.fillStyle = myGradient;
+            myContext.fillRect(100, 300, 200, 400);
+            myContext.fillStyle = 'black';  // Reset fill style
+        });
+
+        buttons[5].addEventListener('click', () => {
+            myContext.clearRect(20, 20, 50, 50);
+        });
+
+        buttons[6].addEventListener('click', () => {
+            myContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
+        });
+
+        // Animation example: Moving circle
+        let angle = 0;
+        buttons[7].addEventListener('click', () => {
+            function animateCircle() {
+                myContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
+
+                let x = 500 + 100 * Math.cos(angle);
+                let y = 300 + 100 * Math.sin(angle);
+
+                myContext.beginPath();
+                myContext.arc(x, y, 30, 0, 2 * Math.PI);
+                myContext.fillStyle = 'blue';
+                myContext.fill();
+                myContext.strokeStyle = 'black';
+                myContext.stroke();
+
+                angle += 0.05;
+                requestAnimationFrame(animateCircle);
+            }
+
+            animateCircle();
+        });
+    </script>
+</body>
+</html>
