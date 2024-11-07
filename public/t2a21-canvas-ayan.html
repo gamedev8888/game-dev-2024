@@ -69,6 +69,8 @@
         <input type="button" value="Linear Gradient">
         <input type="button" value="Clear">
         <input type="button" value="Animate Circle">
+        <input type="button" value="Animate Triangle" id="animateTriangleButton">
+        <input type="button" value="Animate Square" id="animateSquareButton">
         <input type="color" id="penColor" value="#ff0000"> <!-- Color Picker for Pen -->
     </div>
 
@@ -80,9 +82,13 @@
         
         let isDrawing = false;
         let lastX, lastY;
-        let isAnimating = false;
+        let isAnimatingCircle = false;
+        let isAnimatingTriangle = false;
+        let isAnimatingSquare = false;
         let animationFrameId;
-        let angle = 0;
+        let angleCircle = 0;
+        let angleTriangle = 0;
+        let angleSquare = 0;
         let paintMode = false; // Track paint mode state
 
         const penColorInput = document.getElementById('penColor');
@@ -92,7 +98,6 @@
             currentPenColor = e.target.value;
         });
 
-        // Button actions
         const buttons = document.querySelectorAll('.button-container input[type="button"]');
         
         buttons[0].addEventListener('click', () => {
@@ -148,28 +153,50 @@
         });
 
         buttons[7].addEventListener('click', () => {
-            if (isAnimating) {
-                stopAnimation();
+            if (isAnimatingCircle) {
+                stopAnimationCircle();
                 buttons[7].value = "Animate Circle";
             } else {
-                startAnimation();
+                startAnimationCircle();
                 buttons[7].value = "Stop Animation";
             }
         });
 
-        function startAnimation() {
-            isAnimating = true;
+        // Animation for Triangle
+        buttons[8].addEventListener('click', () => {
+            if (isAnimatingTriangle) {
+                stopAnimationTriangle();
+                buttons[8].value = "Animate Triangle";
+            } else {
+                startAnimationTriangle();
+                buttons[8].value = "Stop Triangle Animation";
+            }
+        });
+
+        // Animation for Square
+        buttons[9].addEventListener('click', () => {
+            if (isAnimatingSquare) {
+                stopAnimationSquare();
+                buttons[9].value = "Animate Square";
+            } else {
+                startAnimationSquare();
+                buttons[9].value = "Stop Square Animation";
+            }
+        });
+
+        function startAnimationCircle() {
+            isAnimatingCircle = true;
 
             function animateCircle() {
                 myContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
                 drawBackground();
 
-                const gradient = myContext.createRadialGradient(500 + 100 * Math.cos(angle), 300 + 100 * Math.sin(angle), 0, 500 + 100 * Math.cos(angle), 300 + 100 * Math.sin(angle), 30);
+                const gradient = myContext.createRadialGradient(500 + 100 * Math.cos(angleCircle), 300 + 100 * Math.sin(angleCircle), 0, 500 + 100 * Math.cos(angleCircle), 300 + 100 * Math.sin(angleCircle), 30);
                 gradient.addColorStop(0, 'rgba(255, 255, 255, 0.8)');
                 gradient.addColorStop(1, 'rgba(0, 0, 255, 0)');
 
                 myContext.beginPath();
-                myContext.arc(500 + 100 * Math.cos(angle), 300 + 100 * Math.sin(angle), 30, 0, 2 * Math.PI);
+                myContext.arc(500 + 100 * Math.cos(angleCircle), 300 + 100 * Math.sin(angleCircle), 30, 0, 2 * Math.PI);
                 myContext.fillStyle = gradient;
                 myContext.fill();
                 myContext.shadowColor = 'rgba(0, 0, 255, 0.5)';
@@ -179,15 +206,55 @@
                 myContext.strokeStyle = 'blue';
                 myContext.stroke();
 
-                angle += 0.05;
+                angleCircle += 0.05;
                 animationFrameId = requestAnimationFrame(animateCircle);
             }
 
             animateCircle();
         }
 
-        function stopAnimation() {
-            isAnimating = false;
+        function stopAnimationCircle() {
+            isAnimatingCircle = false;
+            cancelAnimationFrame(animationFrameId);
+        }
+
+        function startAnimationTriangle() {
+            isAnimatingTriangle = true;
+
+            function animateTriangle() {
+                myContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
+                drawBackground();
+                drawTriangle(400 + 50 * Math.cos(angleTriangle), 300 + 50 * Math.sin(angleTriangle), angleTriangle);
+                
+                angleTriangle += 0.05;
+                animationFrameId = requestAnimationFrame(animateTriangle);
+            }
+
+            animateTriangle();
+        }
+
+        function stopAnimationTriangle() {
+            isAnimatingTriangle = false;
+            cancelAnimationFrame(animationFrameId);
+        }
+
+        function startAnimationSquare() {
+            isAnimatingSquare = true;
+
+            function animateSquare() {
+                myContext.clearRect(0, 0, myCanvas.width, myCanvas.height);
+                drawBackground();
+                drawSquare(400 + 50 * Math.cos(angleSquare), 300 + 50 * Math.sin(angleSquare), angleSquare);
+                
+                angleSquare += 0.05;
+                animationFrameId = requestAnimationFrame(animateSquare);
+            }
+
+            animateSquare();
+        }
+
+        function stopAnimationSquare() {
+            isAnimatingSquare = false;
             cancelAnimationFrame(animationFrameId);
         }
 
@@ -197,6 +264,31 @@
             gradientBackground.addColorStop(1, '#ff6699');
             myContext.fillStyle = gradientBackground;
             myContext.fillRect(0, 0, myCanvas.width, myCanvas.height);
+        }
+
+        function drawTriangle(x, y, angle) {
+            myContext.save();
+            myContext.translate(x, y);
+            myContext.rotate(angle);
+            myContext.beginPath();
+            myContext.moveTo(0, -50);
+            myContext.lineTo(50, 50);
+            myContext.lineTo(-50, 50);
+            myContext.closePath();
+            myContext.fillStyle = 'red'; 
+            myContext.fill();
+            myContext.restore();
+        }
+
+        function drawSquare(x, y, angle) {
+            myContext.save();
+            myContext.translate(x, y);
+            myContext.rotate(angle);
+            myContext.beginPath();
+            myContext.rect(-25, -25, 50, 50); // Square 50x50 pixels
+            myContext.fillStyle = 'green'; 
+            myContext.fill();
+            myContext.restore();
         }
 
         // Paint function
@@ -230,6 +322,15 @@
         myCanvas.addEventListener('mouseout', () => {
             isDrawing = false; // Stop drawing when mouse leaves the canvas
         });
+
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
     </script>
 </body>
 </html>
