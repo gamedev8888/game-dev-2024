@@ -30,7 +30,7 @@
             margin-bottom: 20px;
         }
 
-        input[type="button"], input[type="color"] {
+        input[type="button"], input[type="color"], input[type="range"] {
             padding: 10px 20px;
             font-size: 14px; 
             background-color: #61dafb; 
@@ -55,25 +55,30 @@
             padding: 10px; 
             margin: 10px; 
         }
+
+        input[type="range"] {
+            margin: 10px;
+            vertical-align: middle;
+        }
     </style>
 </head>
 <body>
 
     <h2>Interactive Canvas Paint</h2>
     <div class="button-container">
-    <input type="button" value="Paint" id="paintButton">
-    <input type="button" value="LineTo">
-    <input type="button" value="Arc">
-    <input type="button" value="Text">
-    <input type="button" value="Quadratic Curve">
-    <input type="button" value="Linear Gradient">
-    <input type="button" value="Clear">
-    <input type="button" value="Animate Circle">
-    <input type="button" value="Animate Triangle" id="animateTriangleButton">
-    <input type="button" value="Animate Square" id="animateSquareButton">
-    <input type="color" id="penColor" value="#ff0000"> <!-- Color Picker for Pen -->
-    <input type="range" id="lineWidth" min="1" max="20" value="5" title="Line Width"> <!-- Line Width Slider -->
-</div>
+        <input type="button" value="Paint" id="paintButton"> <!-- Paint Toggle Button -->
+        <input type="button" value="LineTo">
+        <input type="button" value="Arc">
+        <input type="button" value="Text">
+        <input type="button" value="Quadratic Curve">
+        <input type="button" value="Linear Gradient">
+        <input type="button" value="Clear">
+        <input type="button" value="Animate Circle">
+        <input type="button" value="Animate Triangle" id="animateTriangleButton">
+        <input type="button" value="Animate Square" id="animateSquareButton">
+        <input type="color" id="penColor" value="#ff0000"> <!-- Color Picker for Pen -->
+        <input type="range" id="brushWidth" min="1" max="20" value="5" step="1"> <!-- Brush Width Slider -->
+    </div>
 
     <canvas id="myCoolTag" width="800" height="600"></canvas>
 
@@ -95,8 +100,15 @@
         const penColorInput = document.getElementById('penColor');
         let currentPenColor = penColorInput.value;
 
+        const brushWidthInput = document.getElementById('brushWidth'); // Brush Width Input
+        let currentBrushWidth = brushWidthInput.value;
+
         penColorInput.addEventListener('input', (e) => {
             currentPenColor = e.target.value;
+        });
+
+        brushWidthInput.addEventListener('input', (e) => {
+            currentBrushWidth = e.target.value; // Update brush width
         });
 
         const buttons = document.querySelectorAll('.button-container input[type="button"]');
@@ -110,7 +122,7 @@
             myContext.beginPath();
             myContext.moveTo(20, 10);
             myContext.lineTo(30, 200);
-            myContext.lineWidth = 2;
+            myContext.lineWidth = currentBrushWidth; // Use current brush width
             myContext.strokeStyle = getRandomColor();
             myContext.stroke();
         });
@@ -118,7 +130,7 @@
         buttons[2].addEventListener('click', () => {
             myContext.beginPath();
             myContext.arc(95, 50, 40, 0, 2 * Math.PI);
-            myContext.lineWidth = 5;
+            myContext.lineWidth = currentBrushWidth; // Use current brush width
             myContext.strokeStyle = getRandomColor();
             myContext.stroke();
             myContext.fillStyle = getRandomColor();
@@ -134,7 +146,7 @@
             myContext.beginPath();
             myContext.moveTo(300, 100);
             myContext.quadraticCurveTo(100, 220, 240, 110);
-            myContext.lineWidth = 2;
+            myContext.lineWidth = currentBrushWidth; // Use current brush width
             myContext.strokeStyle = getRandomColor();
             myContext.stroke();
         });
@@ -307,7 +319,7 @@
                 myContext.moveTo(lastX, lastY);
                 myContext.lineTo(e.offsetX, e.offsetY);
                 myContext.strokeStyle = currentPenColor;
-                myContext.lineWidth = 5; // You can adjust the thickness
+                myContext.lineWidth = currentBrushWidth; // Use current brush width
                 myContext.stroke();
 
                 lastX = e.offsetX;
