@@ -7,14 +7,17 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #282c34;
+            background-image: url('https://wallpaperaccess.com/full/25561.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
             color: #ffffff;
             text-align: center;
             overflow: hidden;
         }
 
         canvas {
-            background-color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.8); /* Slightly transparent white background */
             border: 1px solid #000;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
             margin: 20px;
@@ -33,7 +36,7 @@
         input[type="button"], input[type="color"], input[type="range"] {
             padding: 10px 20px;
             font-size: 14px; 
-            background-color: #61dafb; 
+            background-color: rgba(97, 218, 251, 0.9); /* Lighter blue from the image */
             color: #282c34; 
             border: none; 
             cursor: pointer; 
@@ -42,18 +45,19 @@
         }
 
         input[type="button"]:hover {
-            background-color: #21a1f1; 
+            background-color: rgba(33, 161, 241, 0.9); /* Darker blue for hover effect */
             transform: scale(1.05);
         }
 
         input[type="button"]:active {
-            background-color: #1890e3; 
+            background-color: rgba(24, 144, 227, 0.9); /* Even darker for active state */
             transform: scale(0.95);  
         }
 
         input[type="color"] {
             padding: 10px; 
             margin: 10px; 
+            background-color: rgba(255, 255, 255, 0.5); /* To allow seeing the color */
         }
 
         input[type="range"] {
