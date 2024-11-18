@@ -66,7 +66,7 @@
         function createPipe() {
             const gap = 120;
             const topPipeHeight = Math.random() * (canvas.height - gap - 20) + 20;
-            pipes.push({ x: canvas.width, top: topPipeHeight, bottom: canvas.height - (topPipeHeight + gap) });
+            pipes.push({ x: canvas.width, top: topPipeHeight, bottom: canvas.height - (topPipeHeight + gap), scored: false });
         }
 
         // Update game state
@@ -76,14 +76,23 @@
             bird.velocity += bird.gravity;
             bird.y += bird.velocity;
 
-            // Collision detection
+            // Collision detection with walls
             if (bird.y + bird.height >= canvas.height || bird.y < 0) {
                 isGameOver = true;
             }
 
-            // Move pipes and handle scoring
+            // Move pipes and handle scoring and collision detection
             for (let i = pipes.length - 1; i >= 0; i--) {
                 pipes[i].x -= 2;
+
+                // Check for collision with the top or bottom pipe
+                if (
+                    bird.x + bird.width > pipes[i].x &&
+                    bird.x < pipes[i].x + 50 &&
+                    (bird.y < pipes[i].top || bird.y + bird.height > canvas.height - pipes[i].bottom)
+                ) {
+                    isGameOver = true; // Collision detected
+                }
 
                 if (pipes[i].x + 50 < bird.x && !pipes[i].scored) {
                     score++;
