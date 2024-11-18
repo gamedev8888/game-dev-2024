@@ -9,18 +9,19 @@
             overflow: hidden;
             margin: 0;
             font-family: Arial, sans-serif;
+            background-color: #70c5ce; /* Light blue background */
+            color: #ffffff; /* White text color */
         }
         canvas {
             display: block;
             margin: 0 auto;
-            border: 2px solid #ffffff; /* White border for visibility */
+            border: 5px solid #ffffff; /* White border for visibility */
         }
         #gameOver {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            color: #ffffff; /* White text color */
             font-size: 30px;
             display: none; /* Hidden by default */
         }
@@ -28,7 +29,6 @@
             position: absolute;
             top: 20px;
             left: 20px;
-            color: #ffffff; /* White text color */
             font-size: 20px;
         }
         .background {
@@ -48,11 +48,25 @@
 <div class="background"></div>
 <canvas id="gameCanvas" width="400" height="600"></canvas>
 <div id="score">Score: 0</div>
-<div id="gameOver">Game Over! Click to Restart</div>
+<div id="gameOver">Game Over! Press Space to Restart</div>
 
 <script>
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
+
+    // Load images
+    const birdImg = new Image();
+    birdImg.src = 'https://example.com/bird.png'; // Replace with your bird image URL
+
+    const pipeTopImg = new Image();
+    pipeTopImg.src = 'https://example.com/pipeTop.png'; // Replace with your top pipe image URL
+
+    const pipeBottomImg = new Image();
+    pipeBottomImg.src = 'https://example.com/pipeBottom.png'; // Replace with your bottom pipe image URL
+
+    // Sound effects
+    const jumpSound = new Audio('https://example.com/jump.mp3'); // Replace with your jump sound URL
+    const scoreSound = new Audio('https://example.com/score.mp3'); // Replace with your score sound URL
 
     // Game variables
     let bird = { x: 50, y: canvas.height / 2, width: 30, height: 30, gravity: 0.6, lift: -15, velocity: 0 };
@@ -65,21 +79,19 @@
     function createPipe() {
         const gap = 100;
         const pipeHeight = Math.random() * (canvas.height - gap - 20) + 20;
-        pipes.push({ x: canvas.width, height: pipeHeight, gap: gap });
+        pipes.push({ x: canvas.width, height: pipeHeight, gap: gap, scored: false });
     }
 
     // Draw bird
     function drawBird() {
-        ctx.fillStyle = '#ffcc00'; // A shade of yellow matching the theme
-        ctx.fillRect(bird.x, bird.y, bird.width, bird.height);
+        ctx.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
     }
 
     // Draw pipes
     function drawPipes() {
-        ctx.fillStyle = '#34a853'; // A green color matching the landscape
         pipes.forEach(pipe => {
-            ctx.fillRect(pipe.x, 0, 50, pipe.height); // Top pipe
-            ctx.fillRect(pipe.x, pipe.height + pipe.gap, 50, canvas.height); // Bottom pipe
+            ctx.drawImage(pipeTopImg, pipe.x, 0, 50, pipe.height); // Top pipe
+            ctx.drawImage(pipeBottomImg, pipe.x, pipe.height + pipe.gap, 50, canvas.height); // Bottom pipe
         });
     }
 
@@ -100,7 +112,7 @@
         });
 
         // Check collisions
-        pipes.forEach((pipe) => {
+        pipes.forEach(pipe => {
             if (bird.x + bird.width > pipe.x && bird.x < pipe.x + 50) {
                 if (bird.y < pipe.height || bird.y + bird.height > pipe.height + pipe.gap) {
                     isGameOver = true;
@@ -116,6 +128,7 @@
             if (pipe.x + 50 < bird.x && !pipe.scored) {
                 score++;
                 pipe.scored = true;
+                scoreSound.play(); // Play score sound
                 document.getElementById('score').innerText = 'Score: ' + score; // Update score
             }
         });
@@ -132,6 +145,7 @@
             resetGame();
         } else {
             bird.velocity = bird.lift;
+            jumpSound.play(); // Play jump sound
         }
     }
 
@@ -161,8 +175,13 @@
         }
     }
 
-    // Start game
-    window.addEventListener('click', jump);
+    // Start game - Space bar control for jumping
+    window.addEventListener('keydown', function (e) {
+        if (e.code === 'Space') {
+            jump();
+        }
+    });
+
     gameLoop();
 </script>
 
