@@ -35,7 +35,15 @@
         };
 
         // Game variables
-        let bird = { x: 50, y: canvas.height / 2, width: 30, height: 30, gravity: 0.6, lift: -10, velocity: 0 }; // Shorter jump
+        let bird = { 
+            x: 50, 
+            y: canvas.height / 2, 
+            width: 30, 
+            height: 30, 
+            gravity: 0.6, 
+            lift: -5, // Smaller jump
+            velocity: 0 
+        };
         let pipes = [];
         let frame = 0;
         let score = 0;
