@@ -16,6 +16,8 @@
             display: block;
             margin: 0 auto;
             border: 5px solid #ffffff; /* White border for visibility */
+            width: 100%;
+            height: auto;
         }
         #gameOver {
             position: absolute;
@@ -30,6 +32,14 @@
             top: 20px;
             left: 20px;
             font-size: 20px;
+        }
+        #muteButton {
+            position: absolute;
+            top: 50px;
+            left: 20px;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
         }
         .background {
             position: absolute;
@@ -49,6 +59,7 @@
 <canvas id="gameCanvas" width="400" height="600"></canvas>
 <div id="score">Score: 0</div>
 <div id="gameOver">Game Over! Press Space to Restart</div>
+<button id="muteButton">Mute</button>
 
 <script>
     const canvas = document.getElementById('gameCanvas');
@@ -56,17 +67,43 @@
 
     // Load images
     const birdImg = new Image();
-    birdImg.src = 'https://example.com/bird.png'; // Replace with your bird image URL
-
     const pipeTopImg = new Image();
-    pipeTopImg.src = 'https://example.com/pipeTop.png'; // Replace with your top pipe image URL
-
     const pipeBottomImg = new Image();
+
+    birdImg.src = 'https://example.com/bird.png'; // Replace with your bird image URL
+    pipeTopImg.src = 'https://example.com/pipeTop.png'; // Replace with your top pipe image URL
     pipeBottomImg.src = 'https://example.com/pipeBottom.png'; // Replace with your bottom pipe image URL
 
     // Sound effects
     const jumpSound = new Audio('https://example.com/jump.mp3'); // Replace with your jump sound URL
     const scoreSound = new Audio('https://example.com/score.mp3'); // Replace with your score sound URL
+    
+    // Preloading assets
+    const imagesToLoad = [birdImg, pipeTopImg, pipeBottomImg];
+    let imagesLoaded = 0;
+
+    imagesToLoad.forEach(image => {
+        image.onload = () => {
+            imagesLoaded++;
+            if (imagesLoaded === imagesToLoad.length && soundsLoaded === soundsToLoad.length) {
+                gameLoop(); // Start the game loop once all resources are loaded
+            }
+        };
+        image.src = image.src; // Trigger load
+    });
+
+    const soundsToLoad = [jumpSound, scoreSound];
+    let soundsLoaded = 0;
+
+    soundsToLoad.forEach(sound => {
+        sound.oncanplaythrough = () => {
+            soundsLoaded++;
+            if (imagesLoaded === imagesToLoad.length && soundsLoaded === soundsToLoad.length) {
+                gameLoop(); // Start the game loop once all resources are loaded
+            }
+        };
+        sound.load();
+    });
 
     // Game variables
     let bird = { x: 50, y: canvas.height / 2, width: 30, height: 30, gravity: 0.6, lift: -15, velocity: 0 };
@@ -74,6 +111,7 @@
     let frame = 0;
     let score = 0;
     let isGameOver = false;
+    let isMuted = false;
 
     // Create a pipe
     function createPipe() {
@@ -99,6 +137,9 @@
     function update() {
         if (isGameOver) return;
 
+        // Increase speed based on score
+        const pipeSpeed = 2 + Math.floor(score / 5); // Increases speed every 5 points
+
         // Bird movement
         bird.velocity += bird.gravity;
         bird.y += bird.velocity;
@@ -108,10 +149,10 @@
             createPipe();
         }
         pipes.forEach(pipe => {
-            pipe.x -= 2; // Move pipes to the left
+            pipe.x -= pipeSpeed; // Move pipes to the left
         });
 
-        // Check collisions
+        // Check for collisions
         pipes.forEach(pipe => {
             if (bird.x + bird.width > pipe.x && bird.x < pipe.x + 50) {
                 if (bird.y < pipe.height || bird.y + bird.height > pipe.height + pipe.gap) {
@@ -128,7 +169,7 @@
             if (pipe.x + 50 < bird.x && !pipe.scored) {
                 score++;
                 pipe.scored = true;
-                scoreSound.play(); // Play score sound
+                if (!isMuted) scoreSound.play(); // Play score sound
                 document.getElementById('score').innerText = 'Score: ' + score; // Update score
             }
         });
@@ -145,7 +186,7 @@
             resetGame();
         } else {
             bird.velocity = bird.lift;
-            jumpSound.play(); // Play jump sound
+            if (!isMuted) jumpSound.play(); // Play jump sound
         }
     }
 
@@ -159,6 +200,21 @@
         document.getElementById('score').innerText = 'Score: 0'; // Reset score display
         document.getElementById('gameOver').style.display = 'none'; // Hide game over message
     }
+
+    // Resize canvas for mobile responsiveness
+    function resizeCanvas() {
+        const aspectRatio = 400 / 600; // Original dimensions
+        if (window.innerWidth / window.innerHeight > aspectRatio) {
+            canvas.width = window.innerHeight * aspectRatio;
+            canvas.height = window.innerHeight;
+        } else {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerWidth / aspectRatio;
+        }
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas(); // Call once to set initial size
 
     // Game loop
     function gameLoop() {
@@ -182,7 +238,11 @@
         }
     });
 
-    gameLoop();
+    // Mute/Unmute audio
+    document.getElementById('muteButton').addEventListener('click', () => {
+        isMuted = !isMuted;
+        document.getElementById('muteButton').innerText = isMuted ? 'Unmute' : 'Mute';
+    });
 </script>
 
 </body>
