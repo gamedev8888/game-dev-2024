@@ -33,14 +33,6 @@
             left: 20px;
             font-size: 20px;
         }
-        #muteButton {
-            position: absolute;
-            top: 50px;
-            left: 20px;
-            padding: 10px;
-            font-size: 16px;
-            cursor: pointer;
-        }
         .background {
             position: absolute;
             top: 0;
@@ -59,7 +51,6 @@
 <canvas id="gameCanvas" width="400" height="600"></canvas>
 <div id="score">Score: 0</div>
 <div id="gameOver">Game Over! Press Space to Restart</div>
-<button id="muteButton">Mute</button>
 
 <script>
     const canvas = document.getElementById('gameCanvas');
@@ -77,7 +68,7 @@
     // Sound effects
     const jumpSound = new Audio('https://example.com/jump.mp3'); // Replace with your jump sound URL
     const scoreSound = new Audio('https://example.com/score.mp3'); // Replace with your score sound URL
-    
+
     // Preloading assets
     const imagesToLoad = [birdImg, pipeTopImg, pipeBottomImg];
     let imagesLoaded = 0;
@@ -85,11 +76,8 @@
     imagesToLoad.forEach(image => {
         image.onload = () => {
             imagesLoaded++;
-            if (imagesLoaded === imagesToLoad.length && soundsLoaded === soundsToLoad.length) {
-                gameLoop(); // Start the game loop once all resources are loaded
-            }
+            checkIfReady();
         };
-        image.src = image.src; // Trigger load
     });
 
     const soundsToLoad = [jumpSound, scoreSound];
@@ -98,12 +86,16 @@
     soundsToLoad.forEach(sound => {
         sound.oncanplaythrough = () => {
             soundsLoaded++;
-            if (imagesLoaded === imagesToLoad.length && soundsLoaded === soundsToLoad.length) {
-                gameLoop(); // Start the game loop once all resources are loaded
-            }
+            checkIfReady();
         };
         sound.load();
     });
+
+    function checkIfReady() {
+        if (imagesLoaded === imagesToLoad.length && soundsLoaded === soundsToLoad.length) {
+            gameLoop(); // Start the game loop once all resources are loaded
+        }
+    }
 
     // Game variables
     let bird = { x: 50, y: canvas.height / 2, width: 30, height: 30, gravity: 0.6, lift: -15, velocity: 0 };
@@ -111,7 +103,6 @@
     let frame = 0;
     let score = 0;
     let isGameOver = false;
-    let isMuted = false;
 
     // Create a pipe
     function createPipe() {
@@ -169,7 +160,7 @@
             if (pipe.x + 50 < bird.x && !pipe.scored) {
                 score++;
                 pipe.scored = true;
-                if (!isMuted) scoreSound.play(); // Play score sound
+                scoreSound.play(); // Play score sound
                 document.getElementById('score').innerText = 'Score: ' + score; // Update score
             }
         });
@@ -186,7 +177,7 @@
             resetGame();
         } else {
             bird.velocity = bird.lift;
-            if (!isMuted) jumpSound.play(); // Play jump sound
+            jumpSound.play(); // Play jump sound
         }
     }
 
@@ -236,12 +227,6 @@
         if (e.code === 'Space') {
             jump();
         }
-    });
-
-    // Mute/Unmute audio
-    document.getElementById('muteButton').addEventListener('click', () => {
-        isMuted = !isMuted;
-        document.getElementById('muteButton').innerText = isMuted ? 'Unmute' : 'Mute';
     });
 </script>
 
