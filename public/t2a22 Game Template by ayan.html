@@ -2,106 +2,159 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>T2A22 Game Template</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flappy Bird</title>
     <style>
         body {
+            background-color: #70c5ce; /* Sky color */
             overflow: hidden;
-            background-image: url('https://wallpaperaccess.com/full/357699.jpg');
-            background-repeat: no-repeat; /* Prevents repeating the image */
-            background-size: cover; /* Covers the entire viewport */
+            margin: 0;
+            font-family: Arial, sans-serif;
         }
-        h1 {
-            text-align: center;
+        canvas {
+            display: block;
+            margin: 0 auto;
+            background: #70c5ce; /* Sky color */
+            border: 2px solid #000; /* Black border */
         }
-        #gameContainer {
-            position: relative;
-            height: 600px; /* Set a fixed height for the game area */
-            width: 100%;
-        }
-        .gameImage {
+        #gameOver {
             position: absolute;
-            width: 100px;
-            height: 80px;
-        }
-        #message {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: rgba(255, 255, 255, 0.8);
-            padding: 10px;
-            border-radius: 5px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: red;
+            font-size: 30px;
             display: none; /* Hidden by default */
+        }
+        #score {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            font-size: 20px;
         }
     </style>
 </head>
 <body>
 
-<h1>T2A22 Game Template by Ayan</h1>
-
-<div id="gameContainer">
-    <div id="message">You lose! Resetting...</div>
-    <img id="myImg01" class="gameImage" style="top:0px; left:50px;" src="https://i.pinimg.com/originals/43/b0/cf/43b0cfd48672494e13e80d592d93b9b1.png" alt="Player's Image">
-    <img id="myImg02" class="gameImage" style="top:200px; left:250px;" src="https://www.pngmart.com/files/22/Doctor-Doom-PNG-Isolated-Photo.png" alt="Enemy Image">
-</div>
-
-<input type="button" value="Auto Background Left" onclick="startAutoBackgroundLeft()">
-<input type="button" value="Move Right" onclick="moveImageRight()"><br><br>
+<canvas id="gameCanvas" width="400" height="600"></canvas>
+<div id="score">Score: 0</div>
+<div id="gameOver">Game Over! Click to Restart</div>
 
 <script>
-    let myGlobalX = 0;
-    let myClock;
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
 
-    function myHitOther(my1, my2) {
-        const rect1 = document.getElementById(my1).getBoundingClientRect();
-        const rect2 = document.getElementById(my2).getBoundingClientRect();
+    // Game variables
+    let bird = { x: 50, y: canvas.height / 2, width: 30, height: 30, gravity: 0.6, lift: -15, velocity: 0 };
+    let pipes = [];
+    let frame = 0;
+    let score = 0;
+    let isGameOver = false;
 
-        return !(rect1.right < rect2.left || 
-                 rect1.left > rect2.right || 
-                 rect1.bottom < rect2.top || 
-                 rect1.top > rect2.bottom);
+    // Create a pipe
+    function createPipe() {
+        const gap = 100;
+        const pipeHeight = Math.random() * (canvas.height - gap - 20) + 20;
+        pipes.push({ x: canvas.width, height: pipeHeight, gap: gap });
     }
 
-    function myCheckHit() {
-        const playerId = 'myImg01';
-        const enemyIds = ['myImg02', 'myImg03'];
-        for (let enemyId of enemyIds) {
-            if (myHitOther(playerId, enemyId)) {
-                showAlert('You lose! Redirecting...');
-                resetPlayer();
-                break;
+    // Draw bird
+    function drawBird() {
+        ctx.fillStyle = 'yellow';
+        ctx.fillRect(bird.x, bird.y, bird.width, bird.height);
+    }
+
+    // Draw pipes
+    function drawPipes() {
+        ctx.fillStyle = 'green';
+        pipes.forEach(pipe => {
+            ctx.fillRect(pipe.x, 0, 50, pipe.height); // Top pipe
+            ctx.fillRect(pipe.x, pipe.height + pipe.gap, 50, canvas.height); // Bottom pipe
+        });
+    }
+
+    // Update game state
+    function update() {
+        if (isGameOver) return;
+
+        // Bird movement
+        bird.velocity += bird.gravity;
+        bird.y += bird.velocity;
+
+        // Pipe movement
+        if (frame % 100 === 0) {
+            createPipe();
+        }
+        pipes.forEach(pipe => {
+            pipe.x -= 2; // Move pipes to the left
+        });
+
+        // Check collisions
+        pipes.forEach((pipe) => {
+            if (bird.x + bird.width > pipe.x && bird.x < pipe.x + 50) {
+                if (bird.y < pipe.height || bird.y + bird.height > pipe.height + pipe.gap) {
+                    isGameOver = true;
+                }
             }
+        });
+
+        // Remove off-screen pipes
+        pipes = pipes.filter(pipe => pipe.x + 50 > 0);
+
+        // Increase score
+        pipes.forEach(pipe => {
+            if (pipe.x + 50 < bird.x && !pipe.scored) {
+                score++;
+                pipe.scored = true;
+                document.getElementById('score').innerText = 'Score: ' + score; // Update score
+            }
+        });
+
+        // Reset bird position on hitting canvas
+        if (bird.y > canvas.height || bird.y < 0) {
+            isGameOver = true;
         }
     }
 
-    function resetPlayer() {
-        document.getElementById('myImg01').style.left = '50px';
-        document.getElementById('message').style.display = 'none'; // Hide message
-        location = 't2a13-keydown.html'; // Redirect to next level
+    // Jump function
+    function jump() {
+        if (isGameOver) {
+            resetGame();
+        } else {
+            bird.velocity = bird.lift;
+        }
     }
 
-    function showAlert(message) {
-        const messageDiv = document.getElementById('message');
-        messageDiv.innerText = message;
-        messageDiv.style.display = 'block';
-        setTimeout(() => {
-            messageDiv.style.display = 'none'; // Hide the message after 2 seconds
-        }, 2000);
+    // Reset game
+    function resetGame() {
+        bird.y = canvas.height / 2;
+        bird.velocity = 0;
+        pipes = [];
+        score = 0;
+        isGameOver = false;
+        document.getElementById('score').innerText = 'Score: 0'; // Reset score display
+        document.getElementById('gameOver').style.display = 'none'; // Hide game over message
     }
 
-    function moveImageRight() {
-        const playerImage = document.getElementById('myImg01');
-        playerImage.style.left = parseInt(playerImage.style.left) + 10 + 'px';
-        myCheckHit();
+    // Game loop
+    function gameLoop() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        update();
+        drawPipes();
+        drawBird();
+
+        if (!isGameOver) {
+            frame++;
+            requestAnimationFrame(gameLoop);
+        } else {
+            document.getElementById('gameOver').style.display = 'block'; // Show game over message
+        }
     }
 
-    function startAutoBackgroundLeft() {
-        clearInterval(myClock);
-        myGlobalX = 100; // Initialize to a starting position
-        myClock = setInterval(() => {
-            myGlobalX -= 5;
-            document.body.style.backgroundPosition = myGlobalX + 'px 0px';
-        }, 100);
-    }
+    // Start game
+    window.addEventListener('click', jump);
+    gameLoop();
 </script>
 
 </body>
