@@ -1,70 +1,109 @@
-<h6> Version 0.0.1 </h6>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>T2A22 Game Template</title>
+    <style>
+        body {
+            overflow: hidden;
+            background-image: url('myBackground01.jpg');
+            background-repeat: repeat;
+            background-size: 80%;
+        }
+        h1 {
+            text-align: center;
+        }
+        #gameContainer {
+            position: relative;
+            height: 600px; /* Set a fixed height for the game area */
+            width: 100%;
+        }
+        .gameImage {
+            position: absolute;
+            width: 100px;
+            height: 80px;
+        }
+        #message {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            display: none; /* Hidden by default */
+        }
+    </style>
+</head>
+<body>
 
-<body id="myBody" style="background-repeat:repeat; background-size: 80%" background="myBackground01.jpg">
+<h1>T2A22 Game Template by Ayan</h1>
 
-<h1 align=center>t2a22 Game Template by ayan.html</h1>
-<br><br><br><br>
+<div id="gameContainer">
+    <div id="message">You lose! Resetting...</div>
+    <img id="myImg01" class="gameImage" style="top:0px; left:50px;" src="myImage01.jpg" alt="Player's Image">
+    <img id="myImg02" class="gameImage" style="top:200px; left:250px;" src="myImage02.jpg" alt="Enemy Image">
+    <img id="myImg03" class="gameImage" style="top:100px; left:400px;" src="myImage03.jpg" alt="Another Enemy Image">
+</div>
+
+<input type="button" value="Auto Background Left" onclick="startAutoBackgroundLeft()">
+<input type="button" value="Move Right" onclick="moveImageRight()"><br><br>
 
 <script>
+    let myGlobalX = 0;
+    let myClock;
 
-   // global variables here
-   let myGlobalX = 0
-   let myClock
+    function myHitOther(my1, my2) {
+        const rect1 = document.getElementById(my1).getBoundingClientRect();
+        const rect2 = document.getElementById(my2).getBoundingClientRect();
 
+        return !(rect1.right < rect2.left || 
+                 rect1.left > rect2.right || 
+                 rect1.bottom < rect2.top || 
+                 rect1.top > rect2.bottom);
+    }
 
-   // global functions here
-function myHitOther(my1,my2){
-   left1   = parseInt(document.getElementById(my1).style.left)
-   right1  = left1 + parseInt(document.getElementById(my1).style.width)
-   top1    = parseInt(document.getElementById(my1).style.top)   
-   bottom1 = top1   + parseInt(document.getElementById(my1).style.height)
-   left2   = parseInt(document.getElementById(my2).style.left)
-   right2  = left2 + parseInt(document.getElementById(my2).style.width)
-   top2    = parseInt(document.getElementById(my2).style.top)   
-   bottom2 = top2   + parseInt(document.getElementById(my2).style.height)
-   if ((right1  >=  left2  ) &&      	   
-       (bottom1 >=  top2   ) &&
-       (left1   <=  right2 ) &&
-       (top1    <=  bottom2) ){
-       return true
-   }
-}
+    function myCheckHit() {
+        const playerId = 'myImg01';
+        const enemyIds = ['myImg02', 'myImg03'];
+        for (let enemyId of enemyIds) {
+            if (myHitOther(playerId, enemyId)) {
+                showAlert('You lose! Redirecting...');
+                resetPlayer();
+                break;
+            }
+        }
+    }
 
+    function resetPlayer() {
+        document.getElementById('myImg01').style.left = '50px';
+        document.getElementById('message').style.display = 'none'; // Hide message
+        location = 't2a13-keydown.html'; // Redirect to next level
+    }
 
-function myCheckHit(){
-   if ( myHitOther('myImg01','myImg02') ){
-       alert('you lose')  
-       document.getElementById('myImg01').style.left = '20px'
-       location = 't2a13-keydown.html'  // go to your next level
-   }
+    function showAlert(message) {
+        const messageDiv = document.getElementById('message');
+        messageDiv.innerText = message;
+        messageDiv.style.display = 'block';
+        setTimeout(() => {
+            messageDiv.style.display = 'none'; // Hide the message after 2 seconds
+        }, 2000);
+    }
 
+    function moveImageRight() {
+        const playerImage = document.getElementById('myImg01');
+        playerImage.style.left = parseInt(playerImage.style.left) + 10 + 'px';
+        myCheckHit();
+    }
 
-   // more if statements here like the above
-
-
-
-}  // end of myCheckHit()
-
-
+    function startAutoBackgroundLeft() {
+        clearInterval(myClock);
+        myGlobalX = 100; // Initialize to a starting position
+        myClock = setInterval(() => {
+            myGlobalX -= 5;
+            document.body.style.backgroundPosition = myGlobalX + 'px 0px';
+        }, 100);
+    }
 </script>
 
-<img id="myImg01" style="position:absolute; width:100px; height:80px; top:0px; left:50px;"  src="myImage01.jpg">
-<img id="myImg02" style="position:absolute; width:100px; height:80px; top:0px; left:250px;" src="myImage02.jpg">
-
-<input type=button value="Auto Background Left" onclick="{
-  clearInterval(myClock)
-  let myTemp = '100px 0px'
-  myClock = setInterval(function(){
-      myGlobalX -= 5
-      myTemp =  myGlobalX + 'px 0px'
-      document.getElementById('myBody').style.backgroundPosition = myTemp
-  }, 100)
-    
-}">
-
-
-<input type=button value="Image Right Fast Button" onTouchStart="{this.click(); event.preventDefault();}" onclick="{
-  document.getElementById('myImg01').style.left = parseInt(document.getElementById('myImg01').style.left) + 10 + 'px'
-  myCheckHit()     // checks for all collisions
-}"><br><br>
-
+</body>
+</html>
