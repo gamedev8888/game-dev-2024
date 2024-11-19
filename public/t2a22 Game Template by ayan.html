@@ -1,53 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flappy Bird Game</title>
     <style>
-        canvas { 
-            display: block; 
-            margin: 0 auto; 
-            background: #70c5ce; 
+        canvas {
+            display: block;
+            margin: 0 auto;
+            background: #70c5ce;
+            border: 2px solid #333; /* Enhanced border */
         }
+
         body {
-            text-align: center; 
-            background: #fef8e1; 
+            text-align: center;
+            background: #fef8e1;
+            font-family: Arial, sans-serif; /* Better font */
+        }
+
+        h1 {
+            color: #333; /* Better text color */
+        }
+
+        #menu {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none; /* Hide menu by default */
+        }
+
+        .button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .button:hover {
+            background-color: #218838;
         }
     </style>
 </head>
+
 <body>
     <h1>Flappy Bird</h1>
+    <div id="menu">
+        <button class="button" id="startButton">Start Game</button>
+        <div id="highScoreDisplay"></div>
+    </div>
     <canvas id="gameCanvas" width="400" height="600"></canvas>
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
-        // Load audio files
-        const jumpSound = new Audio('https://www.soundjay.com/button/sounds/button-3.mp3');
-        jumpSound.onerror = function() {
-            console.error("Failed to load jump sound");
-        };
-
-        const scoreSound = new Audio('https://www.soundjay.com/button/sounds/button-4.mp3');
-        scoreSound.onerror = function() {
-            console.error("Failed to load score sound");
-        };
-
         // Game variables
-        let bird = { 
-            x: 50, 
-            y: canvas.height / 2, 
-            width: 30, 
-            height: 30, 
-            gravity: 0.6, 
-            lift: -8, // Increased jump height
-            velocity: 0 
+        let bird = {
+            x: 50,
+            y: canvas.height / 2,
+            width: 30,
+            height: 30,
+            gravity: 0.6,
+            lift: -8,
+            velocity: 0
         };
         let pipes = [];
         let frame = 0;
         let score = 0;
         let isGameOver = false;
+        let highScore = 0;
+
+        // Load and set images
+        const birdImage = new Image();
+        birdImage.src = 'https://example.com/bird.png';  // Use your own bird image
+
+        const pipeImage = new Image();
+        pipeImage.src = 'https://example.com/pipe.png'; // Use your own pipe image
+
+        const backgroundImage = new Image();
+        backgroundImage.src = 'https://example.com/background.png'; // Use your own background image
+
+        // Show the menu
+        function showMenu() {
+            document.getElementById('menu').style.display = 'block';
+            document.getElementById('highScoreDisplay').innerText = `High Score: ${localStorage.getItem('highScore') || 0}`;
+        }
+
+        // Save high score
+        function saveHighScore() {
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem('highScore', highScore);
+            }
+        }
+
+        // Start the game
+        function startGame() {
+            document.getElementById('menu').style.display = 'none';
+            resetGame();
+            gameLoop(); // Start game loop
+        }
 
         // Bird jump function
         function jump() {
@@ -55,8 +111,6 @@
                 resetGame();
             } else {
                 bird.velocity = bird.lift;
-                jumpSound.currentTime = 0; // Reset sound to start
-                jumpSound.play(); // Play jump sound
             }
         }
 
@@ -74,7 +128,12 @@
         function createPipe() {
             const gap = 120;
             const topPipeHeight = Math.random() * (canvas.height - gap - 20) + 20;
-            pipes.push({ x: canvas.width, top: topPipeHeight, bottom: canvas.height - (topPipeHeight + gap), scored: false });
+            pipes.push({
+                x: canvas.width,
+                top: topPipeHeight,
+                bottom: canvas.height - (topPipeHeight + gap),
+                scored: false
+            });
         }
 
         // Update game state
@@ -86,12 +145,12 @@
 
             // Collision detection with walls
             if (bird.y + bird.height >= canvas.height || bird.y < 0) {
-                isGameOver = true;
+                isGameOver = true; // Collision detected
             }
 
             // Move pipes and handle scoring and collision detection
             for (let i = pipes.length - 1; i >= 0; i--) {
-                pipes[i].x -= 2;
+                pipes[i].x -= 2 + Math.floor(score / 5); // Increase speed based on score
 
                 // Check for collision with the top or bottom pipe
                 if (
@@ -104,9 +163,8 @@
 
                 if (pipes[i].x + 50 < bird.x && !pipes[i].scored) {
                     score++;
+                    saveHighScore(); // Save high score
                     pipes[i].scored = true; // Mark as scored
-                    scoreSound.currentTime = 0; // Reset sound to start
-                    scoreSound.play(); // Play score sound
                 }
 
                 if (pipes[i].x < -50) {
@@ -124,14 +182,12 @@
 
         // Draw the game
         function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#ffdd00';
-            ctx.fillRect(bird.x, bird.y, bird.width, bird.height);
+            ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+            ctx.drawImage(birdImage, bird.x, bird.y, bird.width, bird.height);
 
             for (let pipe of pipes) {
-                ctx.fillStyle = '#228B22';
-                ctx.fillRect(pipe.x, 0, 50, pipe.top); // Top pipe
-                ctx.fillRect(pipe.x, canvas.height - pipe.bottom, 50, pipe.bottom); // Bottom pipe
+                ctx.drawImage(pipeImage, pipe.x, 0, 50, pipe.top); // Top pipe
+                ctx.drawImage(pipeImage, pipe.x, canvas.height - pipe.bottom, 50, pipe.bottom); // Bottom pipe
             }
 
             ctx.fillStyle = '#000';
@@ -140,7 +196,7 @@
 
             if (isGameOver) {
                 ctx.fillText('Game Over!', canvas.width / 2 - 50, canvas.height / 2);
-                ctx.fillText('Press Enter to Restart', canvas.width / 2 - 90, canvas.height / 2 + 30);
+                ctx.fillText('Press Space to Restart', canvas.width / 2 - 90, canvas.height / 2 + 30);
             }
         }
 
@@ -152,13 +208,20 @@
         }
 
         // Set up event listeners
-        window.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                jump(); // Jump on Enter key
+        window.addEventListener('keydown', function (e) {
+            if (e.key === ' ') { // Space key for jump and restart
+                if (isGameOver) {
+                    startGame(); // Start game on Space key if game is over
+                } else {
+                    jump(); // Jump on Space key
+                }
             }
         });
 
-        gameLoop(); // Start game loop
+        document.getElementById('startButton').addEventListener('click', startGame); // Start game on button click
+
+        showMenu(); // Show the initial menu
     </script>
 </body>
+
 </html>
