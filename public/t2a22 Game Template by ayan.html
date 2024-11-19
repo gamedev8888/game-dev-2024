@@ -8,7 +8,9 @@
         body {
             margin: 0;
             overflow: hidden;
-            background: linear-gradient(to bottom, #87CEEB, #000); /* Sky to ground */
+            background-image: url('https://wallpaperaccess.com/full/2016760.jpg');
+            background-size: cover; /* Scale the background to cover the window */
+            background-position: center; /* Center the background */
             font-family: 'Arial', sans-serif;
             color: white;
         }
@@ -22,7 +24,7 @@
             font-size: 24px;
             margin-top: 10px;
         }
-        game-over {
+        .game-over {
             display: none;
             position: absolute;
             top: 40%;
@@ -35,14 +37,9 @@
         }
         .player, .obstacle {
             position: absolute;
-            width: 100px;
-            height: 100px;
-        }
-        .player {
-            transition: left 0.1s; /* Smooth player movement */
-        }
-        .obstacle {
-            transition: top 0.1s; /* Smooth obstacle movement */
+            width: 100px; /* Set the width for player and obstacles */
+            height: 100px; /* Set the height for player and obstacles */
+            transition: top 0.1s, left 0.1s; /* Smooth movement for obstacles and player */
         }
     </style>
 </head>
@@ -83,9 +80,8 @@
         function handleCollision() {
             gameActive = false;
             document.getElementById('finalScore').innerText = score;
-            document.getElementById('gameOver').style.display = 'block';
+            document.getElementById('gameOver').style.display = 'block'; // Show game over screen
             document.getElementById('score').style.display = 'none'; // Hide score on game over
-            alert(`Game Over! Final Score: ${score}`);
             clearInterval(obstacleMoveInterval); // Stop moving obstacles
         }
 
