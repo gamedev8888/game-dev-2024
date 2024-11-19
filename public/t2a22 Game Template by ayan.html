@@ -7,6 +7,9 @@
     <title>Flappy Bird Game</title>
     <style>
         canvas {
+            width: 100%;
+            height: auto;
+            max-width: 400px; /* Maximum width for canvas */
             display: block;
             margin: 0 auto;
             background: #70c5ce;
@@ -51,6 +54,12 @@
             font-size: 20px;
             color: #333;
         }
+
+        #gameOverMenu {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+        }
     </style>
 </head>
 
@@ -66,6 +75,7 @@
         <p>Your Score: <span id="finalScore"></span></p>
         <button class="button" id="restartButton">Restart</button>
     </div>
+
     <audio id="jumpSound" src="jump.mp3"></audio>
     <audio id="scoreSound" src="score.mp3"></audio>
     <audio id="gameOverSound" src="gameOver.mp3"></audio>
@@ -91,17 +101,37 @@
         let isGameOver = false;
         let highScore = 0;
 
-        // Load images
-        const birdImage = new Image();
-        const pipeImage = new Image();
-        const backgroundImage = new Image();
+        // Load images with error handling
+        function loadImage(src, fallback) {
+            const img = new Image();
+            img.src = src;
+            img.onerror = function() {
+                console.error(`Failed to load image: ${src}`);
+                img.src = fallback; // Fallback image path
+            };
+            return img;
+        }
 
+        // Replace with actual image URLs for your assets
+        const birdImage = loadImage('https://www.pngmart.com/files/12/Flappy-Bird-PNG-Photo.png', 'https://via.placeholder.com/30/FF0000/FFFFFF?text=Bird'); // Bird
+        const pipeImage = loadImage('https://pixelartmaker-data-78746291193.nyc3.digitaloceanspaces.com/image/77922d218fc6bc3.png', 'https://via.placeholder.com/50/008000/FFFFFF?text=Pipe'); // Pipe
+        const backgroundImage = loadImage('https://wallpapercave.com/wp/wp6956942.jpg', 'https://via.placeholder.com/400x600/70C5CE/FFFFFF?text=Background'); // Background
+
+        // Load audio with error handling
+        function loadAudio(src) {
+            const audio = new Audio(src);
+            audio.onerror = function() {
+                console.error(`Failed to load audio: ${src}`);
+            };
+            return audio;
+        }
+
+        const jumpSound = loadAudio('jump.mp3');
+        const scoreSound = loadAudio('score.mp3');
+        const gameOverSound = loadAudio('gameOver.mp3');
+        
         let imagesLoaded = 0;
-        const totalImages = 3; // Total images to load
-        birdImage.src = 'https://www.pngmart.com/files/12/Flappy-Bird-PNG-Photo.png';
-        pipeImage.src = 'https://pixelartmaker-data-78746291193.nyc3.digitaloceanspaces.com/image/77922d218fc6bc3.png';
-        backgroundImage.src = 'https://wallpapercave.com/wp/wp6956942.jpg'; // New background image URL
-
+        const totalImages = 3;
         birdImage.onload = incrementImageLoad;
         pipeImage.onload = incrementImageLoad;
         backgroundImage.onload = incrementImageLoad;
@@ -115,6 +145,10 @@
 
         function showMenu() {
             document.getElementById('menu').style.display = 'block';
+            updateHighScoreDisplay();
+        }
+
+        function updateHighScoreDisplay() {
             document.getElementById('highScoreDisplay').innerText = `High Score: ${localStorage.getItem('highScore') || 0}`;
         }
 
@@ -122,13 +156,14 @@
             if (score > highScore) {
                 highScore = score;
                 localStorage.setItem('highScore', highScore);
+                updateHighScoreDisplay();
             }
         }
 
         function startGame() {
             if (imagesLoaded < totalImages) return;
             document.getElementById('menu').style.display = 'none';
-            document.getElementById('gameOverMenu').style.display = 'none'; // Hide game over menu
+            document.getElementById('gameOverMenu').style.display = 'none'; 
             resetGame();
             gameLoop();
         }
@@ -138,7 +173,7 @@
                 resetGame();
             } else {
                 bird.velocity = bird.lift;
-                document.getElementById('jumpSound').play(); // Play jump sound
+                jumpSound.play();
             }
         }
 
@@ -170,7 +205,7 @@
 
             if (bird.y + bird.height >= canvas.height || bird.y < 0) {
                 isGameOver = true; 
-                document.getElementById('gameOverSound').play(); // Play game over sound
+                gameOverSound.play();
             }
 
             for (let i = pipes.length - 1; i >= 0; i--) {
@@ -182,12 +217,12 @@
                     (bird.y < pipes[i].top || bird.y + bird.height > canvas.height - pipes[i].bottom)
                 ) {
                     isGameOver = true; 
-                    document.getElementById('gameOverSound').play(); // Play game over sound
+                    gameOverSound.play();
                 }
 
                 if (pipes[i].x + 50 < bird.x && !pipes[i].scored) {
                     score++;
-                    document.getElementById('scoreSound').play(); // Play score sound
+                    scoreSound.play();
                     saveHighScore(); 
                     pipes[i].scored = true; 
                 }
@@ -197,7 +232,7 @@
                 }
             }
 
-            if (frame % 75 === 0) {
+            if (frame % (75 - Math.floor(score / 10)) === 0) { // Adjust pipe generation frequency
                 createPipe();
             }
 
@@ -235,6 +270,10 @@
             if (e.key === ' ') {
                 jump();
             }
+        });
+
+        window.addEventListener('touchstart', function () {
+            jump();
         });
 
         document.getElementById('startButton').addEventListener('click', startGame);
