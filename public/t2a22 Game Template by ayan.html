@@ -74,15 +74,28 @@
         let isGameOver = false;
         let highScore = 0;
 
-        // Load and set images
+        // Load and set images with a loading mechanism
         const birdImage = new Image();
-        birdImage.src = 'https://example.com/bird.png';  // Use your own bird image
-
         const pipeImage = new Image();
-        pipeImage.src = 'https://example.com/pipe.png'; // Use your own pipe image
-
         const backgroundImage = new Image();
-        backgroundImage.src = 'https://example.com/background.png'; // Use your own background image
+
+        let imagesLoaded = 0;
+        const totalImages = 3; // Loading 3 images
+
+        birdImage.src = 'https://www.pngmart.com/files/12/Flappy-Bird-PNG-Photo.png';  // Replace with your own bird image URL
+        pipeImage.src = 'https://pixelartmaker-data-78746291193.nyc3.digitaloceanspaces.com/image/77922d218fc6bc3.png'; // Replace with your own pipe image URL
+        backgroundImage.src = 'https://example.com/background.png'; // Replace with your own background image URL
+
+        birdImage.onload = incrementImageLoad;
+        pipeImage.onload = incrementImageLoad;
+        backgroundImage.onload = incrementImageLoad;
+
+        function incrementImageLoad() {
+            imagesLoaded++;
+            if (imagesLoaded === totalImages) {
+                showMenu(); // Show the menu when all images are loaded
+            }
+        }
 
         // Show the menu
         function showMenu() {
@@ -100,6 +113,7 @@
 
         // Start the game
         function startGame() {
+            if (imagesLoaded < totalImages) return; // Wait until images are loaded
             document.getElementById('menu').style.display = 'none';
             resetGame();
             gameLoop(); // Start game loop
@@ -219,8 +233,6 @@
         });
 
         document.getElementById('startButton').addEventListener('click', startGame); // Start game on button click
-
-        showMenu(); // Show the initial menu
     </script>
 </body>
 
