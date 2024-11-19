@@ -9,9 +9,9 @@
             margin: 0;
             overflow: hidden;
             background-image: url('https://wallpaperaccess.com/full/2016760.jpg');
-            background-size: cover; /* Scale the background to cover the entire window */
-            background-position: center; /* Center the background */
-            height: 100vh; /* Set the height to be full viewport height */
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
             font-family: 'Arial', sans-serif;
             color: white;
         }
@@ -36,11 +36,17 @@
             padding: 20px;
             border-radius: 10px;
         }
-        .player, .obstacle {
+        .player {
             position: absolute;
-            width: 100px; /* Set the width for player and obstacles */
-            height: 100px; /* Set the height for player and obstacles */
-            transition: top 0.1s, left 0.1s; /* Smooth movement for obstacles and player */
+            width: 100px; /* Width of the player circle */
+            height: 100px; /* Height of the player circle */
+            transition: top 0.1s, left 0.1s; /* Smooth movement for player */
+        }
+        .obstacle {
+            position: absolute;
+            width: 70px; /* Smaller width for nails */
+            height: 70px; /* Smaller height for nails */
+            transition: top 0.1s, left 0.1s; /* Smooth movement for obstacles */
         }
         /* Pop effect */
         .pop {
@@ -97,9 +103,9 @@
             popEffect(); // Trigger pop effect
             gameActive = false;
             document.getElementById('finalScore').innerText = score;
-            document.getElementById('gameOver').style.display = 'block'; // Show game over screen
-            document.getElementById('score').style.display = 'none'; // Hide score on game over
-            clearInterval(obstacleMoveInterval); // Stop moving obstacles
+            document.getElementById('gameOver').style.display = 'block';
+            document.getElementById('score').style.display = 'none';
+            clearInterval(obstacleMoveInterval);
         }
 
         function popEffect() {
@@ -116,7 +122,7 @@
             score = 0;
             gameActive = true;
             document.getElementById('score').innerText = `Score: ${score}`;
-            document.getElementById('gameOver').style.display = 'none'; // Hide game over screen
+            document.getElementById('gameOver').style.display = 'none';
             
             // Reset positions
             document.getElementById('myImg01').style.left = '50px';
@@ -141,13 +147,13 @@
                 // Reset obstacle positions
                 if (parseInt(img02.style.top) > window.innerHeight) {
                     img02.style.top = '-100px';
-                    img02.style.left = Math.random() * (window.innerWidth - 100) + 'px'; // Randomize position
+                    img02.style.left = Math.random() * (window.innerWidth - 70) + 'px'; // Randomize position
                     score++;
                 }
 
                 if (parseInt(img03.style.top) > window.innerHeight) {
                     img03.style.top = '-100px';
-                    img03.style.left = Math.random() * (window.innerWidth - 100) + 'px'; // Randomize position
+                    img03.style.left = Math.random() * (window.innerWidth - 70) + 'px'; // Randomize position
                     score++;
                 }
 
