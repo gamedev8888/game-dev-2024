@@ -107,8 +107,9 @@
                 let img02 = document.getElementById('myImg02');
                 let img03 = document.getElementById('myImg03');
 
-                img02.style.top = (parseInt(img02.style.top) + 5) + 'px'; // Move down
-                img03.style.top = (parseInt(img03.style.top) + 3) + 'px'; // Move down
+                // Increased speeds for nails
+                img02.style.top = (parseInt(img02.style.top) + 7) + 'px'; // Moved down faster
+                img03.style.top = (parseInt(img03.style.top) + 5) + 'px'; // Moved down faster
 
                 // Reset obstacle positions
                 if (parseInt(img02.style.top) > window.innerHeight) {
@@ -136,9 +137,9 @@
 
             if (gameActive) {
                 if (event.key === 'ArrowRight' && left < window.innerWidth - player.width) {
-                    player.style.left = left + 20 + 'px'; // Move right faster
+                    player.style.left = Math.min(left + 20, window.innerWidth - player.width) + 'px'; // Move right faster
                 } else if (event.key === 'ArrowLeft' && left > 0) {
-                    player.style.left = left - 20 + 'px'; // Move left faster
+                    player.style.left = Math.max(left - 20, 0) + 'px'; // Move left faster
                 }
                 myCheckHit();
             }
