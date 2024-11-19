@@ -9,8 +9,9 @@
             margin: 0;
             overflow: hidden;
             background-image: url('https://wallpaperaccess.com/full/2016760.jpg');
-            background-size: cover; /* Scale the background to cover the window */
+            background-size: cover; /* Scale the background to cover the entire window */
             background-position: center; /* Center the background */
+            height: 100vh; /* Set the height to be full viewport height */
             font-family: 'Arial', sans-serif;
             color: white;
         }
@@ -150,7 +151,6 @@
 
         // Start the game
         let obstacleMoveInterval = setInterval(moveObstacles, 100);
-
     </script>
 </body>
 </html>
