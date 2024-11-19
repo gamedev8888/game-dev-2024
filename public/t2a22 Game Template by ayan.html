@@ -3,40 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Dodge Game</title>
+    <title>Fancy Dodge Game</title>
     <style>
         body {
-            background-image: url('https://wallpaperaccess.com/full/2016760.jpg');
-            background-repeat: repeat;
-            background-size: 80%;
+            margin: 0;
             overflow: hidden;
+            background: linear-gradient(to bottom, #87CEEB, #000); /* Sky to ground */
+            font-family: 'Arial', sans-serif;
+            color: white;
         }
-        #myImg01, #myImg02, #myImg03 {
-            position: absolute;
-            width: 100px;
-            height: 80px;
-        }
-        #myImg01 { left: 50px; top: 400px; }
-        #myImg02 { left: 250px; top: 0px; }
-        #myImg03 { left: 150px; top: -100px; }
         h1 {
             text-align: center;
+            font-size: 40px;
+            margin-top: 20px;
         }
         #score {
             text-align: center;
             font-size: 24px;
-            margin-top: 20px;
+            margin-top: 10px;
+        }
+        game-over {
+            display: none;
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .player, .obstacle {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+        }
+        .player {
+            transition: left 0.1s; /* Smooth player movement */
+        }
+        .obstacle {
+            transition: top 0.1s; /* Smooth obstacle movement */
         }
     </style>
 </head>
-
 <body>
-    <h1>Simple Dodge Game by Ayan</h1>
-    <div id="score">Score: 0</div>
 
-    <img id="myImg01" src="myImage01.jpg">
-    <img id="myImg02" src="myImage02.jpg">
-    <img id="myImg03" src="myImage03.jpg">
+    <h1>Fancy Dodge Game</h1>
+    <div id="score">Score: 0</div>
+    <div id="gameOver" class="game-over">
+        <h2>Game Over</h2>
+        <p>Your final score: <span id="finalScore"></span></p>
+        <button id="restartBtn">Restart Game</button>
+    </div>
+
+    <img id="myImg01" class="player" src="myImage01.png" alt="Player">
+    <img id="myImg02" class="obstacle" src="myImage02.png" alt="Obstacle">
+    <img id="myImg03" class="obstacle" src="myImage03.png" alt="Obstacle">
 
     <script>
         let score = 0;
@@ -59,26 +81,32 @@
         }
 
         function handleCollision() {
+            gameActive = false;
+            document.getElementById('finalScore').innerText = score;
+            document.getElementById('gameOver').style.display = 'block';
+            document.getElementById('score').style.display = 'none'; // Hide score on game over
             alert(`Game Over! Final Score: ${score}`);
-            resetGame();
+            clearInterval(obstacleMoveInterval); // Stop moving obstacles
         }
 
         function resetGame() {
             score = 0;
-            gameActive = false;
+            gameActive = true;
             document.getElementById('score').innerText = `Score: ${score}`;
+            document.getElementById('gameOver').style.display = 'none'; // Hide game over screen
             
             // Reset positions
             document.getElementById('myImg01').style.left = '50px';
+            document.getElementById('myImg01').style.top = '400px';
             document.getElementById('myImg02').style.top = '0px';
             document.getElementById('myImg03').style.top = '-100px';
 
-            // Stop moving obstacles
-            clearInterval(obstacleMoveInterval);
+            // Restart the movement of obstacles
+            obstacleMoveInterval = setInterval(moveObstacles, 100);
         }
 
         // Move obstacles
-        let obstacleMoveInterval = setInterval(function() {
+        function moveObstacles() {
             if (gameActive) {
                 let img02 = document.getElementById('myImg02');
                 let img03 = document.getElementById('myImg03');
@@ -88,13 +116,13 @@
 
                 // Reset obstacle positions
                 if (parseInt(img02.style.top) > window.innerHeight) {
-                    img02.style.top = '-80px';
+                    img02.style.top = '-100px';
                     img02.style.left = Math.random() * (window.innerWidth - 100) + 'px'; // Randomize position
                     score++;
                 }
 
                 if (parseInt(img03.style.top) > window.innerHeight) {
-                    img03.style.top = '-80px';
+                    img03.style.top = '-100px';
                     img03.style.left = Math.random() * (window.innerWidth - 100) + 'px'; // Randomize position
                     score++;
                 }
@@ -103,22 +131,29 @@
                 document.getElementById('score').innerText = `Score: ${score}`;
                 myCheckHit();
             }
-        }, 100);
+        }
 
-        // Move the player with keyboard controls
+        // Controls
         document.addEventListener('keydown', function(event) {
             const player = document.getElementById('myImg01');
             let left = parseInt(player.style.left);
 
             if (gameActive) {
                 if (event.key === 'ArrowRight' && left < window.innerWidth - player.width) {
-                    player.style.left = left + 10 + 'px'; // Move right
+                    player.style.left = left + 20 + 'px'; // Move right faster
                 } else if (event.key === 'ArrowLeft' && left > 0) {
-                    player.style.left = left - 10 + 'px'; // Move left
+                    player.style.left = left - 20 + 'px'; // Move left faster
                 }
                 myCheckHit();
             }
         });
+
+        // Restart button functionality
+        document.getElementById('restartBtn').addEventListener('click', resetGame);
+
+        // Start the game
+        let obstacleMoveInterval = setInterval(moveObstacles, 100);
+
     </script>
 </body>
 </html>
