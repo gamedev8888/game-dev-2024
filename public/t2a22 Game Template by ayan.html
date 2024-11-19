@@ -86,8 +86,7 @@
     </div>
 
     <img id="myImg01" class="player" src="https://pngimg.com/uploads/circle/circle_PNG16.png" alt="Player">
-    <img id="myImg02" class="obstacle" src="https://png.pngtree.com/png-clipart/20220116/original/pngtree-q-plate-iron-nail-element-pattern-png-image_7105514.png" alt="Obstacle">
-    <img id="myImg03" class="obstacle" src="https://png.pngtree.com/png-clipart/20220116/original/pngtree-q-plate-iron-nail-element-pattern-png-image_7105514.png" alt="Obstacle">
+    <div id="obstaclesContainer"></div>
 
     <script>
         let score = 0;
@@ -95,6 +94,7 @@
         let obstacleSpeed = 100; // Speed of obstacle movement
         let gameActive = true;
         const winningScore = 30; // Score needed to win
+        const initialObstacles = 2; // Number of initial obstacles
 
         function myHitOther(my1, my2) {
             const rect1 = document.getElementById(my1).getBoundingClientRect();
@@ -107,9 +107,13 @@
         }
 
         function myCheckHit() {
-            if (myHitOther('myImg01', 'myImg02') || myHitOther('myImg01', 'myImg03')) {
-                handleCollision();
-            }
+            // Check collisions with all obstacles
+            const obstacles = document.querySelectorAll('.obstacle');
+            obstacles.forEach(obstacle => {
+                if (myHitOther('myImg01', obstacle.id)) {
+                    handleCollision();
+                }
+            });
         }
 
         function handleCollision() {
@@ -143,9 +147,9 @@
             // Reset positions
             document.getElementById('myImg01').style.left = '50px';
             document.getElementById('myImg01').style.top = '400px';
-            document.getElementById('myImg02').style.top = '0px';
-            document.getElementById('myImg03').style.top = '-100px';
+            document.getElementById('obstaclesContainer').innerHTML = ''; // Clear existing obstacles
 
+            createObstacles(initialObstacles); // Create the initial obstacles
             obstacleMoveInterval = setInterval(moveObstacles, obstacleSpeed);
         }
 
@@ -167,30 +171,39 @@
                 level++;
                 obstacleSpeed = Math.max(50, obstacleSpeed - 10); // Increase speed, but limit minimum speed
                 document.getElementById('level').innerText = `Level: ${level}`;
+                createObstacles(level); // Create new obstacles for the new level
                 clearInterval(obstacleMoveInterval);
                 obstacleMoveInterval = setInterval(moveObstacles, obstacleSpeed); // Set new interval speed
             }
         }
 
+        function createObstacles(num) {
+            const container = document.getElementById('obstaclesContainer');
+            for (let i = 0; i < num; i++) {
+                const obstacle = document.createElement('img');
+                obstacle.src = "https://png.pngtree.com/png-clipart/20220116/original/pngtree-q-plate-iron-nail-element-pattern-png-image_7105514.png";
+                obstacle.classList.add('obstacle');
+                obstacle.id = `myImg0${i + 2}`; // Unique ID for each obstacle
+                obstacle.style.position = 'absolute';
+                obstacle.style.top = '-100px';
+                obstacle.style.left = Math.random() * (window.innerWidth - 70) + 'px'; // Random position
+                container.appendChild(obstacle);
+            }
+        }
+
         function moveObstacles() {
             if (gameActive) {
-                let img02 = document.getElementById('myImg02');
-                let img03 = document.getElementById('myImg03');
+                const obstacles = document.querySelectorAll('.obstacle');
+                obstacles.forEach(obstacle => {
+                    obstacle.style.top = (parseInt(obstacle.style.top) + 7) + 'px';
 
-                img02.style.top = (parseInt(img02.style.top) + 7) + 'px';
-                img03.style.top = (parseInt(img03.style.top) + 5) + 'px';
-
-                if (parseInt(img02.style.top) > window.innerHeight) {
-                    img02.style.top = '-100px';
-                    img02.style.left = Math.random() * (window.innerWidth - 70) + 'px';
-                    score++;
-                }
-
-                if (parseInt(img03.style.top) > window.innerHeight) {
-                    img03.style.top = '-100px';
-                    img03.style.left = Math.random() * (window.innerWidth - 70) + 'px';
-                    score++;
-                }
+                    // Reset the obstacle when it goes out of view
+                    if (parseInt(obstacle.style.top) > window.innerHeight) {
+                        obstacle.style.top = '-100px';
+                        obstacle.style.left = Math.random() * (window.innerWidth - 70) + 'px';
+                        score++;
+                    }
+                });
 
                 // Update Score
                 document.getElementById('score').innerText = `Score: ${score}`;
@@ -219,7 +232,7 @@
         document.getElementById('restartWinBtn').addEventListener('click', resetGame); 
 
         // Start the game
-        let obstacleMoveInterval = setInterval(moveObstacles, obstacleSpeed);
+        resetGame(); // Initialize the game at start
     </script>
 </body>
 </html>
