@@ -42,6 +42,21 @@
             height: 100px; /* Set the height for player and obstacles */
             transition: top 0.1s, left 0.1s; /* Smooth movement for obstacles and player */
         }
+        /* Pop effect */
+        .pop {
+            animation: pop-animation 0.2s ease forwards;
+        }
+        @keyframes pop-animation {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
     </style>
 </head>
 <body>
@@ -79,11 +94,22 @@
         }
 
         function handleCollision() {
+            popEffect(); // Trigger pop effect
             gameActive = false;
             document.getElementById('finalScore').innerText = score;
             document.getElementById('gameOver').style.display = 'block'; // Show game over screen
             document.getElementById('score').style.display = 'none'; // Hide score on game over
             clearInterval(obstacleMoveInterval); // Stop moving obstacles
+        }
+
+        function popEffect() {
+            const player = document.getElementById('myImg01');
+            player.classList.add('pop'); // Add pop class
+            
+            // Remove pop effect after the animation duration
+            setTimeout(() => {
+                player.classList.remove('pop');
+            }, 200); // Duration of the animation
         }
 
         function resetGame() {
