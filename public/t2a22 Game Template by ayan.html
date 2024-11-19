@@ -10,7 +10,7 @@
             display: block;
             margin: 0 auto;
             background: #70c5ce;
-            border: 2px solid #333; /* Enhanced border */
+            border: 2px solid #333;
         }
 
         body {
@@ -23,15 +23,12 @@
             color: #333;
         }
 
-        #menu {
+        #menu,
+        #gameOverMenu {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            display: none;
-        }
-
-        #gameOverMenu {
             display: none;
         }
 
@@ -72,6 +69,7 @@
     <audio id="jumpSound" src="jump.mp3"></audio>
     <audio id="scoreSound" src="score.mp3"></audio>
     <audio id="gameOverSound" src="gameOver.mp3"></audio>
+    
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
@@ -100,7 +98,6 @@
 
         let imagesLoaded = 0;
         const totalImages = 3; // Total images to load
-
         birdImage.src = 'https://www.pngmart.com/files/12/Flappy-Bird-PNG-Photo.png';
         pipeImage.src = 'https://pixelartmaker-data-78746291193.nyc3.digitaloceanspaces.com/image/77922d218fc6bc3.png';
         backgroundImage.src = 'https://example.com/background.png'; // Replace with your own background
@@ -241,7 +238,7 @@
         });
 
         document.getElementById('startButton').addEventListener('click', startGame);
-        document.getElementById('restartButton').addEventListener('click', startGame); // Restart game
+        document.getElementById('restartButton').addEventListener('click', startGame); 
     </script>
 </body>
 
