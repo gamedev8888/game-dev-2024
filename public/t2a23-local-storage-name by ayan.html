@@ -1,24 +1,76 @@
-<h2>t2a23-local-storage-name by ayan.html Instructions:</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Storage Example</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f7f7f7;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h2 {
+            color: #333;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .btn {
+            background-color: #0056b3;
+            color: white;
+        }
+        .btn:hover {
+            background-color: #004494;
+        }
+        .alert {
+            display: none;
+        }
+    </style>
+</head>
+<body onload="loadStoredText()">
 
-<body onload="{
-   myStorage = localStorage.getItem('myStoredText')
-   if(myStorage  != null){
-      document.getElementById('myText1').value = myStorage 
-    }
-}">
+    <div class="container">
+        <h2 class="text-center">Local Storage Example</h2>
+        <p class="text-center">by Ayan</p>
+        
+        <div class="input-group">
+            <input id="myText1" type="text" class="form-control" placeholder="Write here to store" aria-label="User input">
+        </div>
 
-<body onunload="{
-   localstorage.setItem('myStoredText',document.getElementById('myText1').value)
-}">   
+        <div class="text-center">
+            <button class="btn btn-primary" onclick="storeText()">Store Text</button>
+            <button class="btn btn-success" onclick="retrieveText()">Retrieve Text</button>
+        </div>
 
-Text example: <input id="myText1" type=text size=70 value="" placeholder="Write here to store"><br>
+        <div class="alert alert-success mt-3" id="successAlert"></div>
+    </div>
 
-<input type="button" value="Store Text" onClick="{
-   localStorage.setItem('myStoredText', document.getElementById('myText1').value)
-   alert(document.getElementById('myText1').value + ' \nHas been stored')
-   document.getElementById('myText1').value = ''
-}">
+    <script>
+        function loadStoredText() {
+            const myStorage = localStorage.getItem('myStoredText');
+            if (myStorage !== null) {
+                document.getElementById('myText1').value = myStorage;
+            }
+        }
 
-<input type="button" value="Retrieve Text" onClick="{
-   document.getElementById('myText1').value = localStorage.getItem('myStoredText')
-}"> 
+        function storeText() {
+            const textValue = document.getElementById('myText1').value;
+            localStorage.setItem('myStoredText', textValue);
+            const alertBox = document.getElementById('successAlert');
+            alertBox.innerText = `'${textValue}' \nHas been stored`;
+            alertBox.style.display = 'block';
+            document.getElementById('myText1').value = '';
+            setTimeout(() => {
+                alertBox.style.display = 'none';
+            }, 3000);
+        }
+
+        function retrieveText() {
+            document.getElementById('myText1').value = localStorage.getItem('myStoredText');
+        }
+    </script>
+
+</body>
+</html>
