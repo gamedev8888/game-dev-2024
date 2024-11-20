@@ -6,43 +6,53 @@
     <title>Local Storage Example</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
+        html, body {
+            height: 100%;  /* Make sure the html and body take the full height */
+            margin: 0;     /* Remove default margin */
+        }
         body {
             background-image: url('https://wallpaperaccess.com/full/2016823.jpg');
-            background-size: cover;
-            background-position: center;
+            background-size: cover;       /* Cover the entire body with the image */
+            background-position: center;  /* Center the image */
+            background-repeat: no-repeat; /* Prevent the image from repeating */
             font-family: Arial, sans-serif;
+            color: #ffffff;  /* Set text color to white */
             padding: 20px;
-            color: #ffffff;  /* Set text color to white for better visibility on the background */
+            display: flex;    /* Use flexbox for centering */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Ensure it covers viewport height */
         }
         h2, p {
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);  /* Add a shadow for better text legibility */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);  /* Shadow for better visibility */
         }
         .input-group {
             margin-bottom: 15px;
         }
         .btn {
-            background-color: rgba(0, 86, 179, 0.8);  /* Semi-transparent button for better visualization */
+            background-color: rgba(0, 86, 179, 0.8);  /* Semi-transparent button */
             color: white;
         }
         .btn:hover {
-            background-color: rgba(0, 86, 179, 1);
+            background-color: rgba(0, 86, 179, 1);  /* Solid color on hover */
         }
         .alert {
-            display: none;
+            display: none;  /* Hidden by default */
         }
     </style>
 </head>
 <body onload="loadStoredText()">
 
-    <div class="container">
-        <h2 class="text-center">Local Storage Example</h2>
-        <p class="text-center">by Ayan</p>
+    <div class="container text-center">
+        <h2>Local Storage Example</h2>
+        <p>by Ayan</p>
         
         <div class="input-group">
             <input id="myText1" type="text" class="form-control" placeholder="Write here to store" aria-label="User input">
         </div>
 
-        <div class="text-center">
+        <div>
             <button class="btn btn-primary" onclick="storeText()">Store Text</button>
             <button class="btn btn-success" onclick="retrieveText()">Retrieve Text</button>
         </div>
