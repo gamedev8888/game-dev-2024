@@ -7,42 +7,42 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         html, body {
-            height: 100%;  /* Make sure the html and body take the full height */
-            margin: 0;     /* Remove default margin */
+            height: 100%;
+            margin: 0;
         }
         body {
             background-image: url('https://wallpaperaccess.com/full/2016823.jpg');
-            background-size: cover;       /* Cover the entire body with the image */
-            background-position: center;  /* Center the image */
-            background-repeat: no-repeat; /* Prevent the image from repeating */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             font-family: Arial, sans-serif;
-            color: #ffffff;  /* Set text color to white */
+            color: #ffffff;
             padding: 20px;
-            display: flex;    /* Use flexbox for centering */
+            display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 100vh; /* Ensure it covers viewport height */
+            min-height: 100vh;
         }
         h2, p {
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);  /* Shadow for better visibility */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
         }
         .input-group {
             margin-bottom: 15px;
         }
         .btn {
-            background-color: rgba(0, 86, 179, 0.8);  /* Semi-transparent button */
+            background-color: rgba(0, 86, 179, 0.8);
             color: white;
         }
         .btn:hover {
-            background-color: rgba(0, 86, 179, 1);  /* Solid color on hover */
+            background-color: rgba(0, 86, 179, 1);
         }
         .alert {
-            display: none;  /* Hidden by default */
+            display: none;
         }
     </style>
 </head>
-<body onload="loadStoredText()">
+<body onload="loadStoredTexts()">
 
     <div class="container text-center">
         <h2>Local Storage Example</h2>
@@ -54,34 +54,79 @@
 
         <div>
             <button class="btn btn-primary" onclick="storeText()">Store Text</button>
-            <button class="btn btn-success" onclick="retrieveText()">Retrieve Text</button>
+            <button class="btn btn-success" onclick="retrieveTexts()">Retrieve Texts</button>
+            <button class="btn btn-danger" onclick="clearStorage()">Clear All Storage</button>
         </div>
 
         <div class="alert alert-success mt-3" id="successAlert"></div>
+        
+        <div id="storedTexts" class="mt-3"></div>
     </div>
 
     <script>
-        function loadStoredText() {
-            const myStorage = localStorage.getItem('myStoredText');
-            if (myStorage !== null) {
-                document.getElementById('myText1').value = myStorage;
-            }
+        function loadStoredTexts() {
+            displayStoredTexts();
         }
 
         function storeText() {
             const textValue = document.getElementById('myText1').value;
-            localStorage.setItem('myStoredText', textValue);
+            if (textValue.trim() === '') {
+                alert("Please enter some text to store.");
+                return;
+            }
+
+            let storedItems = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
+            storedItems.push(textValue);
+            localStorage.setItem('myStoredTexts', JSON.stringify(storedItems));
+
             const alertBox = document.getElementById('successAlert');
-            alertBox.innerText = `'${textValue}' \nHas been stored`;
+            alertBox.innerText = `'${textValue}' has been stored`;
             alertBox.style.display = 'block';
             document.getElementById('myText1').value = '';
             setTimeout(() => {
                 alertBox.style.display = 'none';
             }, 3000);
+            displayStoredTexts();
         }
 
-        function retrieveText() {
-            document.getElementById('myText1').value = localStorage.getItem('myStoredText');
+        function retrieveTexts() {
+            displayStoredTexts();
+        }
+
+        function displayStoredTexts() {
+            const storedItems = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
+            const textsContainer = document.getElementById('storedTexts');
+            textsContainer.innerHTML = ''; // Clear previous texts
+
+            if (storedItems.length === 0) {
+                textsContainer.innerHTML = '<p>No stored texts available.</p>';
+            } else {
+                storedItems.forEach((item, index) => {
+                    textsContainer.innerHTML += `
+                        <div class="alert alert-info" role="alert">
+                            ${item} <button class="btn btn-danger btn-sm" onclick="removeText(${index})">Remove</button>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        function removeText(index) {
+            let storedItems = JSON.parse(localStorage.getItem('myStoredTexts')) || [];
+            storedItems.splice(index, 1); // Remove item at the given index
+            localStorage.setItem('myStoredTexts', JSON.stringify(storedItems));
+            displayStoredTexts(); // Refresh displayed texts
+        }
+
+        function clearStorage() {
+            localStorage.removeItem('myStoredTexts');
+            document.getElementById('storedTexts').innerHTML = '';
+            const alertBox = document.getElementById('successAlert');
+            alertBox.innerText = 'Storage cleared!';
+            alertBox.style.display = 'block';
+            setTimeout(() => {
+                alertBox.style.display = 'none';
+            }, 3000);
         }
     </script>
 
