@@ -44,34 +44,45 @@
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script>
     // Initialize the map and set default view
-    const map = L.map('map').setView([20, 0], 2); // Centered at latitude 20, longitude 0
+    const map = L.map('map').setView([20, 0], 2);
 
     // Add OpenStreetMap tile layer
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
     }).addTo(map);
 
-    // Predefined list of locations (name and coordinates)
+    // Predefined list of major cities (name and coordinates, A-Z)
     const locations = [
-        { name: 'New York, USA', lat: 40.712776, lng: -74.005974 },
-        { name: 'Los Angeles, USA', lat: 34.052235, lng: -118.243683 },
-        { name: 'Chicago, USA', lat: 41.878113, lng: -87.629799 },
-        { name: 'Tokyo, Japan', lat: 35.652832, lng: 139.839478 },
-        { name: 'London, UK', lat: 51.507351, lng: -0.127758 },
-        { name: 'Paris, France', lat: 48.856613, lng: 2.352222 },
-        { name: 'Berlin, Germany', lat: 52.520008, lng: 13.404954 },
-        { name: 'Sydney, Australia', lat: -33.868820, lng: 151.209290 }
+        { name: 'Amsterdam, Netherlands', lat: 52.3676, lng: 4.9041 },
+        { name: 'Berlin, Germany', lat: 52.5200, lng: 13.4050 },
+        { name: 'Chicago, USA', lat: 41.8781, lng: -87.6298 },
+        { name: 'Delhi, India', lat: 28.6139, lng: 77.2090 },
+        { name: 'Dubai, UAE', lat: 25.276987, lng: 55.296249 },
+        { name: 'London, UK', lat: 51.5074, lng: -0.1278 },
+        { name: 'Los Angeles, USA', lat: 34.0522, lng: -118.2437 },
+        { name: 'Mexico City, Mexico', lat: 19.4326, lng: -99.1332 },
+        { name: 'New Delhi, India', lat: 28.6139, lng: 77.2090 },
+        { name: 'New York, USA', lat: 40.7128, lng: -74.0060 },
+        { name: 'Paris, France', lat: 48.8566, lng: 2.3522 },
+        { name: 'Rio de Janeiro, Brazil', lat: -22.9068, lng: -43.1729 },
+        { name: 'San Francisco, USA', lat: 37.7749, lng: -122.4194 },
+        { name: 'Sydney, Australia', lat: -33.8688, lng: 151.2093 },
+        { name: 'Tokyo, Japan', lat: 35.6895, lng: 139.6917 },
+        { name: 'Toronto, Canada', lat: 43.6510, lng: -79.347015 },
+        { name: 'Vancouver, Canada', lat: 49.2827, lng: -123.1207 },
+        { name: 'Washington, D.C., USA', lat: 38.9072, lng: -77.0369 }
     ];
 
     // Clear previous markers
     let marker;
 
-    // Function to search locations
+    // Function to search locations and update the map
     function searchLocation(query) {
         // Clear the existing marker if any
         if (marker) {
-            map.removeLayer(marker);
+            map.removeLayer(marker); // Remove the existing marker
         }
+
         // Filter locations based on search input
         const filteredLocation = locations.find(location => 
             location.name.toLowerCase().includes(query.toLowerCase())
