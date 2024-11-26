@@ -3,78 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Map with Search</title>
+    <title>Leaflet Location Search</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <style>
-        /* Basic styling for map and search bar */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+        }
         #map {
-            height: 500px;  /* Adjust the height as needed */
-            width: 100%;    /* Full width */
+            height: 500px;
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
         }
         #input {
-            width: 600px;   /* Width of the search input */
-            margin: 20px;
-            padding: 10px;
-            font-size: 16px;
+            width: 100%; 
+            max-width: 400px; 
+            margin: 0 auto 20px auto; 
+            display: block; 
+            padding: 10px; 
+            border: 1px solid #ccc; 
+            border-radius: 5px; 
+            outline: none;
         }
     </style>
 </head>
 <body>
 
 <h1>Search for Locations</h1>
-<input id="input" type="text" placeholder="Enter a country, province, or city">
-
+<input id="input" type="text" placeholder="Enter a location" />
 <div id="map"></div>
 
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 <script>
-    let map;
-    let service;
-    let infowindow;
+    // Initialize the map and set default view
+    const map = L.map('map').setView([20, 0], 2); // Centered at latitude 20, longitude 0
 
-    // Function to initialize the map
-    function initMap() {
-        const location = { lat: -25.363, lng: 131.044 }; // Center the map
-        map = new google.maps.Map(document.getElementById("map"), {
-            center: location,
-            zoom: 4,
-        });
+    // Add OpenStreetMap tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+    }).addTo(map);
 
-        // Initialize Infowindow
-        infowindow = new google.maps.InfoWindow();
-        
-        // Handle search input
-        const input = document.getElementById("input");
-        input.addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                searchPlaces(input.value);
-            }
-        });
+    // Predefined list of locations (name and coordinates)
+    const locations = [
+        { name: 'New York, USA', lat: 40.712776, lng: -74.005974 },
+        { name: 'Los Angeles, USA', lat: 34.052235, lng: -118.243683 },
+        { name: 'Chicago, USA', lat: 41.878113, lng: -87.629799 },
+        { name: 'Tokyo, Japan', lat: 35.652832, lng: 139.839478 },
+        { name: 'London, UK', lat: 51.507351, lng: -0.127758 },
+        { name: 'Paris, France', lat: 48.856613, lng: 2.352222 },
+        { name: 'Berlin, Germany', lat: 52.520008, lng: 13.404954 },
+        { name: 'Sydney, Australia', lat: -33.868820, lng: 151.209290 }
+    ];
+
+    // Clear previous markers
+    let marker;
+
+    // Function to search locations
+    function searchLocation(query) {
+        // Clear the existing marker if any
+        if (marker) {
+            map.removeLayer(marker);
+        }
+        // Filter locations based on search input
+        const filteredLocation = locations.find(location => 
+            location.name.toLowerCase().includes(query.toLowerCase())
+        );
+
+        if (filteredLocation) {
+            // Center the map on the found location and add a marker
+            map.setView([filteredLocation.lat, filteredLocation.lng], 10);
+            marker = L.marker([filteredLocation.lat, filteredLocation.lng]).addTo(map)
+                .bindPopup(filteredLocation.name)
+                .openPopup();
+        }
     }
 
-    // Function to search for places
-    function searchPlaces(query) {
-        const request = {
-            query: query,
-            fields: ["name", "geometry"],
-        };
-
-        service = new google.maps.places.PlacesService(map);
-        service.findPlaceFromQuery(request, (results, status) => {
-            if (status === google.maps.places.PlacesServiceStatus.OK) {
-                map.setCenter(results[0].geometry.location);
-                infowindow.setContent(results[0].name);
-                infowindow.setPosition(results[0].geometry.location);
-                infowindow.open(map);
-            } else {
-                alert("Location not found: " + status);
-            }
-        });
-    }
-</script>
-
-<!-- Google Maps API -->
-<script async defer
-    src="https://www.google.ca/maps">
+    // Event listener for search input
+    document.getElementById("input").addEventListener("input", function() {
+        searchLocation(this.value);
+    });
 </script>
 
 </body>
