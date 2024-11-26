@@ -70,37 +70,37 @@
         maxZoom: 19,
     }).addTo(map);
 
-    // Predefined list of major cities (name and coordinates) including Middle Eastern cities
+    // Predefined list of major cities (name, coordinates, and addresses)
     const locations = [
-        { name: 'Amsterdam, Netherlands', lat: 52.3676, lng: 4.9041 },
-        { name: 'Berlin, Germany', lat: 52.5200, lng: 13.4050 },
-        { name: 'Chicago, USA', lat: 41.8781, lng: -87.6298 },
-        { name: 'Delhi, India', lat: 28.6139, lng: 77.2090 },
-        { name: 'Dubai, UAE', lat: 25.276987, lng: 55.296249 },
-        { name: 'London, UK', lat: 51.5074, lng: -0.1278 },
-        { name: 'Los Angeles, USA', lat: 34.0522, lng: -118.2437 },
-        { name: 'Mexico City, Mexico', lat: 19.4326, lng: -99.1332 },
-        { name: 'New York, USA', lat: 40.7128, lng: -74.0060 },
-        { name: 'Paris, France', lat: 48.8566, lng: 2.3522 },
-        { name: 'Rio de Janeiro, Brazil', lat: -22.9068, lng: -43.1729 },
-        { name: 'San Francisco, USA', lat: 37.7749, lng: -122.4194 },
-        { name: 'Sydney, Australia', lat: -33.8688, lng: 151.2093 },
-        { name: 'Tokyo, Japan', lat: 35.6895, lng: 139.6917 },
-        { name: 'Toronto, Canada', lat: 43.6510, lng: -79.347015 },
-        { name: 'Vancouver, Canada', lat: 49.2827, lng: -123.1207 },
-        { name: 'Washington, D.C., USA', lat: 38.9072, lng: -77.0369 },
+        { name: 'Amsterdam, Netherlands', lat: 52.3676, lng: 4.9041, address: 'Dam Square, Amsterdam, Netherlands' },
+        { name: 'Berlin, Germany', lat: 52.5200, lng: 13.4050, address: 'Brandenburg Gate, Berlin, Germany' },
+        { name: 'Chicago, USA', lat: 41.8781, lng: -87.6298, address: 'Michigan Ave, Chicago, USA' },
+        { name: 'Delhi, India', lat: 28.6139, lng: 77.2090, address: 'Connaught Place, New Delhi, India' },
+        { name: 'Dubai, UAE', lat: 25.276987, lng: 55.296249, address: 'Burj Khalifa, Dubai, UAE' },
+        { name: 'London, UK', lat: 51.5074, lng: -0.1278, address: 'Buckingham Palace, London, UK' },
+        { name: 'Los Angeles, USA', lat: 34.0522, lng: -118.2437, address: 'Hollywood Blvd, Los Angeles, USA' },
+        { name: 'Mexico City, Mexico', lat: 19.4326, lng: -99.1332, address: 'Zócalo, Mexico City, Mexico' },
+        { name: 'New York, USA', lat: 40.7128, lng: -74.0060, address: 'Times Square, New York, USA' },
+        { name: 'Paris, France', lat: 48.8566, lng: 2.3522, address: 'Eiffel Tower, Paris, France' },
+        { name: 'Rio de Janeiro, Brazil', lat: -22.9068, lng: -43.1729, address: 'Copacabana Beach, Rio de Janeiro, Brazil' },
+        { name: 'San Francisco, USA', lat: 37.7749, lng: -122.4194, address: 'Fisherman\'s Wharf, San Francisco, USA' },
+        { name: 'Sydney, Australia', lat: -33.8688, lng: 151.2093, address: 'Sydney Opera House, Sydney, Australia' },
+        { name: 'Tokyo, Japan', lat: 35.6895, lng: 139.6917, address: 'Shinjuku, Tokyo, Japan' },
+        { name: 'Toronto, Canada', lat: 43.6510, lng: -79.347015, address: 'CN Tower, Toronto, Canada' },
+        { name: 'Vancouver, Canada', lat: 49.2827, lng: -123.1207, address: 'Stanley Park, Vancouver, Canada' },
+        { name: 'Washington, D.C., USA', lat: 38.9072, lng: -77.0369, address: 'White House, Washington, D.C., USA' },
         
-        // Middle Eastern countries and cities
-        { name: 'Amman, Jordan', lat: 31.9522, lng: 35.9304 },
-        { name: 'Baghdad, Iraq', lat: 33.3152, lng: 44.3661 },
-        { name: 'Bahrain, Manama', lat: 26.0275, lng: 50.5357 },
-        { name: 'Doha, Qatar', lat: 25.276987, lng: 51.520008 },
-        { name: 'Kuwait City, Kuwait', lat: 29.3759, lng: 47.9774 },
-        { name: 'Muscat, Oman', lat: 23.5880, lng: 58.3829 },
-        { name: 'Riyadh, Saudi Arabia', lat: 24.7136, lng: 46.6753 },
-        { name: 'Sana\'a, Yemen', lat: 15.3694, lng: 44.1910 },
-        { name: 'Tehran, Iran', lat: 35.6892, lng: 51.3890 },
-        { name: 'Jerusalem, Israel', lat: 31.7683, lng: 35.2137 }
+        // Middle Eastern countries and cities with addresses
+        { name: 'Amman, Jordan', lat: 31.9522, lng: 35.9304, address: 'Rainbow Street, Amman, Jordan' },
+        { name: 'Baghdad, Iraq', lat: 33.3152, lng: 44.3661, address: 'Al-Mustansiriya University, Baghdad, Iraq' },
+        { name: 'Bahrain, Manama', lat: 26.0275, lng: 50.5357, address: 'The Avenues Mall, Manama, Bahrain' },
+        { name: 'Doha, Qatar', lat: 25.276987, lng: 51.520008, address: 'Corniche, Doha, Qatar' },
+        { name: 'Kuwait City, Kuwait', lat: 29.3759, lng: 47.9774, address: 'Kuwait Towers, Kuwait City, Kuwait' },
+        { name: 'Muscat, Oman', lat: 23.5880, lng: 58.3829, address: 'Matthias Church, Muscat, Oman' },
+        { name: 'Riyadh, Saudi Arabia', lat: 24.7136, lng: 46.6753, address: 'Kingdom Centre, Riyadh, Saudi Arabia' },
+        { name: 'Sana\'a, Yemen', lat: 15.3694, lng: 44.1910, address: 'Old City, Sana\'a, Yemen' },
+        { name: 'Tehran, Iran', lat: 35.6892, lng: 51.3890, address: 'Golestan Palace, Tehran, Iran' },
+        { name: 'Jerusalem, Israel', lat: 31.7683, lng: 35.2137, address: 'Western Wall, Jerusalem, Israel' }
     ];
 
     let marker;
@@ -123,7 +123,7 @@
                     html: '<span>📍</span>' // Use an emoji or can replace it with an image source
                 })
             }).addTo(map)
-            .bindPopup(filteredLocation.name)
+            .bindPopup(`<strong>${filteredLocation.name}</strong><br>${filteredLocation.address}`)
             .openPopup();
         }
     }
