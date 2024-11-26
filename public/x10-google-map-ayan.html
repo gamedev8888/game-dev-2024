@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Map with Search</title>
+    <style>
+        /* Basic styling for map and search bar */
+        #map {
+            height: 500px;  /* Adjust the height as needed */
+            width: 100%;    /* Full width */
+        }
+        #input {
+            width: 600px;   /* Width of the search input */
+            margin: 20px;
+            padding: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Search for Locations</h1>
+<input id="input" type="text" placeholder="Enter a country, province, or city">
+
+<div id="map"></div>
+
+<script>
+    let map;
+    let service;
+    let infowindow;
+
+    // Function to initialize the map
+    function initMap() {
+        const location = { lat: -25.363, lng: 131.044 }; // Center the map
+        map = new google.maps.Map(document.getElementById("map"), {
+            center: location,
+            zoom: 4,
+        });
+
+        // Initialize Infowindow
+        infowindow = new google.maps.InfoWindow();
+        
+        // Handle search input
+        const input = document.getElementById("input");
+        input.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                searchPlaces(input.value);
+            }
+        });
+    }
+
+    // Function to search for places
+    function searchPlaces(query) {
+        const request = {
+            query: query,
+            fields: ["name", "geometry"],
+        };
+
+        service = new google.maps.places.PlacesService(map);
+        service.findPlaceFromQuery(request, (results, status) => {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+                map.setCenter(results[0].geometry.location);
+                infowindow.setContent(results[0].name);
+                infowindow.setPosition(results[0].geometry.location);
+                infowindow.open(map);
+            } else {
+                alert("Location not found: " + status);
+            }
+        });
+    }
+</script>
+
+<!-- Google Maps API -->
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places&callback=initMap">
+</script>
+
+</body>
+</html>
