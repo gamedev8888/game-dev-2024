@@ -3,45 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leaflet Location Search</title>
+    <title>Fancy Leaflet Location Search</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
+            background-color: #f8f9fa;
+            color: #343a40;
         }
         h1 {
             text-align: center;
+            margin: 20px 0;
+            font-weight: 300;
+            color: #007bff;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
         }
         #map {
             height: 500px;
-            width: 100%;
-            max-width: 800px;
-            margin: 20px auto;
-            border: 2px solid #ddd;
             border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
         }
         #input {
-            width: 100%; 
-            max-width: 400px; 
-            margin: 0 auto 20px auto; 
-            display: block; 
-            padding: 10px; 
-            border: 1px solid #ccc; 
-            border-radius: 5px; 
-            outline: none;
+            margin-bottom: 20px;
+        }
+        .marker-icon {
+            background-color: #007bff;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            box-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+        }
+        .custom-button {
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
 
-<h1>Search for Locations</h1>
-<input id="input" type="text" placeholder="Enter a location" />
-<div id="map"></div>
+<div class="container">
+    <h1>Search for Locations</h1>
+    <input id="input" type="text" class="form-control" placeholder="Enter a location" />
+    <button id="clear-btn" class="btn btn-danger custom-button">Clear Search</button>
+    <div id="map"></div>
+</div>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
     // Initialize the map and set default view
     const map = L.map('map').setView([20, 0], 2);
@@ -51,7 +70,7 @@
         maxZoom: 19,
     }).addTo(map);
 
-    // Predefined list of major cities (name and coordinates, A-Z)
+    // Predefined list of major cities (name and coordinates)
     const locations = [
         { name: 'Amsterdam, Netherlands', lat: 52.3676, lng: 4.9041 },
         { name: 'Berlin, Germany', lat: 52.5200, lng: 13.4050 },
@@ -61,7 +80,6 @@
         { name: 'London, UK', lat: 51.5074, lng: -0.1278 },
         { name: 'Los Angeles, USA', lat: 34.0522, lng: -118.2437 },
         { name: 'Mexico City, Mexico', lat: 19.4326, lng: -99.1332 },
-        { name: 'New Delhi, India', lat: 28.6139, lng: 77.2090 },
         { name: 'New York, USA', lat: 40.7128, lng: -74.0060 },
         { name: 'Paris, France', lat: 48.8566, lng: 2.3522 },
         { name: 'Rio de Janeiro, Brazil', lat: -22.9068, lng: -43.1729 },
@@ -73,33 +91,44 @@
         { name: 'Washington, D.C., USA', lat: 38.9072, lng: -77.0369 }
     ];
 
-    // Clear previous markers
     let marker;
 
     // Function to search locations and update the map
     function searchLocation(query) {
-        // Clear the existing marker if any
         if (marker) {
-            map.removeLayer(marker); // Remove the existing marker
+            map.removeLayer(marker);
         }
 
-        // Filter locations based on search input
         const filteredLocation = locations.find(location => 
             location.name.toLowerCase().includes(query.toLowerCase())
         );
 
         if (filteredLocation) {
-            // Center the map on the found location and add a marker
             map.setView([filteredLocation.lat, filteredLocation.lng], 10);
-            marker = L.marker([filteredLocation.lat, filteredLocation.lng]).addTo(map)
-                .bindPopup(filteredLocation.name)
-                .openPopup();
+            marker = L.marker([filteredLocation.lat, filteredLocation.lng], {
+                icon: L.divIcon({
+                    className: 'marker-icon',
+                    html: '<span>📍</span>' // Use an emoji or can replace it with an image source
+                })
+            }).addTo(map)
+            .bindPopup(filteredLocation.name)
+            .openPopup();
         }
     }
 
     // Event listener for search input
     document.getElementById("input").addEventListener("input", function() {
         searchLocation(this.value);
+    });
+
+    // Clear search button functionality
+    document.getElementById("clear-btn").addEventListener("click", function() {
+        document.getElementById("input").value = '';
+        if (marker) {
+            map.removeLayer(marker);
+            marker = null; // Clear the marker reference
+        }
+        map.setView([20, 0], 2); // Reset to default view
     });
 </script>
 
