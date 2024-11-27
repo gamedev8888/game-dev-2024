@@ -1,1 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OvO-inspired Game</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
 
+        #game {
+            position: relative;
+            width: 800px; /* Width of the game area */
+            height: 400px; /* Height of the game area */
+            background-image: url('background.jpg'); /* Set your desired background image */
+            background-size: cover; /* Ensure the image covers the entire area */
+            border: 2px solid black;
+            overflow: hidden;
+        }
+
+        #player {
+            position: absolute;
+            bottom: 0;
+            left: 50px; /* Starting position of the player */
+            width: 30px;
+            height: 30px;
+            background-color: transparent; /* Remove default color */
+        }
+
+        .obstacle {
+            position: absolute;
+            bottom: 50px; /* Height of the obstacle */
+            width: 30px;
+            height: 30px;
+            background-color: red; /* Color for the obstacle */
+        }
+
+        #levelDisplay {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+            font-size: 24px;
+            z-index: 10; /* Make sure it appears above other elements */
+        }
+
+        #imageInput {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10; /* Make sure it appears above other elements */
+        }
+    </style>
+</head>
+<body>
+    <div id="game">
+        <div id="levelDisplay">Level: 1</div>
+        <input type="text" id="imageInput" placeholder="" />
+        <div id="player"></div>
+        <div class="obstacle"></div>
+    </div>
+    <script>
+        const player = document.getElementById('player');
+        const game = document.getElementById('game');
+        const obstacle = document.querySelector('.obstacle');
+        const levelDisplay = document.getElementById('levelDisplay');
+        const imageInput = document.getElementById('imageInput');
+
+        let isJumping = false;
+        let gravity = 0.9;
+        let velocityY = 0;
+        let playerBottom = 0;
+        let level = 1;
+        let obstacleSpeed = 5;
+
+        // Handle image input
+        imageInput.addEventListener('change', () => {
+            const imageUrl = imageInput.value;
+            player.style.backgroundImage = `url(${imageUrl})`;
+            player.style.backgroundSize = 'cover'; // Ensure image fits correctly
+            player.style.width = '50px'; // Adjust player size
+            player.style.height = '50px'; // Adjust player size
+        });
+
+        // Handle key events
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowRight') {
+                moveRight();
+            }
+            if (event.key === 'ArrowLeft') {
+                moveLeft();
+            }
+            if (event.key === ' ' && !isJumping) {
+                jump();
+            }
+        });
+
+        // Move right
+        function moveRight() {
+            const playerStyle = getComputedStyle(player);
+            const playerLeft = parseInt(playerStyle.left);
+            if (playerLeft < 750) { // Prevent moving outside the game area
+                player.style.left = playerLeft + 10 + 'px';
+            }
+        }
+
+        // Move left
+        function moveLeft() {
+            const playerStyle = getComputedStyle(player);
+            const playerLeft = parseInt(playerStyle.left);
+            if (playerLeft > 0) { // Prevent moving outside the game area
+                player.style.left = playerLeft - 10 + 'px';
+            }
+        }
+
+        // Jump functionality
+        function jump() {
+            isJumping = true;
+            velocityY = 15; // Jump height
+            jumpAnimation();
+        }
+
+        function jumpAnimation() {
+            if (isJumping) {
+                playerBottom += velocityY;
+                velocityY -= gravity; // Gravity pulls down the player
+
+                if (playerBottom <= 0) {
+                    playerBottom = 0; // Prevent going below ground
+                    isJumping = false; // Stop jumping when landing
+                }
+                player.style.bottom = playerBottom + 'px';
+                requestAnimationFrame(jumpAnimation);
+            }
+        }
+
+        // Move obstacle continuously
+        function moveObstacle() {
+            const obstacleStyle = getComputedStyle(obstacle);
+            let obstacleLeft = parseInt(obstacleStyle.left);
+
+            obstacleLeft -= obstacleSpeed; // Move obstacle to the left
+            if (obstacleLeft < -30) { // Reset obstacle position
+                obstacleLeft = 800; // Move it back to the right side
+                obstacle.style.height = Math.random() * 50 + 20 + 'px'; // Random height for variant obstacles
+            }
+            obstacle.style.left = obstacleLeft + 'px';
+            requestAnimationFrame(moveObstacle);
+            checkLevelUp();
+        }
+
+        // Check for level up
+        function checkLevelUp() {
+            if (level < 40) {
+                if (Math.random() < 0.02 * level) { // Increase chances of leveling up
+                    level++;
+                    obstacleSpeed += 0.5; // Increase speed with each level
+                    levelDisplay.textContent = `Level: ${level}`;
+                }
+            }
+        }
+
+        // Start obstacle movement
+        moveObstacle();
+    </script>
+</body>
+</html>
