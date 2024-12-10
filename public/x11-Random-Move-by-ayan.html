@@ -28,11 +28,7 @@
 <h1>x11-Random-Move-by-ayan.html</h1>
 
 <img id="myImg01" src="https://imgv3.fotor.com/images/gallery/cartoon-character-generated-by-Fotor-ai-art-creator.jpg" title="myImg01" style="left: 500px; top: 400px;">
-
-<input type="button" id="autoBgLeftBtn" value="Auto Background Left">
-<input type="button" id="rightBtn" value="Right">
-<input type="button" id="downBtn" value="Down">
-<input type="button" id="autoRightBtn" value="Auto Right">
+<img id="myImg02" src="https://example.com/image2.jpg" title="myImg02" style="left: 300px; top: 200px;"> <!-- Add a second image for collision detection -->
 
 <script>
     let myGlobalX = 0;
@@ -42,6 +38,9 @@
         // Start moving myImg02 randomly upon loading
         clearInterval(myTimer02);
         myTimer02 = setInterval(randomMoveImg02, 50);
+
+        // Add keydown event listener for arrow keys
+        document.addEventListener('keydown', handleKeydown);
     }
 
     function randomMoveImg02() {
@@ -54,14 +53,8 @@
     }
 
     function myCheckHit() {
-        if (myHitOther('myImg01', 'myImg02') || myHitOther('myImg01', 'myImg03')) {
+        if (myHitOther('myImg01', 'myImg02')) {
             document.getElementById('myImg01').style.left = '20px';
-        }
-
-        if (myHitOther('myImg01', 'myImg04')) {
-            alert('You Win, now go to the next level');
-            document.getElementById('myImg01').style.left = '20px';
-            location = 'https://www.google.ca';
         }
 
         // Check boundaries
@@ -88,28 +81,17 @@
         if (imgRect.bottom > window.innerHeight) img.style.top = (window.innerHeight - imgRect.height) + 'px';
     }
 
-    document.getElementById('autoBgLeftBtn').addEventListener('click', function() {
-        clearInterval(myClock);
-        myClock = setInterval(function() {
-            myGlobalX -= 5;
-            document.body.style.backgroundPosition = myGlobalX + 'px 0px';
-        }, 100);
-    });
-
-    document.getElementById('rightBtn').addEventListener('click', function() {
-        moveImg('myImg01', 10, 0);
-    });
-
-    document.getElementById('downBtn').addEventListener('click', function() {
-        moveImg('myImg01', 0, 10);
-    });
-
-    document.getElementById('autoRightBtn').addEventListener('click', function() {
-        clearInterval(myTimer01);
-        myTimer01 = setInterval(function() {
+    function handleKeydown(event) {
+        if (event.key === 'ArrowRight') {
             moveImg('myImg01', 10, 0);
-        }, 50);
-    });
+        } else if (event.key === 'ArrowLeft') {
+            moveImg('myImg01', -10, 0);
+        } else if (event.key === 'ArrowDown') {
+            moveImg('myImg01', 0, 10);
+        } else if (event.key === 'ArrowUp') {
+            moveImg('myImg01', 0, -10);
+        }
+    }
 
     function moveImg(imageId, deltaX, deltaY) {
         const img = document.getElementById(imageId);
