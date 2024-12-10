@@ -28,9 +28,9 @@
 <h1>x11-Random-Move-by-ayan.html</h1>
 
 <img id="myImg01" src="https://imgv3.fotor.com/images/gallery/cartoon-character-generated-by-Fotor-ai-art-creator.jpg" title="myImg01" style="left: 500px; top: 400px;">
+<img id="myImg02" src="https://www.alexbirkett.com/wp-content/uploads/2022/11/iamalexbirkett_jacked_aliens_wandering_through_lord_of_the_ring_0bee4dd7-c4a1-4f73-9b1b-f407f052054f.png" title="myImg02" style="left: 300px; top: 200px;"> <!-- Placeholder for random image -->
 
 <script>
-    let myGlobalX = 0;
     let myTimer02;
 
     window.onload = function() {
@@ -43,8 +43,12 @@
     }
 
     function randomMoveImg02() {
-        // This functionality can be removed since we no longer have myImg02
-        // However, if you'd like to keep some other randomly moving images, you can add that logic.
+        let img02 = document.getElementById('myImg02');
+        let my02x = Math.floor((Math.random() * 20) - 10); // Move left/right
+        let my02y = Math.floor((Math.random() * 20) - 10); // Move up/down
+        img02.style.left = parseInt(img02.style.left) + my02x + 'px';
+        img02.style.top = parseInt(img02.style.top) + my02y + 'px';
+        checkBoundaries('myImg02'); // Check boundaries
     }
 
     function handleKeydown(event) {
@@ -63,7 +67,7 @@
         const img = document.getElementById(imageId);
         img.style.left = parseInt(img.style.left) + deltaX + 'px';
         img.style.top = parseInt(img.style.top) + deltaY + 'px';
-        checkBoundaries(imageId); // Check boundaries on movement
+        checkBoundaries(imageId); // Check boundaries
     }
 
     function checkBoundaries(imageId) {
