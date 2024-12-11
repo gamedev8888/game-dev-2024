@@ -31,10 +31,9 @@
     <input type="button" value="Right" onclick="moveImage(10, 0)">
     <input type="button" value="Down" onclick="moveImage(0, 10)"><br><br>
 
-    <img id="myImg01" src="myImgNew.jpg" style="width:100px; height:80px; left: 50px; top:190px;">
-    <img id="myImg02" src="myImgNew.jpg" style="width:100px; height:80px; left:350px; top:190px;">
-    <img id="myImg03" src="myImgNew.jpg" style="width:100px; height:80px; left:500px; top:190px;">
-    <img id="myImg04" src="myImgNew.jpg" style="width:100px; height:80px; left:500px; top:400px;">
+    <img id="myImg01" src="https://www.vhv.rs/dpng/d/466-4664430_cartoon-characters-holding-guns-hd-png-download.png" style="width:100px; height:80px; left: 50px; top:190px;">
+    <img id="myImg02" src="https://th.bing.com/th/id/R.fb7bf7b6d8e963ef96b22670a7f7fa30?rik=IxxxIiQwFAPeHQ&pid=ImgRaw&r=0" style="width:100px; height:80px; left:350px; top:190px;">
+    <img id="myImg03" src="https://th.bing.com/th/id/R.e3490abeaf21b09906343dc1a529b205?rik=LXhrSDiZEsY9cg&riu=http%3a%2f%2fwww.pngmart.com%2ffiles%2f3%2fPortal-PNG-Image.png&ehk=1B9yl%2bdZDqK5dto%2f7080WYrCxJNIY5N8AQ5H1oeRu6I%3d&risl=&pid=ImgRaw&r=0" style="width:100px; height:80px; left:500px; top:400px;">
 
     <script>
         // Global variables
@@ -77,8 +76,8 @@
                 location.reload();
             }
 
-            if (checkCollision(img01, img04)) {
-                updateFeedback('You hit myImg04 and you win the game!');
+            if (checkCollision(img01, img03)) {
+                updateFeedback('You hit myImg03 and you win the game!');
                 alert('You Win, now go to the next level');
                 location.href = 'https://www.google.ca';
             }
