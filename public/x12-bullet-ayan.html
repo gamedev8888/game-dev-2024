@@ -6,8 +6,8 @@
     <title>Collision Game</title>
     <style>
         body {
-            background-image: url('https://wallpaperaccess.com/full/2016925.jpg');
-            background-repeat: repeat;
+            background-image: url('myBackground01.jpg');
+            background-repeat: cover;
             background-size: 80%;
             position: relative;
         }
@@ -31,9 +31,10 @@
     <input type="button" value="Right" onclick="moveImage(10, 0)">
     <input type="button" value="Down" onclick="moveImage(0, 10)"><br><br>
 
-    <img id="myImg01" src="https://img.freepik.com/premium-photo/cute-cowboy-holding-gun-pistol-cartoon-vector-icon-illustration-people-holiday-icon-concept-isolated-premium-vector-flat-cartoon-style_839035-1529061.jpg?w=2000" style="width:100px; height:80px; left: 50px; top:190px;">
-    <img id="myImg02" src="https://png.pngtree.com/png-vector/20240128/ourmid/pngtree-splash-art-cartoon-zombie-sticker-with-ai-generative-png-image_11558064.png" style="width:100px; height:80px; left:350px; top:190px;">
-    <img id="myImg04" src="https://www.pngall.com/wp-content/uploads/3/Portal-PNG-Photo.png" style="width:100px; height:80px; left:500px; top:400px;">
+    <img id="myImg01" src="myImgNew.jpg" style="width:100px; height:80px; left: 50px; top:190px;">
+    <img id="myImg02" src="myImgNew.jpg" style="width:100px; height:80px; left:350px; top:190px;">
+    <img id="myImg03" src="myImgNew.jpg" style="width:100px; height:80px; left:500px; top:190px;">
+    <img id="myImg04" src="myImgNew.jpg" style="width:100px; height:80px; left:500px; top:400px;">
 
     <script>
         // Global variables
@@ -94,11 +95,17 @@
         function handleKey(event) {
             const img01 = document.getElementById('myImg01');
             switch (event.key) {
-                case 'd':
+                case 'd': // Move right
                     img01.style.left = parseInt(img01.style.left) + 10 + 'px';
                     break;
-                case 's':
+                case 's': // Move down
                     img01.style.top = parseInt(img01.style.top) + 10 + 'px';
+                    break;
+                case 'a': // Move left
+                    img01.style.left = parseInt(img01.style.left) - 10 + 'px';
+                    break;
+                case 'w': // Move up
+                    img01.style.top = parseInt(img01.style.top) - 10 + 'px';
                     break;
             }
             checkHits();
