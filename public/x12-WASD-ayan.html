@@ -6,7 +6,7 @@
     <title>Collision Game</title>
     <style>
         body {
-            background-image: url('myBackground01.jpg');
+            background-image: url('https://wallpaperaccess.com/full/2016925.jpg');
             background-repeat: cover;
             background-size: 80%;
             position: relative;
@@ -19,6 +19,12 @@
         img {
             position: absolute;
         }
+        .bullet {
+            width: 10px;
+            height: 5px;
+            background-color: red; /* Bullet color */
+            position: absolute;
+        }
     </style>
 </head>
 <body id="myBody" onkeydown="handleKey(event)">
@@ -29,7 +35,8 @@
 
     <input type="button" value="Auto Background Left" onclick="startBackgroundMovement()">
     <input type="button" value="Right" onclick="moveImage(10, 0)">
-    <input type="button" value="Down" onclick="moveImage(0, 10)"><br><br>
+    <input type="button" value="Down" onclick="moveImage(0, 10)">
+    <input type="button" value="Shoot" onclick="shootBullet()"><br><br>
 
     <img id="myImg01" src="https://www.vhv.rs/dpng/d/466-4664430_cartoon-characters-holding-guns-hd-png-download.png" style="width:100px; height:80px; left: 50px; top:190px;">
     <img id="myImg02" src="https://th.bing.com/th/id/R.fb7bf7b6d8e963ef96b22670a7f7fa30?rik=IxxxIiQwFAPeHQ&pid=ImgRaw&r=0" style="width:100px; height:80px; left:350px; top:190px;">
@@ -54,7 +61,6 @@
             const img01 = document.getElementById('myImg01');
             const img02 = document.getElementById('myImg02');
             const img03 = document.getElementById('myImg03');
-            const img04 = document.getElementById('myImg04');
 
             document.getElementById('myText01').value = myScore;
 
@@ -77,6 +83,7 @@
             }
 
             if (checkCollision(img01, img03)) {
+                myScore++; // Increment score at win state
                 updateFeedback('You hit myImg03 and you win the game!');
                 alert('You Win, now go to the next level');
                 location.href = 'https://www.google.ca';
@@ -123,6 +130,40 @@
                 myGlobalX -= 5;
                 document.getElementById('myBody').style.backgroundPosition = `${myGlobalX}px 0px`;
             }, 100);
+        }
+
+        function shootBullet() {
+            const img01 = document.getElementById('myImg01');
+            const bullet = document.createElement('div');
+            bullet.className = 'bullet';
+            bullet.style.left = (parseInt(img01.style.left) + 50) + 'px'; // Starting position of the bullet
+            bullet.style.top = (parseInt(img01.style.top) + 30) + 'px'; // Middle of the player's image
+            document.body.appendChild(bullet);
+
+            // Move the bullet
+            let moveInterval = setInterval(() => {
+                bullet.style.left = (parseInt(bullet.style.left) + 10) + 'px'; // Move bullet
+                if (parseInt(bullet.style.left) > window.innerWidth) {
+                    clearInterval(moveInterval);
+                    bullet.remove();  // Remove bullet when it goes off screen
+                }
+
+                // Check for bullet collisions with other images
+                const img02 = document.getElementById('myImg02');
+                const img03 = document.getElementById('myImg03');
+                if (checkCollision(bullet, img02)) {
+                    clearInterval(moveInterval);
+                    bullet.remove();
+                    myScore += 2; // Adjust score for hitting img02
+                    updateFeedback('Hit myImg02! Score: ' + myScore);
+                }
+                if (checkCollision(bullet, img03)) {
+                    clearInterval(moveInterval);
+                    bullet.remove();
+                    myScore += 2; // Adjust score for hitting img03
+                    updateFeedback('Hit myImg03! Score: ' + myScore);
+                }
+            }, 30);
         }
     </script>
 </body>
