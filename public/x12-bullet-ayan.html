@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collision Game</title>
+    <style>
+        body {
+            background-image: url('https://wallpaperaccess.com/full/2016925.jpg');
+            background-repeat: repeat;
+            background-size: 80%;
+            position: relative;
+        }
+        #myText01 {
+            width: 400px;
+            margin: 10px auto;
+            display: block;
+        }
+        img {
+            position: absolute;
+        }
+    </style>
+</head>
+<body id="myBody" onkeydown="handleKey(event)">
+
+    <h1 align="center" style="color: yellow;">T4A05 Template with WASD by Fred</h1>
+    
+    <input id="myText01" type="text" value="" placeholder="Feedback here"><br>
+
+    <input type="button" value="Auto Background Left" onclick="startBackgroundMovement()">
+    <input type="button" value="Right" onclick="moveImage(10, 0)">
+    <input type="button" value="Down" onclick="moveImage(0, 10)"><br><br>
+
+    <img id="myImg01" src="https://img.freepik.com/premium-photo/cute-cowboy-holding-gun-pistol-cartoon-vector-icon-illustration-people-holiday-icon-concept-isolated-premium-vector-flat-cartoon-style_839035-1529061.jpg?w=2000" style="width:100px; height:80px; left: 50px; top:190px;">
+    <img id="myImg02" src="https://png.pngtree.com/png-vector/20240128/ourmid/pngtree-splash-art-cartoon-zombie-sticker-with-ai-generative-png-image_11558064.png" style="width:100px; height:80px; left:350px; top:190px;">
+    <img id="myImg04" src="https://www.pngall.com/wp-content/uploads/3/Portal-PNG-Photo.png" style="width:100px; height:80px; left:500px; top:400px;">
+
+    <script>
+        // Global variables
+        let myGlobalX = 0;
+        let myClock;
+        let myScore = 10;
+
+        function checkCollision(element1, element2) {
+            const rect1 = element1.getBoundingClientRect();
+            const rect2 = element2.getBoundingClientRect();
+            return !(rect1.right < rect2.left || 
+                     rect1.left > rect2.right || 
+                     rect1.bottom < rect2.top || 
+                     rect1.top > rect2.bottom);
+        }
+
+        function checkHits() {
+            const img01 = document.getElementById('myImg01');
+            const img02 = document.getElementById('myImg02');
+            const img03 = document.getElementById('myImg03');
+            const img04 = document.getElementById('myImg04');
+
+            document.getElementById('myText01').value = myScore;
+
+            if (checkCollision(img01, img02)) {
+                resetImagePosition(img01);
+                myScore--;
+                updateFeedback('You hit myImg02');
+            }
+
+            if (checkCollision(img01, img03)) {
+                resetImagePosition(img01);
+                myScore--;
+                updateFeedback('You hit myImg03');
+            }
+
+            if (myScore <= 0) {
+                updateFeedback('You Lose, score at zero!');
+                alert('Sorry, you lose');
+                location.reload();
+            }
+
+            if (checkCollision(img01, img04)) {
+                updateFeedback('You hit myImg04 and you win the game!');
+                alert('You Win, now go to the next level');
+                location.href = 'https://www.google.ca';
+            }
+        }
+
+        function resetImagePosition(img) {
+            img.style.left = '20px';
+        }
+
+        function updateFeedback(message) {
+            document.getElementById('myText01').value = message;
+        }
+
+        function handleKey(event) {
+            const img01 = document.getElementById('myImg01');
+            switch (event.key) {
+                case 'd':
+                    img01.style.left = parseInt(img01.style.left) + 10 + 'px';
+                    break;
+                case 's':
+                    img01.style.top = parseInt(img01.style.top) + 10 + 'px';
+                    break;
+            }
+            checkHits();
+        }
+
+        function moveImage(deltaX, deltaY) {
+            const img01 = document.getElementById('myImg01');
+            img01.style.left = parseInt(img01.style.left) + deltaX + 'px';
+            img01.style.top = parseInt(img01.style.top) + deltaY + 'px';
+            checkHits();
+        }
+
+        function startBackgroundMovement() {
+            clearInterval(myClock);
+            myClock = setInterval(() => {
+                myGlobalX -= 5;
+                document.getElementById('myBody').style.backgroundPosition = `${myGlobalX}px 0px`;
+            }, 100);
+        }
+    </script>
+</body>
+</html>
