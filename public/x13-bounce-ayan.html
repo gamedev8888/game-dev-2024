@@ -1,4 +1,4 @@
-z<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,6 +9,7 @@ z<!DOCTYPE html>
             background-repeat: repeat;
             background-size: 80%;
             background-image: url('https://wallpapercave.com/wp/wp14803412.webp');
+            overflow: hidden; /* Prevent scrollbars */
         }
         h1 {
             color: red;
@@ -17,27 +18,43 @@ z<!DOCTYPE html>
         .button {
             margin-bottom: 10px;
             display: block;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        img {
+            position: absolute;
+            width: 100px;
+            height: 80px;
+        }
+        #myImg01 {
+            left: 50px;
+            top: 190px;
+        }
+        #myImg02 {
+            left: 350px;
+            top: 390px;
         }
     </style>
 </head>
 <body id="myBody">
-    <h6> Version 0.1.1-5</h6>
+    <h6>Version 0.1.1-5</h6>
     <h1>T4A09 Bounce by Fred</h1>
 
     <input type="button" id="moveRightButton" class="button" value="Auto Right">
     <input type="button" id="moveDownButton" class="button" value="Auto Down">
     <input type="button" class="button" value="Auto Background Left" onclick="moveBackgroundLeft()">
 
-    <img id="myImg01" src="myImgNew.jpg" title="myImg01" style="position:absolute; width:100px; height:80px; left: 50px; top:190px;">
-    <img id="myImg02" src="myImgNew.jpg" title="myImg02" style="position:absolute; width:100px; height:80px; left:350px; top:390px;">
+    <img id="myImg01" src="https://via.placeholder.com/100x80" title="myImg01">
+    <img id="myImg02" src="https://via.placeholder.com/100x80" title="myImg02">
 
     <script>
         // Global variables
-        let myGlobalX = 0;
-        let myHorizontalSpeed = 10;
-        let myVerticalSpeed = 6;
         let isMovingRight = false;
         let isMovingDown = false;
+        const myHorizontalSpeed = 10;
+        const myVerticalSpeed = 6;
+        const img01 = document.getElementById('myImg01');
+        const img02 = document.getElementById('myImg02');
 
         // Function to detect collisions
         function myHitOther(my1, my2) {
@@ -52,76 +69,76 @@ z<!DOCTYPE html>
 
         // Function to check for collisions and boundaries
         function myCheckHit() {
-            // Checking win condition
             if (myHitOther('myImg01', 'myImg02')) {
                 alert('You Win, now go to the next level');
-                document.getElementById('myImg01').style.left = '20px';
+                img01.style.left = '20px';
+                img01.style.top = '190px';
                 window.location = 'https://www.google.ca'; // Redirecting to Google
             }
 
-            // Checking for window boundaries
-            const img01 = document.getElementById('myImg01');
-            const img01Left = parseInt(img01.style.left);
-            const img01Top = parseInt(img01.style.top);
+            // Bouncing logic
+            bounceOffWindowEdges(img01);
+            bounceOffWindowEdges(img02);
+        }
 
-            // Bounce off the left and right window edges
-            if (img01Left > window.innerWidth - img01.width || img01Left < 0) {
-                myHorizontalSpeed *= -1; // Reverse direction
+        // Function to bounce image off window edges
+        function bounceOffWindowEdges(img) {
+            const rect = img.getBoundingClientRect();
+            const imgLeft = rect.left;
+            const imgTop = rect.top;
+            const imgWidth = rect.width;
+            const imgHeight = rect.height;
+
+            // Bounce off left and right edges
+            if (imgLeft > window.innerWidth - imgWidth || imgLeft < 0) {
+                img.dataset.horizontalSpeed = -parseFloat(img.dataset.horizontalSpeed) || myHorizontalSpeed; // Reverse direction
             }
 
-            // Bounce off the top and bottom window edges
-            if (img01Top > window.innerHeight - img01.height || img01Top < 0) {
-                myVerticalSpeed *= -1; // Reverse direction
+            // Bounce off top and bottom edges
+            if (imgTop > window.innerHeight - imgHeight || imgTop < 0) {
+                img.dataset.verticalSpeed = -parseFloat(img.dataset.verticalSpeed) || myVerticalSpeed; // Reverse direction
             }
         }
 
-        // Function to move the image to the right
-        function moveRight() {
+        // Function to move the images
+        function moveImages() {
             if (isMovingRight) {
-                const img01 = document.getElementById('myImg01');
-                img01.style.left = parseInt(img01.style.left) + myHorizontalSpeed + 'px';
-                myCheckHit();
-                requestAnimationFrame(moveRight);
+                img01.style.left = (parseInt(img01.style.left) + (parseFloat(img01.dataset.horizontalSpeed) || myHorizontalSpeed)) + 'px';
             }
-        }
-
-        // Function to move the image down
-        function moveDown() {
             if (isMovingDown) {
-                const img01 = document.getElementById('myImg01');
-                img01.style.top = parseInt(img01.style.top) + myVerticalSpeed + 'px';
-                myCheckHit();
-                requestAnimationFrame(moveDown);
+                img01.style.top = (parseInt(img01.style.top) + (parseFloat(img01.dataset.verticalSpeed) || myVerticalSpeed)) + 'px';
             }
+
+            myCheckHit();
+            requestAnimationFrame(moveImages); // Continue the animation
         }
 
         // Event listeners for movement buttons
-        const moveRightButton = document.getElementById('moveRightButton');
-        moveRightButton.addEventListener('mousedown', function () {
+        document.getElementById('moveRightButton').addEventListener('mousedown', function () {
             isMovingRight = true;
-            moveRight();
+            requestAnimationFrame(moveImages); // Start moving
         });
-        moveRightButton.addEventListener('mouseup', function () {
+        document.getElementById('moveRightButton').addEventListener('mouseup', function () {
             isMovingRight = false;
         });
 
-        const moveDownButton = document.getElementById('moveDownButton');
-        moveDownButton.addEventListener('mousedown', function () {
+        document.getElementById('moveDownButton').addEventListener('mousedown', function () {
             isMovingDown = true;
-            moveDown();
+            requestAnimationFrame(moveImages); // Start moving
         });
-        moveDownButton.addEventListener('mouseup', function () {
+        document.getElementById('moveDownButton').addEventListener('mouseup', function () {
             isMovingDown = false;
         });
 
         // Function to move background to the left
         function moveBackgroundLeft() {
-            clearInterval(myClock);
-            myGlobalX = parseInt(getComputedStyle(document.body).backgroundPositionX) || 0;
-            myClock = setInterval(function () {
-                myGlobalX -= 5;
+            let myGlobalX = parseInt(getComputedStyle(document.body).backgroundPositionX) || 0;
+            function animateBackground() {
+                myGlobalX -= 5; // Move left by 5 pixels
                 document.body.style.backgroundPosition = myGlobalX + 'px 0px';
-            }, 100);
+                requestAnimationFrame(animateBackground); // Continue moving background
+            }
+            animateBackground(); // Start the animation
         }
     </script>
 </body>
