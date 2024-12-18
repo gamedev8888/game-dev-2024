@@ -34,6 +34,7 @@
             position: absolute;
             width: 100px;
             height: 80px;
+            transition: transform 0.3s;  /* Optionally add transition for smoother movement */
         }
         #myImg01 {
             left: 50px;
@@ -55,6 +56,7 @@
     <input type="button" class="button" id="resetButton" value="Reset Images">
 
     <img id="myImg01" src="https://www.pngall.com/wp-content/uploads/5/Red-Ball-PNG.png" title="myImg01">
+    <img id="myImg02" src="https://www.pngall.com/wp-content/uploads/5/Red-Ball-PNG.png" title="myImg02">
 
     <audio id="collisionSound" src="https://www.soundjay.com/button/beep-07.wav" preload="auto"></audio>
 
@@ -62,11 +64,11 @@
         // Global variables
         let isMovingRight = false;
         let isMovingDown = false;
-        const myHorizontalSpeed = 10;
-        const myVerticalSpeed = 6;
+        const myHorizontalSpeed = 5; // Reduced speed for better bounce effect
         const img01 = document.getElementById('myImg01');
         const img02 = document.getElementById('myImg02');
         const collisionSound = document.getElementById('collisionSound');
+        let bounceOffset = 0; // For bounce effect
 
         // Function to reset images
         function resetImages() {
@@ -74,6 +76,7 @@
             img01.style.top = '190px';
             img02.style.left = '350px';
             img02.style.top = '390px';
+            bounceOffset = 0; // Reset bounce offset
         }
 
         // Function to detect collisions
@@ -90,12 +93,12 @@
         // Function to check for collisions and boundaries
         function myCheckHit() {
             if (myHitOther('myImg01', 'myImg02')) {
-                collisionSound.play(); // Play sound on collision
+                collisionSound.play();
                 setTimeout(() => alert('You Win, now go to the next level!'), 100);
                 resetImages();
             }
 
-            // Bouncing logic
+            // Check boundaries 
             bounceOffWindowEdges(img01);
             bounceOffWindowEdges(img02);
         }
@@ -115,7 +118,7 @@
 
             // Bounce off top and bottom edges
             if (imgTop > window.innerHeight - imgHeight || imgTop < 0) {
-                img.dataset.verticalSpeed = -parseFloat(img.dataset.verticalSpeed) || myVerticalSpeed; // Reverse direction
+                img.dataset.verticalSpeed = -parseFloat(img.dataset.verticalSpeed) || 5; // Reverse direction
             }
         }
 
@@ -125,10 +128,13 @@
                 img01.style.left = (parseInt(img01.style.left) + (parseFloat(img01.dataset.horizontalSpeed) || myHorizontalSpeed)) + 'px';
                 img02.style.left = (parseInt(img02.style.left) + (parseFloat(img02.dataset.horizontalSpeed) || myHorizontalSpeed)) + 'px';
             }
-            if (isMovingDown) {
-                img01.style.top = (parseInt(img01.style.top) + (parseFloat(img01.dataset.verticalSpeed) || myVerticalSpeed)) + 'px';
-                img02.style.top = (parseInt(img02.style.top) + (parseFloat(img02.dataset.verticalSpeed) || myVerticalSpeed)) + 'px';
-            }
+
+            // Add a bouncing effect using sine
+            bounceOffset = (bounceOffset + 0.1) % (Math.PI * 2); // Loop bounce offset
+            let bounceHeight = Math.sin(bounceOffset) * 20; // height of the bounce
+
+            img01.style.top = (parseInt(img01.style.top) + bounceHeight) + 'px';
+            img02.style.top = (parseInt(img02.style.top) + bounceHeight) + 'px';
 
             myCheckHit();
             requestAnimationFrame(moveImages); // Continue the animation
