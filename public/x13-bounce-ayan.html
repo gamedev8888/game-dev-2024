@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bouncing Image</title>
+    <title>Bounce/title>
     <style>
         body {
             background-repeat: repeat;
@@ -44,9 +44,8 @@
 </head>
 <body id="myBody">
     <h6>Version 0.1.1-5</h6>
-    <h1>T4A09 Bounce by Fred</h1>
+    <h1>x13-bounce-ayan.html</h1>
 
-    <input type="button" id="moveRightButton" class="button" value="Move Right">
     <input type="button" class="button" value="Move Background Left" onclick="moveBackgroundLeft()">
     <input type="button" class="button" id="resetButton" value="Reset Image">
 
@@ -56,12 +55,10 @@
 
     <script>
         // Global variables
-        let isMovingRight = false;
-        const myHorizontalSpeed = 5; // Horizontal speed of the ball
         const img01 = document.getElementById('myImg01');
         const collisionSound = document.getElementById('collisionSound');
         let verticalDirection = 1; // 1 for down, -1 for up
-        let verticalSpeed = 3; // Speed of vertical movement
+        const verticalSpeed = 3; // Speed of vertical movement
 
         // Function to reset image
         function resetImage() {
@@ -71,10 +68,6 @@
 
         // Function to move the image
         function moveImages() {
-            if (isMovingRight) {
-                img01.style.left = (parseInt(img01.style.left) + myHorizontalSpeed) + 'px';
-            }
-
             // Update the vertical position based on the direction
             img01.style.top = (parseInt(img01.style.top) + (verticalSpeed * verticalDirection)) + 'px';
 
@@ -91,25 +84,26 @@
             requestAnimationFrame(moveImages); // Continue the animation
         }
 
-        // Event listeners for movement buttons
-        document.getElementById('moveRightButton').addEventListener('mousedown', () => {
-            isMovingRight = true;
-            requestAnimationFrame(moveImages); // Start moving
-        });
-        document.getElementById('moveRightButton').addEventListener('mouseup', () => {
-            isMovingRight = false;
-        });
-
-        // Function to move background to the left
-        function moveBackgroundLeft() {
-            let myGlobalX = parseInt(getComputedStyle(document.body).backgroundPositionX) || 0;
-            function animateBackground() {
-                myGlobalX -= 5; // Move left by 5 pixels
-                document.body.style.backgroundPosition = myGlobalX + 'px 0px';
-                requestAnimationFrame(animateBackground); // Continue moving background
+        // Function to handle arrow key movements
+        function handleKeydown(event) {
+            const leftLimit = 0;
+            const rightLimit = window.innerWidth - img01.width; // Keep within window width
+            
+            switch (event.key) {
+                case "ArrowRight":
+                    img01.style.left = Math.min(parseInt(img01.style.left) + 10, rightLimit) + 'px'; // Move right
+                    break;
+                case "ArrowLeft":
+                    img01.style.left = Math.max(parseInt(img01.style.left) - 10, leftLimit) + 'px'; // Move left
+                    break;
             }
-            animateBackground(); // Start the animation
         }
+
+        // Event listener for keydown events
+        window.addEventListener('keydown', handleKeydown);
+
+        // Start moving images automatically
+        moveImages();
 
         // Event listener for Reset button
         document.getElementById('resetButton').addEventListener('click', resetImage);
