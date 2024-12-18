@@ -16,10 +16,19 @@
             text-align: center;
         }
         .button {
-            margin-bottom: 10px;
+            margin: 10px auto;
             display: block;
             font-size: 16px;
             cursor: pointer;
+            padding: 10px 20px;
+            background-color: rgba(255, 0, 0, 0.7);
+            border: none;
+            color: white;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: rgba(255, 0, 0, 1);
         }
         img {
             position: absolute;
@@ -40,12 +49,14 @@
     <h6>Version 0.1.1-5</h6>
     <h1>T4A09 Bounce by Fred</h1>
 
-    <input type="button" id="moveRightButton" class="button" value="Auto Right">
-    <input type="button" id="moveDownButton" class="button" value="Auto Down">
-    <input type="button" class="button" value="Auto Background Left" onclick="moveBackgroundLeft()">
+    <input type="button" id="moveRightButton" class="button" value="Move Right">
+    <input type="button" id="moveDownButton" class="button" value="Move Down">
+    <input type="button" class="button" value="Move Background Left" onclick="moveBackgroundLeft()">
+    <input type="button" class="button" id="resetButton" value="Reset Images">
 
-    <img id="myImg01" src="https://via.placeholder.com/100x80" title="myImg01">
-    <img id="myImg02" src="https://via.placeholder.com/100x80" title="myImg02">
+    <img id="myImg01" src="https://www.pngall.com/wp-content/uploads/5/Red-Ball-PNG.png" title="myImg01">
+
+    <audio id="collisionSound" src="https://www.soundjay.com/button/beep-07.wav" preload="auto"></audio>
 
     <script>
         // Global variables
@@ -55,6 +66,15 @@
         const myVerticalSpeed = 6;
         const img01 = document.getElementById('myImg01');
         const img02 = document.getElementById('myImg02');
+        const collisionSound = document.getElementById('collisionSound');
+
+        // Function to reset images
+        function resetImages() {
+            img01.style.left = '50px';
+            img01.style.top = '190px';
+            img02.style.left = '350px';
+            img02.style.top = '390px';
+        }
 
         // Function to detect collisions
         function myHitOther(my1, my2) {
@@ -70,10 +90,9 @@
         // Function to check for collisions and boundaries
         function myCheckHit() {
             if (myHitOther('myImg01', 'myImg02')) {
-                alert('You Win, now go to the next level');
-                img01.style.left = '20px';
-                img01.style.top = '190px';
-                window.location = 'https://www.google.ca'; // Redirecting to Google
+                collisionSound.play(); // Play sound on collision
+                setTimeout(() => alert('You Win, now go to the next level!'), 100);
+                resetImages();
             }
 
             // Bouncing logic
@@ -104,9 +123,11 @@
         function moveImages() {
             if (isMovingRight) {
                 img01.style.left = (parseInt(img01.style.left) + (parseFloat(img01.dataset.horizontalSpeed) || myHorizontalSpeed)) + 'px';
+                img02.style.left = (parseInt(img02.style.left) + (parseFloat(img02.dataset.horizontalSpeed) || myHorizontalSpeed)) + 'px';
             }
             if (isMovingDown) {
                 img01.style.top = (parseInt(img01.style.top) + (parseFloat(img01.dataset.verticalSpeed) || myVerticalSpeed)) + 'px';
+                img02.style.top = (parseInt(img02.style.top) + (parseFloat(img02.dataset.verticalSpeed) || myVerticalSpeed)) + 'px';
             }
 
             myCheckHit();
@@ -114,19 +135,19 @@
         }
 
         // Event listeners for movement buttons
-        document.getElementById('moveRightButton').addEventListener('mousedown', function () {
+        document.getElementById('moveRightButton').addEventListener('mousedown', () => {
             isMovingRight = true;
             requestAnimationFrame(moveImages); // Start moving
         });
-        document.getElementById('moveRightButton').addEventListener('mouseup', function () {
+        document.getElementById('moveRightButton').addEventListener('mouseup', () => {
             isMovingRight = false;
         });
 
-        document.getElementById('moveDownButton').addEventListener('mousedown', function () {
+        document.getElementById('moveDownButton').addEventListener('mousedown', () => {
             isMovingDown = true;
             requestAnimationFrame(moveImages); // Start moving
         });
-        document.getElementById('moveDownButton').addEventListener('mouseup', function () {
+        document.getElementById('moveDownButton').addEventListener('mouseup', () => {
             isMovingDown = false;
         });
 
@@ -140,6 +161,9 @@
             }
             animateBackground(); // Start the animation
         }
+
+        // Event listener for Reset button
+        document.getElementById('resetButton').addEventListener('click', resetImages);
     </script>
 </body>
 </html>
