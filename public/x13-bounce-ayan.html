@@ -34,11 +34,15 @@
             position: absolute;
             width: 100px;
             height: 80px;
-            transition: transform 0.3s;  /* Optionally add transition for smoother movement */
+            transition: transform 0.3s; /* Optionally add transition for smoother movement */
         }
         #myImg01 {
             left: 50px;
             top: 190px;
+        }
+        .slider-container {
+            text-align: center; /* Center the slider */
+            margin: 20px 0; /* Add some space above and below */
         }
     </style>
 </head>
@@ -49,6 +53,11 @@
     <input type="button" class="button" value="Move Background Left" onclick="moveBackgroundLeft()">
     <input type="button" class="button" id="resetButton" value="Reset Image">
 
+    <div class="slider-container">
+        <label for="speedSlider">Adjust Ball Speed:</label>
+        <input type="range" id="speedSlider" min="1" max="20" value="3" step="1">
+    </div>
+
     <img id="myImg01" src="https://www.pngall.com/wp-content/uploads/5/Red-Ball-PNG.png" title="myImg01">
 
     <audio id="collisionSound" src="https://www.soundjay.com/button/beep-07.wav" preload="auto"></audio>
@@ -58,7 +67,7 @@
         const img01 = document.getElementById('myImg01');
         const collisionSound = document.getElementById('collisionSound');
         let verticalDirection = 1; // 1 for down, -1 for up
-        const verticalSpeed = 3; // Speed of vertical movement
+        let verticalSpeed = 3; // Initial speed of vertical movement
 
         // Function to reset image
         function resetImage() {
@@ -68,7 +77,7 @@
 
         // Function to move the image
         function moveImages() {
-            // Update the vertical position based on the direction
+            // Update the vertical position based on the direction and speed
             img01.style.top = (parseInt(img01.style.top) + (verticalSpeed * verticalDirection)) + 'px';
 
             // Check if ball hits top or bottom of the window
@@ -98,6 +107,14 @@
                     break;
             }
         }
+
+        // Function to update speed when slider value changes
+        function updateSpeed() {
+            verticalSpeed = document.getElementById('speedSlider').value; // Get value from slider
+        }
+
+        // Event listener for speed slider
+        document.getElementById('speedSlider').addEventListener('input', updateSpeed);
 
         // Event listener for keydown events
         window.addEventListener('keydown', handleKeydown);
