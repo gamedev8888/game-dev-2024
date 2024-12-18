@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bouncing Images</title>
+    <title>Bouncing Image</title>
     <style>
         body {
             background-repeat: repeat;
@@ -40,10 +40,6 @@
             left: 50px;
             top: 190px;
         }
-        #myImg02 {
-            left: 350px;
-            top: 390px;
-        }
     </style>
 </head>
 <body id="myBody">
@@ -53,57 +49,28 @@
     <input type="button" id="moveRightButton" class="button" value="Move Right">
     <input type="button" id="moveDownButton" class="button" value="Move Down">
     <input type="button" class="button" value="Move Background Left" onclick="moveBackgroundLeft()">
-    <input type="button" class="button" id="resetButton" value="Reset Images">
+    <input type="button" class="button" id="resetButton" value="Reset Image">
 
     <img id="myImg01" src="https://www.pngall.com/wp-content/uploads/5/Red-Ball-PNG.png" title="myImg01">
-    <img id="myImg02" src="https://www.pngall.com/wp-content/uploads/5/Red-Ball-PNG.png" title="myImg02">
 
     <audio id="collisionSound" src="https://www.soundjay.com/button/beep-07.wav" preload="auto"></audio>
 
     <script>
         // Global variables
         let isMovingRight = false;
-        let isMovingDown = false;
         const myHorizontalSpeed = 5; // Reduced speed for better bounce effect
         const img01 = document.getElementById('myImg01');
-        const img02 = document.getElementById('myImg02');
         const collisionSound = document.getElementById('collisionSound');
         let bounceOffset = 0; // For bounce effect
 
-        // Function to reset images
-        function resetImages() {
+        // Function to reset image
+        function resetImage() {
             img01.style.left = '50px';
             img01.style.top = '190px';
-            img02.style.left = '350px';
-            img02.style.top = '390px';
             bounceOffset = 0; // Reset bounce offset
         }
 
-        // Function to detect collisions
-        function myHitOther(my1, my2) {
-            const rect1 = document.getElementById(my1).getBoundingClientRect();
-            const rect2 = document.getElementById(my2).getBoundingClientRect();
-
-            return !(rect1.right < rect2.left || 
-                     rect1.left > rect2.right || 
-                     rect1.bottom < rect2.top || 
-                     rect1.top > rect2.bottom);
-        }
-
-        // Function to check for collisions and boundaries
-        function myCheckHit() {
-            if (myHitOther('myImg01', 'myImg02')) {
-                collisionSound.play();
-                setTimeout(() => alert('You Win, now go to the next level!'), 100);
-                resetImages();
-            }
-
-            // Check boundaries 
-            bounceOffWindowEdges(img01);
-            bounceOffWindowEdges(img02);
-        }
-
-        // Function to bounce image off window edges
+        // function that checks for window boundaries for collision detection
         function bounceOffWindowEdges(img) {
             const rect = img.getBoundingClientRect();
             const imgLeft = rect.left;
@@ -122,11 +89,10 @@
             }
         }
 
-        // Function to move the images
+        // Function to move the image
         function moveImages() {
             if (isMovingRight) {
                 img01.style.left = (parseInt(img01.style.left) + (parseFloat(img01.dataset.horizontalSpeed) || myHorizontalSpeed)) + 'px';
-                img02.style.left = (parseInt(img02.style.left) + (parseFloat(img02.dataset.horizontalSpeed) || myHorizontalSpeed)) + 'px';
             }
 
             // Add a bouncing effect using sine
@@ -134,9 +100,8 @@
             let bounceHeight = Math.sin(bounceOffset) * 20; // height of the bounce
 
             img01.style.top = (parseInt(img01.style.top) + bounceHeight) + 'px';
-            img02.style.top = (parseInt(img02.style.top) + bounceHeight) + 'px';
 
-            myCheckHit();
+            bounceOffWindowEdges(img01);
             requestAnimationFrame(moveImages); // Continue the animation
         }
 
@@ -150,11 +115,7 @@
         });
 
         document.getElementById('moveDownButton').addEventListener('mousedown', () => {
-            isMovingDown = true;
-            requestAnimationFrame(moveImages); // Start moving
-        });
-        document.getElementById('moveDownButton').addEventListener('mouseup', () => {
-            isMovingDown = false;
+            alert("Down movement is not supported.");
         });
 
         // Function to move background to the left
@@ -169,7 +130,7 @@
         }
 
         // Event listener for Reset button
-        document.getElementById('resetButton').addEventListener('click', resetImages);
+        document.getElementById('resetButton').addEventListener('click', resetImage);
     </script>
 </body>
 </html>
