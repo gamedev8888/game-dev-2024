@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bouncing Ball</title>
+    <title>Bouncing Image</title>
     <style>
         body {
             background-repeat: repeat;
@@ -34,6 +34,7 @@
             position: absolute;
             width: 100px;
             height: 80px;
+            transition: transform 0.3s;  /* Optionally add transition for smoother movement */
         }
         #myImg01 {
             left: 50px;
@@ -43,9 +44,11 @@
 </head>
 <body id="myBody">
     <h6>Version 0.1.1-5</h6>
-    <h1>Bouncing Ball</h1>
+    <h1>T4A09 Bounce by Fred</h1>
 
-    <input type="button" id="resetButton" class="button" value="Reset Ball">
+    <input type="button" id="moveRightButton" class="button" value="Move Right">
+    <input type="button" class="button" value="Move Background Left" onclick="moveBackgroundLeft()">
+    <input type="button" class="button" id="resetButton" value="Reset Image">
 
     <img id="myImg01" src="https://www.pngall.com/wp-content/uploads/5/Red-Ball-PNG.png" title="myImg01">
 
@@ -53,43 +56,63 @@
 
     <script>
         // Global variables
+        let isMovingRight = false;
+        const myHorizontalSpeed = 5; // Horizontal speed of the ball
         const img01 = document.getElementById('myImg01');
         const collisionSound = document.getElementById('collisionSound');
-        let bounceOffset = 0; // For bounce effect
-        const bounceSpeed = 0.1; // Adjust bounce speed
-        const ballSpeed = 5; // Speed of vertical movement
-        let direction = 1; // 1 for down, -1 for up
+        let verticalDirection = 1; // 1 for down, -1 for up
+        let verticalSpeed = 3; // Speed of vertical movement
 
-        // Function to reset the ball position
-        function resetBall() {
+        // Function to reset image
+        function resetImage() {
             img01.style.left = '50px';
             img01.style.top = '190px';
-            bounceOffset = 0; // Reset bounce offset
-            direction = 1; // Reset direction to down
         }
 
-        // Function to move the ball
-        function moveBall() {
-            bounceOffset += bounceSpeed * direction; // Adjust bounce offset based on direction
-
-            // Set the vertical position of the ball
-            img01.style.top = (parseInt(img01.style.top) + bounceOffset) + 'px';
-            
-            // Check for boundaries and reverse direction if needed
-            const rect = img01.getBoundingClientRect();
-            if (rect.top <= 0 || rect.bottom >= window.innerHeight) {
-                collisionSound.play(); // Play sound on bounce
-                direction *= -1; // Reverse direction
+        // Function to move the image
+        function moveImages() {
+            if (isMovingRight) {
+                img01.style.left = (parseInt(img01.style.left) + myHorizontalSpeed) + 'px';
             }
 
-            requestAnimationFrame(moveBall); // Continue the animation
+            // Update the vertical position based on the direction
+            img01.style.top = (parseInt(img01.style.top) + (verticalSpeed * verticalDirection)) + 'px';
+
+            // Check if ball hits top or bottom of the window
+            const rect = img01.getBoundingClientRect();
+            if (rect.top <= 0) {
+                verticalDirection = 1; // Ball hits the top, move down
+                collisionSound.play(); // Play sound on collision
+            } else if (rect.bottom >= window.innerHeight) {
+                verticalDirection = -1; // Ball hits the bottom, move up
+                collisionSound.play(); // Play sound on collision
+            }
+            
+            requestAnimationFrame(moveImages); // Continue the animation
         }
 
-        // Start moving ball
-        moveBall();
+        // Event listeners for movement buttons
+        document.getElementById('moveRightButton').addEventListener('mousedown', () => {
+            isMovingRight = true;
+            requestAnimationFrame(moveImages); // Start moving
+        });
+        document.getElementById('moveRightButton').addEventListener('mouseup', () => {
+            isMovingRight = false;
+        });
+
+        // Function to move background to the left
+        function moveBackgroundLeft() {
+            let myGlobalX = parseInt(getComputedStyle(document.body).backgroundPositionX) || 0;
+            function animateBackground() {
+                myGlobalX -= 5; // Move left by 5 pixels
+                document.body.style.backgroundPosition = myGlobalX + 'px 0px';
+                requestAnimationFrame(animateBackground); // Continue moving background
+            }
+            animateBackground(); // Start the animation
+        }
 
         // Event listener for Reset button
-        document.getElementById('resetButton').addEventListener('click', resetBall);
+        document.getElementById('resetButton').addEventListener('click', resetImage);
     </script>
 </body>
 </html>
