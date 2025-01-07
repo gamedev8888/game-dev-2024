@@ -6,11 +6,11 @@
     <title>Simple Collision Game</title>
     <style>
         body {
-            margin: 0;
-            height: 100vh;
+            margin: 0; 
+            height: 100vh; 
             background-image: url('https://wallpaperaccess.com/full/219688.jpg');
-            background-repeat: no-repeat;
-            background-size: cover;
+            background-repeat: no-repeat; 
+            background-size: cover; 
             position: relative;
         }
         img {
@@ -20,9 +20,9 @@
         }
         input[type="text"] {
             width: 300px;
-            position: absolute;
-            top: 10px;
-            left: 10px;
+            position: absolute; 
+            top: 10px; 
+            left: 10px; 
         }
     </style>
 </head>
@@ -38,7 +38,6 @@
 
 <script>
     let myScore = 10;
-    let isJumping = false; // To track if the jump is in progress
 
     function myHitOther(my1, my2) {
         const left1 = parseInt(document.getElementById(my1).style.left);
@@ -95,10 +94,8 @@
                 moveLeft();
                 break;
             case 'ArrowUp':
-                if (!isJumping) { // Allow jump only if not already jumping
-                    jump();
-                }
-                break;
+                moveUp();
+                break; // Keep moveUp for vertical movement
         }
         myCheckHit(); // Check for collisions
     }
@@ -121,32 +118,6 @@
     function moveUp() {
         const img = document.getElementById('myImg01');
         img.style.top = parseInt(img.style.top) - 10 + 'px';
-    }
-
-    function jump() {
-        const img = document.getElementById('myImg01');
-        isJumping = true;
-        let jumpHeight = 100; // Height to jump
-        let originalTop = parseInt(img.style.top);
-
-        // First part of the jump (upward)
-        let jumpUp = setInterval(() => {
-            if (jumpHeight > 0) {
-                img.style.top = (originalTop - 5) + 'px'; // Move up
-                jumpHeight -= 5; // Decrease jump height
-            } else {
-                clearInterval(jumpUp); // Stop going up, start going down
-                // Second part of the jump (downward)
-                let jumpDown = setInterval(() => {
-                    if (img.style.top < originalTop) {
-                        img.style.top = (parseInt(img.style.top) + 5) + 'px'; // Move down
-                    } else {
-                        clearInterval(jumpDown); // Jump complete
-                        isJumping = false; // Allow jumping again
-                    }
-                }, 20);
-            }
-        }, 20);
     }
 </script>
 </body>
