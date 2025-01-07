@@ -56,11 +56,9 @@
         document.getElementById('myText01').value = 'Score: ' + myScore;
 
         if (myHitOther('myImg01', 'myImg02')) {
-            resetPosition('You hit myImg02');
-        }
-
-        if (myHitOther('myImg01', 'myImg03')) {
-            alert('You Win, now go to the next level');
+            resetPosition('You hit an obstacle! Score reduced by 1.');
+        } else if (myHitOther('myImg01', 'myImg03')) {
+            alert('You Win! Now go to the next level.');
             window.location = 'https://www.google.ca';
         }
 
@@ -102,22 +100,34 @@
 
     function moveRight() {
         const img = document.getElementById('myImg01');
-        img.style.left = parseInt(img.style.left) + 10 + 'px';
+        const newX = parseInt(img.style.left) + 10; 
+        if (newX + img.width <= window.innerWidth) {
+            img.style.left = newX + 'px';
+        }
     }
 
     function moveDown() {
         const img = document.getElementById('myImg01');
-        img.style.top = parseInt(img.style.top) + 10 + 'px';
+        const newY = parseInt(img.style.top) + 10; 
+        if (newY + img.height <= window.innerHeight) {
+            img.style.top = newY + 'px';
+        }
     }
 
     function moveLeft() {
         const img = document.getElementById('myImg01');
-        img.style.left = parseInt(img.style.left) - 10 + 'px';
+        const newX = parseInt(img.style.left) - 10; 
+        if (newX >= 0) {
+            img.style.left = newX + 'px';
+        }
     }
 
     function moveUp() {
         const img = document.getElementById('myImg01');
-        img.style.top = parseInt(img.style.top) - 10 + 'px';
+        const newY = parseInt(img.style.top) - 10; 
+        if (newY >= 0) {
+            img.style.top = newY + 'px';
+        }
     }
 </script>
 </body>
