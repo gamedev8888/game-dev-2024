@@ -3,201 +3,162 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enhanced Collision Game</title>
+    <title>Collect the Coins!</title>
     <style>
         body {
-            margin: 0; 
-            height: 100vh; 
-            background-image: url('https://wallpaperaccess.com/full/219688.jpg');
-            background-repeat: no-repeat; 
-            background-size: cover; 
-            position: relative;
-            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             font-family: Arial, sans-serif;
+            margin: 0;
+            height: 100vh;
+            background-image: url('https://wallpaperaccess.com/full/2016915.jpg');
+            background-size: cover; /* Cover the whole page */
+            background-position: center; /* Center the background */
+            color: white; /* Change text color to white */
         }
-        img {
-            position: absolute;
-            width: 100px;
-            height: 80px;
-        }
-        #scoreDisplay {
+
+        #game {
+            position: relative;
             width: 300px;
-            position: absolute; 
-            top: 10px; 
-            left: 10px; 
-            color: yellow;
-            font-size: 24px;
+            height: 400px;
+            border: 2px solid black;
+            overflow: hidden;
+            background-color: rgba(173, 216, 230, 0.7); /* Light blue with some transparency for better visibility */
         }
-        #gameOverMenu {
+
+        #player {
             position: absolute;
-            top: 50%;
+            bottom: 0;
             left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            display: none;
-            text-align: center;
+            width: 50px;
+            height: 50px;
+            background-color: green;
+            transform: translateX(-50%);
         }
-        button {
-            padding: 10px 20px;
-            font-size: 20px;
-            margin-top: 10px;
+
+        .coin {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: gold;
+        }
+
+        #yellowBlock {
+            position: absolute;
+            bottom: 0;
+            background-color: yellow;
+            width: 50px;
+            height: 50px;
+            left: 50%;
+            transform: translateX(-50%);
         }
     </style>
 </head>
-<body onkeydown="handleKeyDown(event)">
+<body>
+    <h1>Collect the Coins!</h1>
+    <div id="game">
+        <div id="player"></div>
+        <div id="yellowBlock"></div>
+        <div id="score">Score: 0</div>
+    </div>
+    <script>
+        let gameArea = document.getElementById('game');
+        let player = document.getElementById('player');
+        let yellowBlock = document.getElementById('yellowBlock');
+        let scoreDisplay = document.getElementById('score');
+        let score = 0;
+        let coins = [];
+        const coinFallSpeed = 2;
+        const coinSpawnInterval = 1000;
+        const yellowBlockSpeed = 2; // Speed of the yellow block
 
-<h1 align="center" style="color: Yellow;">Level 1</h1>
-<div id="scoreDisplay">Score: 10</div>
-<div id="gameOverMenu">
-    <h2>Game Over</h2>
-    <button onclick="resetGame()">Restart Game</button>
-</div>
-
-<img id="myImg01" src="https://cdn2.iconfinder.com/data/icons/symbols-8/50/1F7E8-yellow-square-512.png" style="left: 50px; top: 400px;"> <!-- Player -->
-<img id="myCoin01" src="https://cdn4.iconfinder.com/data/icons/game-2048/512/coin-512.png" style="left: 200px; top: 300px;"> <!-- Coin -->
-<img id="myImg02" src="https://i.pinimg.com/originals/09/f2/f8/09f2f88f8e9f878451a97077f83e3452.jpg" style="left: 350px; top: 400px;"> <!-- Obstacle 1 -->
-<img id="myImg03" src="https://i.pinimg.com/originals/09/f2/f8/09f2f88f8e9f878451a97077f83e3452.jpg" style="left: 500px; top: 400px;"> <!-- Obstacle 2 -->
-
-<script>
-    let myScore = 10;
-    let gameOver = false;
-    let obstacleSpeed = 2;
-
-    function myHitOther(my1, my2) {
-        const left1 = parseInt(document.getElementById(my1).style.left);
-        const right1 = left1 + 100; // width of the player
-        const top1 = parseInt(document.getElementById(my1).style.top);
-        const bottom1 = top1 + 80; // height of the player
-        const left2 = parseInt(document.getElementById(my2).style.left);
-        const right2 = left2 + 50; // width of the coin
-        const top2 = parseInt(document.getElementById(my2).style.top);
-        const bottom2 = top2 + 50; // height of the coin
-        
-        return (right1 >= left2 && bottom1 >= top2 && left1 <= right2 && top1 <= bottom2);
-    }
-
-    function myCheckHit() {
-        document.getElementById('scoreDisplay').textContent = 'Score: ' + myScore;
-
-        // Check for collision with coin
-        if (myHitOther('myImg01', 'myCoin01')) {
-            myScore += 5; // Increase score when collecting a coin
-            document.getElementById('myCoin01').style.left = Math.random() * (window.innerWidth - 50) + 'px'; // Reposition the coin
-            document.getElementById('myCoin01').style.top = Math.random() * (window.innerHeight - 50) + 'px'; // Reposition the coin randomly
+        function movePlayer(e) {
+            const playerRect = player.getBoundingClientRect();
+            if (e.key === "ArrowLeft" && playerRect.left > 0) {
+                player.style.left = player.offsetLeft - 15 + 'px';
+            } else if (e.key === "ArrowRight" && playerRect.right < gameArea.offsetWidth) {
+                player.style.left = player.offsetLeft + 15 + 'px';
+            }
         }
 
-        // Check for collisions with obstacles
-        if (myHitOther('myImg01', 'myImg02')) {
-            gameOver = true;
-            document.getElementById('gameOverMenu').style.display = 'block';
-            document.getElementById('myImg01').style.display = 'none'; 
+        function createCoin() {
+            const coin = document.createElement('div');
+            coin.classList.add('coin');
+            coin.style.left = Math.random() * (gameArea.offsetWidth - 30) + 'px';
+            gameArea.appendChild(coin);
+            coins.push(coin);
         }
 
-        if (myHitOther('myImg01', 'myImg03')) {
-            alert('You Win! Loading the next level...');
-            window.location = 'https://www.google.ca';
+        function fallCoins() {
+            coins.forEach((coin, index) => {
+                let coinRect = coin.getBoundingClientRect();
+                coin.style.top = (coinRect.top + coinFallSpeed) + 'px';
+                
+                // Check for collision with player
+                if (coinRect.bottom > player.getBoundingClientRect().top &&
+                    coinRect.top < player.getBoundingClientRect().bottom &&
+                    coinRect.right > player.getBoundingClientRect().left &&
+                    coinRect.left < player.getBoundingClientRect().right) {
+                    score++;
+                    scoreDisplay.innerText = "Score: " + score;
+                    gameArea.removeChild(coin);
+                    coins.splice(index, 1);
+                } 
+                // Check for collision with yellow block
+                else if (coinRect.bottom > yellowBlock.getBoundingClientRect().top &&
+                         coinRect.top < yellowBlock.getBoundingClientRect().bottom &&
+                         coinRect.right > yellowBlock.getBoundingClientRect().left &&
+                         coinRect.left < yellowBlock.getBoundingClientRect().right) {
+                    score++;
+                    scoreDisplay.innerText = "Score: " + score;
+                    gameArea.removeChild(coin);
+                    coins.splice(index, 1);
+                } else if (coinRect.top > gameArea.offsetHeight) {
+                    // Remove coin if it falls out of view
+                    gameArea.removeChild(coin);
+                    coins.splice(index, 1);
+                }
+            });
         }
 
-        if (myScore <= 0 && !gameOver) {
-            gameOver = true;
-            alert('Sorry, you lose! Score at zero!');
-            document.getElementById('gameOverMenu').style.display = 'block';
-            document.getElementById('myImg01').style.display = 'none'; 
+        function moveYellowBlock() {
+            const yellowBlockRect = yellowBlock.getBoundingClientRect();
+            // Move the yellow block towards the coin
+            let closestCoinIndex = -1;
+            let closestCoinDistance = Infinity;
+
+            coins.forEach((coin, index) => {
+                let coinRect = coin.getBoundingClientRect();
+                let distance = Math.abs((coinRect.left + coinRect.width / 2) - (yellowBlockRect.left + yellowBlockRect.width / 2));
+                if (distance < closestCoinDistance) {
+                    closestCoinDistance = distance;
+                    closestCoinIndex = index;
+                }
+            });
+
+            if (closestCoinIndex !== -1) {
+                let closestCoinRect = coins[closestCoinIndex].getBoundingClientRect();
+                if (closestCoinRect.left < yellowBlockRect.left) {
+                    yellowBlock.style.left = yellowBlock.offsetLeft - yellowBlockSpeed + 'px';
+                } else if (closestCoinRect.right > yellowBlockRect.right) {
+                    yellowBlock.style.left = yellowBlock.offsetLeft + yellowBlockSpeed + 'px';
+                }
+            }
         }
 
-        // Level Up Logic
-        if (myScore % 5 === 0 && myScore > 0) {
-            obstacleSpeed += 1; // Increase obstacle speed
-            alert('Level Up! New obstacle speed: ' + obstacleSpeed);
+        function gameLoop() {
+            fallCoins();
+            moveYellowBlock();
+            requestAnimationFrame(gameLoop);
         }
-    }
 
-    function moveObstacles() {
-        const obstacle1 = document.getElementById('myImg02');
-        const newX1 = parseInt(obstacle1.style.left) - obstacleSpeed;
-        obstacle1.style.left = newX1 + 'px';
+        // Event listener for player movement
+        document.addEventListener('keydown', movePlayer);
 
-        if (newX1 < -100) {
-            obstacle1.style.left = window.innerWidth + 'px'; 
-        }
-    }
-
-    function resetGame() {
-        myScore = 10;
-        gameOver = false;
-        obstacleSpeed = 2; // reset obstacle speed
-        document.getElementById('scoreDisplay').textContent = 'Score: ' + myScore;
-        document.getElementById('myImg01').style.left = '50px'; 
-        document.getElementById('myImg01').style.top = '400px';
-        document.getElementById('my img01').style.display = 'block'; 
-        document.getElementById('gameOverMenu').style.display = 'none'; 
-
-        // Reset coin position
-        document.getElementById('myCoin01').style.left = '200px';
-        document.getElementById('myCoin01').style.top = '300px';
-    }
-
-    function handleKeyDown(event) {
-        if (gameOver) return; 
-        switch (event.key) {
-            case 'ArrowRight':
-                moveRight();
-                break;
-            case 'ArrowDown':
-                moveDown();
-                break;
-            case 'ArrowLeft':
-                moveLeft();
-                break;
-            case 'ArrowUp':
-                moveUp();
-                break; 
-        }
-        myCheckHit(); 
-    }
-
-    function moveRight() {
-        const img = document.getElementById('myImg01');
-        const newX = parseInt(img.style.left) + 10; 
-        if (newX + 100 <= window.innerWidth) {
-            img.style.left = newX + 'px';
-        }
-    }
-
-    function moveDown() {
-        const img = document.getElementById('myImg01');
-        const newY = parseInt(img.style.top) + 10; 
-        if (newY + 80 <= window.innerHeight) {
-            img.style.top = newY + 'px';
-        }
-    }
-
-    function moveLeft() {
-        const img = document.getElementById('myImg01');
-        const newX = parseInt(img.style.left) - 10; 
-        if (newX >= 0) {
-            img.style.left = newX + 'px';
-        }
-    }
-
-    function moveUp() {
-        const img = document.getElementById('myImg01');
-        const newY = parseInt(img.style.top) - 10; 
-        if (newY >= 0) {
-            img.style.top = newY + 'px';
-        }
-    }
-
-    function gameLoop() {
-        if (!gameOver) {
-            moveObstacles(); 
-            myCheckHit(); 
-            requestAnimationFrame(gameLoop); 
-        }
-    }
-
-    // Start the game loop
-    gameLoop();
-</script>
+        // Start spawning coins and the game loop
+        setInterval(createCoin, coinSpawnInterval);
+        gameLoop();
+    </script>
 </body>
 </html>
