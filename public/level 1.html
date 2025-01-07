@@ -6,11 +6,11 @@
     <title>Simple Collision Game</title>
     <style>
         body {
-            margin: 0; /* Remove default margin */
-            height: 100vh; /* Set height to cover the viewport */
+            margin: 0;
+            height: 100vh;
             background-image: url('https://wallpaperaccess.com/full/219688.jpg');
-            background-repeat: no-repeat; /* Prevent repeating the image */
-            background-size: cover; /* Cover the whole page */
+            background-repeat: no-repeat;
+            background-size: cover;
             position: relative;
         }
         img {
@@ -20,9 +20,9 @@
         }
         input[type="text"] {
             width: 300px;
-            position: absolute; /* Use absolute positioning for better control */
-            top: 10px; /* Position it near the top */
-            left: 10px; /* Position it to the left */
+            position: absolute;
+            top: 10px;
+            left: 10px;
         }
     </style>
 </head>
@@ -33,14 +33,12 @@
 <input id="myText01" type="text" value="Score: 10" size="50" placeholder="Feedback here" readonly><br>
 
 <img id="myImg01" src="https://cdn2.iconfinder.com/data/icons/symbols-8/50/1F7E8-yellow-square-512.png" style="left: 50px; top: 190px;">
-<img id="myImg02" src="" style="left: 350px; top: 190px;">
-<img id="myImg03" src="" style="left: 500px; top: 190px;">
-
+<img id="myImg02" src="https://via.placeholder.com/100x80/ff0000" style="left: 350px; top: 190px;"> <!-- Obstacle 1 -->
+<img id="myImg03" src="https://via.placeholder.com/100x80/00ff00" style="left: 500px; top: 190px;"> <!-- Obstacle 2 -->
 
 <script>
-    let myGlobalX = 0;
-    let myClock;
     let myScore = 10;
+    let isJumping = false; // To track if the jump is in progress
 
     function myHitOther(my1, my2) {
         const left1 = parseInt(document.getElementById(my1).style.left);
@@ -61,19 +59,15 @@
         if (myHitOther('myImg01', 'myImg02')) {
             resetPosition('You hit myImg02');
         }
-        
-        if (myHitOther('myImg01', 'myImg03')) {
-            resetPosition('You hit myImg03');
-        }
-        
-        if (myScore <= 0) {
-            alert('Sorry, you lose! Score at zero!');
-            resetGame(); // Restart Game
-        }
 
         if (myHitOther('myImg01', 'myImg03')) {
             alert('You Win, now go to the next level');
             window.location = 'https://www.google.ca';
+        }
+
+        if (myScore <= 0) {
+            alert('Sorry, you lose! Score at zero!');
+            resetGame(); // Restart Game
         }
     }
 
@@ -101,7 +95,9 @@
                 moveLeft();
                 break;
             case 'ArrowUp':
-                moveUp();
+                if (!isJumping) { // Allow jump only if not already jumping
+                    jump();
+                }
                 break;
         }
         myCheckHit(); // Check for collisions
@@ -110,25 +106,47 @@
     function moveRight() {
         const img = document.getElementById('myImg01');
         img.style.left = parseInt(img.style.left) + 10 + 'px';
-        myCheckHit();
     }
 
     function moveDown() {
         const img = document.getElementById('myImg01');
         img.style.top = parseInt(img.style.top) + 10 + 'px';
-        myCheckHit();
     }
 
     function moveLeft() {
         const img = document.getElementById('myImg01');
         img.style.left = parseInt(img.style.left) - 10 + 'px';
-        myCheckHit();
     }
 
     function moveUp() {
         const img = document.getElementById('myImg01');
         img.style.top = parseInt(img.style.top) - 10 + 'px';
-        myCheckHit();
+    }
+
+    function jump() {
+        const img = document.getElementById('myImg01');
+        isJumping = true;
+        let jumpHeight = 100; // Height to jump
+        let originalTop = parseInt(img.style.top);
+
+        // First part of the jump (upward)
+        let jumpUp = setInterval(() => {
+            if (jumpHeight > 0) {
+                img.style.top = (originalTop - 5) + 'px'; // Move up
+                jumpHeight -= 5; // Decrease jump height
+            } else {
+                clearInterval(jumpUp); // Stop going up, start going down
+                // Second part of the jump (downward)
+                let jumpDown = setInterval(() => {
+                    if (img.style.top < originalTop) {
+                        img.style.top = (parseInt(img.style.top) + 5) + 'px'; // Move down
+                    } else {
+                        clearInterval(jumpDown); // Jump complete
+                        isJumping = false; // Allow jumping again
+                    }
+                }, 20);
+            }
+        }, 20);
     }
 </script>
 </body>
