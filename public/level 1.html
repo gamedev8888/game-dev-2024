@@ -23,9 +23,9 @@
 </head>
 <body id="myBody" onkeydown="handleKeyDown(event)">
 
-<h1 align="center" style="color: Yellow;">T4A05 Template with WASD by Fred</h1>
+<h1 align="center" style="color: Yellow;">T4A05 Template with Arrow Keys by Fred</h1>
 
-<input id="myText01" type="text" value="" size="50" placeholder="Feedback here" readonly><br>
+<input id="myText01" type="text" value="Score: 10" size="50" placeholder="Feedback here" readonly><br>
 
 <button onclick="moveRight()">Right</button>
 <button onclick="moveDown()">Down</button>
@@ -92,16 +92,16 @@
 
     function handleKeyDown(event) {
         switch (event.key) {
-            case 'd':
+            case 'ArrowRight':
                 moveRight();
                 break;
-            case 's':
+            case 'ArrowDown':
                 moveDown();
                 break;
-            case 'a':
+            case 'ArrowLeft':
                 moveLeft();
                 break;
-            case 'w':
+            case 'ArrowUp':
                 moveUp();
                 break;
         }
