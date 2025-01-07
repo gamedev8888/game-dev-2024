@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simple Collision Game</title>
     <style>
-        #myBody {
+        body {
+            margin: 0; /* Remove default margin */
+            height: 100vh; /* Set height to cover the viewport */
             background-image: url('https://wallpaperaccess.com/full/219688.jpg');
-            background-repeat: repeat;
-            background-size: 80%;
+            background-repeat: no-repeat; /* Prevent repeating the image */
+            background-size: cover; /* Cover the whole page */
             position: relative;
         }
         img {
@@ -18,20 +20,17 @@
         }
         input[type="text"] {
             width: 300px;
+            position: absolute; /* Use absolute positioning for better control */
+            top: 10px; /* Position it near the top */
+            left: 10px; /* Position it to the left */
         }
     </style>
 </head>
-<body id="myBody" onkeydown="handleKeyDown(event)">
+<body onkeydown="handleKeyDown(event)">
 
 <h1 align="center" style="color: Yellow;">T4A05 Template with Arrow Keys by Fred</h1>
 
 <input id="myText01" type="text" value="Score: 10" size="50" placeholder="Feedback here" readonly><br>
-
-<button onclick="moveRight()">Right</button>
-<button onclick="moveDown()">Down</button>
-<button onclick="moveLeft()">Left</button>
-<button onclick="moveUp()">Up</button>
-<button onclick="startAutoMove()">Auto Background Left</button>
 
 <img id="myImg01" src="myImgNew.jpg" style="left: 50px; top: 190px;">
 <img id="myImg02" src="myImgNew.jpg" style="left: 350px; top: 190px;">
@@ -105,7 +104,7 @@
                 moveUp();
                 break;
         }
-        myCheckHit(); // checks for all collisions
+        myCheckHit(); // Check for collisions
     }
 
     function moveRight() {
@@ -130,14 +129,6 @@
         const img = document.getElementById('myImg01');
         img.style.top = parseInt(img.style.top) - 10 + 'px';
         myCheckHit();
-    }
-
-    function startAutoMove() {
-        clearInterval(myClock);
-        myClock = setInterval(() => {
-            myGlobalX -= 5;
-            document.getElementById('myBody').style.backgroundPosition = myGlobalX + 'px 0px';
-        }, 100);
     }
 </script>
 </body>
