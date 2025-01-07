@@ -32,10 +32,10 @@
 
 <input id="myText01" type="text" value="Score: 10" size="50" placeholder="Feedback here" readonly><br>
 
-<img id="myImg01" src="myImgNew.jpg" style="left: 50px; top: 190px;">
-<img id="myImg02" src="myImgNew.jpg" style="left: 350px; top: 190px;">
-<img id="myImg03" src="myImgNew.jpg" style="left: 500px; top: 190px;">
-<img id="myImg04" src="myImgNew.jpg" style="left: 500px; top: 400px;">
+<img id="myImg01" src="https://cdn2.iconfinder.com/data/icons/symbols-8/50/1F7E8-yellow-square-512.png" style="left: 50px; top: 190px;">
+<img id="myImg02" src="" style="left: 350px; top: 190px;">
+<img id="myImg03" src="" style="left: 500px; top: 190px;">
+
 
 <script>
     let myGlobalX = 0;
@@ -71,7 +71,7 @@
             resetGame(); // Restart Game
         }
 
-        if (myHitOther('myImg01', 'myImg04')) {
+        if (myHitOther('myImg01', 'myImg03')) {
             alert('You Win, now go to the next level');
             window.location = 'https://www.google.ca';
         }
