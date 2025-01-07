@@ -13,6 +13,7 @@
             background-size: cover; 
             position: relative;
             overflow: hidden;
+            font-family: Arial, sans-serif;
         }
         img {
             position: absolute;
@@ -52,7 +53,8 @@
     <button onclick="resetGame()">Restart Game</button>
 </div>
 
-<img id="myImg01" src="https://cdn2.iconfinder.com/data/icons/symbols-8/50/1F7E8-yellow-square-512.png" style="left: 50px; top: 400px;">
+<img id="myImg01" src="https://cdn2.iconfinder.com/data/icons/symbols-8/50/1F7E8-yellow-square-512.png" style="left: 50px; top: 400px;"> <!-- Player -->
+<img id="myCoin01" src="https://cdn4.iconfinder.com/data/icons/game-2048/512/coin-512.png" style="left: 200px; top: 300px;"> <!-- Coin -->
 <img id="myImg02" src="https://i.pinimg.com/originals/09/f2/f8/09f2f88f8e9f878451a97077f83e3452.jpg" style="left: 350px; top: 400px;"> <!-- Obstacle 1 -->
 <img id="myImg03" src="https://i.pinimg.com/originals/09/f2/f8/09f2f88f8e9f878451a97077f83e3452.jpg" style="left: 500px; top: 400px;"> <!-- Obstacle 2 -->
 
@@ -63,13 +65,13 @@
 
     function myHitOther(my1, my2) {
         const left1 = parseInt(document.getElementById(my1).style.left);
-        const right1 = left1 + parseInt(document.getElementById(my1).style.width);
+        const right1 = left1 + 100; // width of the player
         const top1 = parseInt(document.getElementById(my1).style.top);
-        const bottom1 = top1 + parseInt(document.getElementById(my1).style.height);
+        const bottom1 = top1 + 80; // height of the player
         const left2 = parseInt(document.getElementById(my2).style.left);
-        const right2 = left2 + parseInt(document.getElementById(my2).style.width);
+        const right2 = left2 + 50; // width of the coin
         const top2 = parseInt(document.getElementById(my2).style.top);
-        const bottom2 = top2 + parseInt(document.getElementById(my2).style.height);
+        const bottom2 = top2 + 50; // height of the coin
         
         return (right1 >= left2 && bottom1 >= top2 && left1 <= right2 && top1 <= bottom2);
     }
@@ -77,10 +79,18 @@
     function myCheckHit() {
         document.getElementById('scoreDisplay').textContent = 'Score: ' + myScore;
 
+        // Check for collision with coin
+        if (myHitOther('myImg01', 'myCoin01')) {
+            myScore += 5; // Increase score when collecting a coin
+            document.getElementById('myCoin01').style.left = Math.random() * (window.innerWidth - 50) + 'px'; // Reposition the coin
+            document.getElementById('myCoin01').style.top = Math.random() * (window.innerHeight - 50) + 'px'; // Reposition the coin randomly
+        }
+
+        // Check for collisions with obstacles
         if (myHitOther('myImg01', 'myImg02')) {
             gameOver = true;
             document.getElementById('gameOverMenu').style.display = 'block';
-            document.getElementById('myImg01').style.display = 'none'; // Hide player
+            document.getElementById('myImg01').style.display = 'none'; 
         }
 
         if (myHitOther('myImg01', 'myImg03')) {
@@ -92,34 +102,43 @@
             gameOver = true;
             alert('Sorry, you lose! Score at zero!');
             document.getElementById('gameOverMenu').style.display = 'block';
-            document.getElementById('myImg01').style.display = 'none'; // Hide player
+            document.getElementById('myImg01').style.display = 'none'; 
+        }
+
+        // Level Up Logic
+        if (myScore % 5 === 0 && myScore > 0) {
+            obstacleSpeed += 1; // Increase obstacle speed
+            alert('Level Up! New obstacle speed: ' + obstacleSpeed);
         }
     }
 
     function moveObstacles() {
         const obstacle1 = document.getElementById('myImg02');
-        const newX1 = parseInt(obstacle1.style.left) - obstacleSpeed; // Moves left
+        const newX1 = parseInt(obstacle1.style.left) - obstacleSpeed;
         obstacle1.style.left = newX1 + 'px';
 
-        // Reset obstacle position if it goes off the left side
         if (newX1 < -100) {
-            obstacle1.style.left = window.innerWidth + 'px'; // Reset position
-            myScore += 1; // Increase score for dodging
+            obstacle1.style.left = window.innerWidth + 'px'; 
         }
     }
 
     function resetGame() {
         myScore = 10;
         gameOver = false;
+        obstacleSpeed = 2; // reset obstacle speed
         document.getElementById('scoreDisplay').textContent = 'Score: ' + myScore;
-        document.getElementById('myImg01').style.left = '50px'; // Restart player position
+        document.getElementById('myImg01').style.left = '50px'; 
         document.getElementById('myImg01').style.top = '400px';
-        document.getElementById('myImg01').style.display = 'block'; // Show player
-        document.getElementById('gameOverMenu').style.display = 'none'; // Hide game over menu
+        document.getElementById('my img01').style.display = 'block'; 
+        document.getElementById('gameOverMenu').style.display = 'none'; 
+
+        // Reset coin position
+        document.getElementById('myCoin01').style.left = '200px';
+        document.getElementById('myCoin01').style.top = '300px';
     }
 
     function handleKeyDown(event) {
-        if (gameOver) return; // Prevent movement if game is over
+        if (gameOver) return; 
         switch (event.key) {
             case 'ArrowRight':
                 moveRight();
@@ -134,13 +153,13 @@
                 moveUp();
                 break; 
         }
-        myCheckHit(); // Check for collisions after movement
+        myCheckHit(); 
     }
 
     function moveRight() {
         const img = document.getElementById('myImg01');
         const newX = parseInt(img.style.left) + 10; 
-        if (newX + img.width <= window.innerWidth) {
+        if (newX + 100 <= window.innerWidth) {
             img.style.left = newX + 'px';
         }
     }
@@ -148,7 +167,7 @@
     function moveDown() {
         const img = document.getElementById('myImg01');
         const newY = parseInt(img.style.top) + 10; 
-        if (newY + img.height <= window.innerHeight) {
+        if (newY + 80 <= window.innerHeight) {
             img.style.top = newY + 'px';
         }
     }
@@ -171,9 +190,9 @@
 
     function gameLoop() {
         if (!gameOver) {
-            moveObstacles(); // Update obstacles movement
-            myCheckHit(); // Check for collisions
-            requestAnimationFrame(gameLoop); // Keep the game loop going
+            moveObstacles(); 
+            myCheckHit(); 
+            requestAnimationFrame(gameLoop); 
         }
     }
 
