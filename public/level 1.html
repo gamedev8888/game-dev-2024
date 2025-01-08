@@ -17,7 +17,7 @@
             display: block;
             margin: 0 auto;
         }
-        #score {
+        #score, #level {
             text-align: center;
             font-size: 24px;
             margin: 20px 0;
@@ -25,6 +25,7 @@
     </style>
 </head>
 <body>
+    <div id="level">Level: 1</div>
     <div id="score">Score: 0</div>
     <canvas id="gameCanvas" width="800" height="600"></canvas>
     <script>
@@ -35,6 +36,7 @@
         let block = { x: canvas.width / 2, y: canvas.height - blockSize, width: blockSize, height: blockSize };
         let coins = [];
         let score = 0;
+        let level = 1;
 
         function createCoin() {
             const x = Math.floor(Math.random() * (canvas.width - coinSize));
@@ -58,6 +60,10 @@
             document.getElementById('score').innerText = `Score: ${score}`;
         }
 
+        function updateLevel() {
+            document.getElementById('level').innerText = `Level: ${level}`;
+        }
+
         function checkCollision() {
             coins.forEach((coin, index) => {
                 if (block.x < coin.x + coin.width &&
@@ -67,6 +73,13 @@
                     // Collision detected
                     coins.splice(index, 1); // Remove the coin
                     score++; // Increase score
+
+                    // Level up logic
+                    if (score % 5 === 0) { // every 5 points, increase level
+                        level++;
+                        updateLevel();
+                    }
+
                     updateScore();
                     createCoin(); // Create a new coin
                 }
@@ -101,6 +114,7 @@
             }
             drawGame();
             updateScore();
+            updateLevel();
         }
 
         document.addEventListener('keydown', moveBlock);
