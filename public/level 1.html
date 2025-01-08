@@ -66,14 +66,14 @@
         let coins = [];
         const baseCoinSpawnInterval = 1000; // Base interval for coin generation
         let volumeLevel = 1; // Initial volume level (number of coins to spawn)
-        const fallSpeed = 0.5; // Adjust this value for slower or faster falling coins
+        const fallSpeed = 1; // Falling speed - set to 1 pixel per frame
 
         function moveYellowBlock(e) {
             const yellowBlockRect = yellowBlock.getBoundingClientRect();
             if (e.key === "ArrowLeft" && yellowBlockRect.left > 0) {
-                yellowBlock.style.left = yellowBlock.offsetLeft - 5 + 'px';
+                yellowBlock.style.left = yellowBlock.offsetLeft - 5 + 'px'; // Move left
             } else if (e.key === "ArrowRight" && yellowBlockRect.right < gameArea.offsetWidth) {
-                yellowBlock.style.right = yellowBlock.offsetRight + 5 + 'px';
+                yellowBlock.style.left = yellowBlock.offsetLeft + 5 + 'px'; // Move right
             }
         }
 
@@ -90,7 +90,7 @@
         function fallCoins() {
             coins.forEach((coin, index) => {
                 let coinRect = coin.getBoundingClientRect();
-                // Increment the top position by a smaller value for slower falling
+                // Increment the top position by fallSpeed for the falling effect
                 coin.style.top = (coinRect.top + fallSpeed) + 'px';
                 
                 // Check for collision with yellow block
