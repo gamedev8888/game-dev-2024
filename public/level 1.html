@@ -122,15 +122,21 @@
         function moveYellowBlock(e) {
             if (isGameOver) return;
             const yellowBlockRect = yellowBlock.getBoundingClientRect();
-            if (e.key === "a" && yellowBlockRect.left > 0) {
-                yellowBlock.style.left = yellowBlock.offsetLeft - 5 + 'px';
-            } else if (e.key === "d" && yellowBlockRect.right < gameArea.offsetWidth) {
-                yellowBlock.style.left = yellowBlock.offsetLeft + 5 + 'px';
+            const gameAreaRect = gameArea.getBoundingClientRect();
+
+            // Allow 'A' key for left movement
+            if (e.key === "a" && yellowBlockRect.left > gameAreaRect.left) {
+                yellowBlock.style.left = (yellowBlock.offsetLeft - 5) + 'px';
+            }
+
+            // Allow 'D' key for right movement
+            if (e.key === "d" && yellowBlockRect.right < gameAreaRect.right) {
+                yellowBlock.style.left = (yellowBlock.offsetLeft + 5) + 'px';
             }
         }
 
         function createCoin() {
-            if (isGameOver) return;
+            if (isGameOver) return; // Prevent coins from spawning if the game is over
             const coin = document.createElement('div');
             coin.classList.add('coin');
             coin.style.left = Math.random() * (gameArea.offsetWidth - 30) + 'px';
@@ -158,7 +164,7 @@
                         coins.splice(index, 1);
                         updateDisplay();
                     }, 300);
-                    
+
                     // Increase the difficulty by reducing the spawn interval as score increases
                     if (score % 5 === 0 && currentCoinSpawnInterval > 200) { // Increase difficulty every 5 points
                         currentCoinSpawnInterval -= 50;
@@ -175,12 +181,12 @@
             isGameOver = true;
             gameOverDisplay.style.display = 'block';
             backgroundMusic.pause();
+            clearInterval(spawnCoinsInterval); // Stop spawning coins
             if (score > highScore) {
                 highScore = score;
                 localStorage.setItem('highScore', highScore); // Save high score to local storage
             }
             updateDisplay();
-            clearInterval(spawnCoinsInterval); // Stop the coin spawning
         }
 
         function gameLoop() {
@@ -205,9 +211,9 @@
         }
 
         function startCoinSpawn() {
-            spawnCoinsInterval = setInterval(() => {
-                createCoin();
-            }, currentCoinSpawnInterval);
+            // Clear any existing interval before setting a new one
+            clearInterval(spawnCoinsInterval);
+            spawnCoinsInterval = setInterval(createCoin, currentCoinSpawnInterval);
         }
 
         // Event listener for movement
