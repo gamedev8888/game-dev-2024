@@ -44,7 +44,7 @@
             transform: translateX(-50%);
         }
 
-        #score, #speed {
+        #score, #volume {
             margin-top: 10px;
             font-size: 18px;
         }
@@ -55,41 +55,41 @@
     <div id="game">
         <div id="yellowBlock"></div>
         <div id="score">Score: 0</div>
-        <div id="speed">Speed Scale: 1</div>
+        <div id="volume">Volume: 1</div>
     </div>
     <script>
         let gameArea = document.getElementById('game');
         let yellowBlock = document.getElementById('yellowBlock');
         let scoreDisplay = document.getElementById('score');
-        let speedDisplay = document.getElementById('speed');
+        let volumeDisplay = document.getElementById('volume');
         let score = 0;
         let coins = [];
-        const baseCoinFallSpeed = 1; // Base coin falling speed
-        let speedScale = 1; // Multiplier for coin speed
-        const coinSpawnInterval = 1000; // Interval for coin generation
-        const yellowBlockSpeed = 5; // Speed of the yellow block
+        const baseCoinSpawnInterval = 1000; // Base interval for coin generation
+        let volumeLevel = 1; // Initial volume level (number of coins to spawn)
 
         function moveYellowBlock(e) {
             const yellowBlockRect = yellowBlock.getBoundingClientRect();
-            if (e.key === "a" && yellowBlockRect.left > 0) {
-                yellowBlock.style.left = yellowBlock.offsetLeft - yellowBlockSpeed + 'px';
-            } else if (e.key === "d" && yellowBlockRect.right < gameArea.offsetWidth) {
-                yellowBlock.style.left = yellowBlock.offsetLeft + yellowBlockSpeed + 'px';
+            if (e.key === "ArrowLeft" && yellowBlockRect.left > 0) {
+                yellowBlock.style.left = yellowBlock.offsetLeft - 5 + 'px';
+            } else if (e.key === "ArrowRight" && yellowBlockRect.right < gameArea.offsetWidth) {
+                yellowBlock.style.left = yellowBlock.offsetLeft + 5 + 'px';
             }
         }
 
         function createCoin() {
-            const coin = document.createElement('div');
-            coin.classList.add('coin');
-            coin.style.left = Math.random() * (gameArea.offsetWidth - 30) + 'px';
-            gameArea.appendChild(coin);
-            coins.push(coin);
+            for (let i = 0; i < volumeLevel; i++) {
+                const coin = document.createElement('div');
+                coin.classList.add('coin');
+                coin.style.left = Math.random() * (gameArea.offsetWidth - 30) + 'px';
+                gameArea.appendChild(coin);
+                coins.push(coin);
+            }
         }
 
         function fallCoins() {
             coins.forEach((coin, index) => {
                 let coinRect = coin.getBoundingClientRect();
-                coin.style.top = (coinRect.top + baseCoinFallSpeed * speedScale) + 'px';
+                coin.style.top = (coinRect.top + 1) + 'px';
                 
                 // Check for collision with yellow block
                 if (coinRect.bottom > yellowBlock.getBoundingClientRect().top &&
@@ -116,19 +116,19 @@
         // Event listener for yellow block movement
         document.addEventListener('keydown', moveYellowBlock);
 
-        // increase/decrease speed
+        // Volume control
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowUp') {
-                speedScale += 0.1; 
+            if (e.key === 'ArrowUp' && volumeLevel < 10) { // Limit max volume to 10
+                volumeLevel++; 
             }
-            if (e.key === 'ArrowDown') {
-                speedScale = Math.max(0.1, speedScale - 0.1); // Prevent speed scale from going below 0.1
+            if (e.key === 'ArrowDown' && volumeLevel > 1) { // Limit min volume to 1
+                volumeLevel--; 
             }
-            speedDisplay.innerText = "Speed Scale: " + speedScale.toFixed(1);
+            volumeDisplay.innerText = "Volume: " + volumeLevel;
         });
 
-        // Start spawning coins and the game loop
-        setInterval(createCoin, coinSpawnInterval);
+        // Start spawning coins at an interval
+        setInterval(createCoin, baseCoinSpawnInterval);
         gameLoop();
     </script>
 </body>
