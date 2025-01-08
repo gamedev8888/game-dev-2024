@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Collect the coins</title>
+    <title>Collect the Coins</title>
     <style>
         body {
             margin: 0;
@@ -17,7 +17,7 @@
             display: block;
             margin: 0 auto;
         }
-        #score, #level, #message {
+        #score, #level, #timer, #message {
             text-align: center;
             font-size: 24px;
             margin: 20px 0;
@@ -33,6 +33,7 @@
 <body>
     <div id="level">Level: 1</div>
     <div id="score">Score: 0</div>
+    <div id="timer">Time: 30</div> <!-- Timer display -->
     <canvas id="gameCanvas" width="800" height="600"></canvas>
     <div id="message"></div>
     <button id="restart" onclick="restartGame()">Restart Game</button>
@@ -44,7 +45,9 @@
         let block = { x: canvas.width / 2, y: canvas.height - blockSize, width: blockSize, height: blockSize };
         let coins = [];
         let score = 0;
-        
+        let timer; // Timer variable
+        let timeRemaining = 30; // Time in seconds
+
         function createCoin() {
             const x = Math.floor(Math.random() * (canvas.width - coinSize));
             const y = Math.floor(Math.random() * (canvas.height - coinSize));
@@ -67,9 +70,14 @@
             document.getElementById('score').innerText = `Score: ${score}`;
         }
 
+        function updateTimer() {
+            document.getElementById('timer').innerText = `Time: ${timeRemaining}`;
+        }
+
         function displayGameOver() {
-            document.getElementById('message').innerText = "Game Over! You've reached 20 points!";
+            document.getElementById('message').innerText = "Game Over! You've reached 20 points or time is up!";
             document.getElementById('restart').style.display = 'block';
+            clearInterval(timer); // Stop the timer
         }
 
         function checkCollision() {
@@ -82,10 +90,10 @@
                     coins.splice(index, 1); // Remove the coin
                     score++; // Increase score
 
-                    if (score < 100) {
+                    if (score < 20) {
                         createCoin(); // Create a new coin
                     } else {
-                        displayGameOver(); // End game
+                        displayGameOver(); // End game if score is 20
                     }
                     updateScore();
                 }
@@ -120,6 +128,14 @@
             }
             drawGame();
             updateScore();
+            updateTimer();
+            timer = setInterval(() => {
+                timeRemaining--;
+                updateTimer();
+                if (timeRemaining <= 0) {
+                    displayGameOver();
+                }
+            }, 1000);
         }
 
         function restartGame() {
@@ -127,8 +143,10 @@
             coins = [];
             block.x = canvas.width / 2;
             block.y = canvas.height - blockSize;
+            timeRemaining = 30; // Reset timer
             document.getElementById('message').innerText = '';
             document.getElementById('restart').style.display = 'none';
+            clearInterval(timer); // Clear previous timer
             initializeGame();
         }
 
