@@ -31,8 +31,9 @@
 
         .coin {
             position: absolute;
-            width: 30px;
-            height: 30px;
+            width: 40px; /* Increased coin size for better visibility */
+            height: 40px; /* Increased coin size */
+            border-radius: 50%; /* Make coins circular */
             transition: background-color 0.3s;
         }
 
@@ -120,7 +121,7 @@
         }
 
         function moveYellowBlock(e) {
-            if (isGameOver) return;
+            if (isGameOver) return; // Disable movement when game is over
             const yellowBlockRect = yellowBlock.getBoundingClientRect();
             const gameAreaRect = gameArea.getBoundingClientRect();
 
@@ -139,10 +140,30 @@
             if (isGameOver) return; // Prevent coins from spawning if the game is over
             const coin = document.createElement('div');
             coin.classList.add('coin');
-            coin.style.left = Math.random() * (gameArea.offsetWidth - 30) + 'px';
-            coin.style.top = '0px';
-            coin.value = Math.floor(Math.random() * 3) + 1; // Random value between 1 and 3
-            coin.style.backgroundColor = coin.value === 3 ? 'green' : 'gold'; // Different colors for different values
+            const coinValue = Math.floor(Math.random() * 3) + 1; // Random value between 1 and 3
+            coin.value = coinValue;
+            let newCoinPos;
+            let coinOverlapping = true;
+
+            // Check for existing coins to avoid overlap
+            while (coinOverlapping) {
+                newCoinPos = Math.random() * (gameArea.offsetWidth - 40); // Updated for coin size
+                coin.style.left = newCoinPos + 'px';
+                coin.style.top = '0px';
+                coinOverlapping = coins.some(existingCoin => {
+                    const existingRect = existingCoin.getBoundingClientRect();
+                    coin.style.left = newCoinPos + 'px';
+                    const newRect = coin.getBoundingClientRect();
+                    return !(
+                        newRect.right < existingRect.left || 
+                        newRect.left > existingRect.right || 
+                        newRect.bottom < existingRect.top || 
+                        newRect.top > existingRect.bottom
+                    );
+                });
+            }
+
+            coin.style.backgroundColor = coinValue === 3 ? 'green' : 'gold'; // Different colors for different values
             gameArea.appendChild(coin);
             coins.push(coin);
         }
@@ -156,8 +177,12 @@
                     coinRect.top < yellowBlock.getBoundingClientRect().bottom &&
                     coinRect.right > yellowBlock.getBoundingClientRect().left &&
                     coinRect.left < yellowBlock.getBoundingClientRect().right) {
+                    
+                    // Coin collected
+                    collectSound.pause(); // Stop current sound if playing
+                    collectSound.currentTime = 0; // Reset to start
+                    collectSound.play(); // Play collect sound
                     score += coin.value;
-                    collectSound.play();
                     coin.style.backgroundColor = 'blue'; // Indicate coin collection
                     setTimeout(() => {
                         gameArea.removeChild(coin);
@@ -165,12 +190,13 @@
                         updateDisplay();
                     }, 300);
 
-                    // Increase the difficulty by reducing the spawn interval as score increases
-                    if (score % 5 === 0 && currentCoinSpawnInterval > 200) { // Increase difficulty every 5 points
-                        currentCoinSpawnInterval -= 50;
+                    // Increase the difficulty by reducing the spawn interval
+                    if (score % 10 === 0 && currentCoinSpawnInterval > 300) { // Increase difficulty every 10 points
+                        currentCoinSpawnInterval -= 100; 
                     }
+
                 } else if (coinRect.top > gameArea.offsetHeight) {
-                    endGame();
+                    endGame(); // End game if coin falls below the game area
                 }
             });
         }
@@ -179,6 +205,7 @@
             isGameOver = true;
             gameOverDisplay.style.display = 'block';
             backgroundMusic.pause();
+            backgroundMusic.currentTime = 0; // Reset music to start
             if (score > highScore) {
                 highScore = score;
                 localStorage.setItem('highScore', highScore); // Save high score to local storage
@@ -208,9 +235,7 @@
         }
 
         function startCoinSpawn() {
-            // Clear existing coins before starting new intervals
-            clearInterval(spawnCoinsInterval);
-            spawnCoinsInterval = setInterval(createCoin, currentCoinSpawnInterval);
+            setInterval(createCoin, currentCoinSpawnInterval);
         }
 
         // Event listener for movement
