@@ -6,11 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Collect the Coins!</title>
     <style>
-        /* Improved Styles */
         body {
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             font-family: Arial, sans-serif;
             margin: 0;
             height: 100vh;
@@ -18,7 +18,9 @@
             background-size: cover;
             background-position: center;
             color: white;
+            overflow: hidden;
         }
+
         #game {
             position: relative;
             width: 90%;
@@ -27,15 +29,16 @@
             border: 2px solid black;
             overflow: hidden;
             background-color: rgba(173, 216, 230, 0.7);
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         }
+
         .coin {
             position: absolute;
-            width: 40px; 
-            height: 40px; 
-            border-radius: 50%; 
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             transition: background-color 0.3s, transform 0.5s;
         }
+
         #yellowBlock {
             position: absolute;
             bottom: 0;
@@ -44,14 +47,18 @@
             height: 50px;
             left: 50%;
             transform: translateX(-50%);
+            transition: transform 0.1s;
         }
+
         #score {
             margin-top: 10px;
             font-size: 18px;
         }
+
         #highScore {
             font-size: 16px;
         }
+
         #gameOver {
             position: absolute;
             top: 50%;
@@ -62,7 +69,9 @@
             display: none;
             text-align: center;
         }
+
         #restartButton {
+            margin-top: 10px;
             padding: 10px;
             background-color: lightblue;
             border: none;
@@ -70,6 +79,7 @@
             cursor: pointer;
             font-size: 16px;
         }
+
         #restartButton:hover {
             background-color: deepskyblue;
         }
@@ -105,9 +115,9 @@
         let coins = [];
         let isGameOver = false;
 
-        const baseCoinSpawnInterval = 1000; 
-        let currentCoinSpawnInterval = baseCoinSpawnInterval;
-        const fallSpeed = 1; 
+        const baseCoinSpawnInterval = 1000; // Starting coin spawn interval
+        let currentCoinSpawnInterval = baseCoinSpawnInterval; // Current spawn interval
+        const fallSpeed = 1; // Falling speed
 
         function updateDisplay() {
             scoreDisplay.innerText = "Score: " + score;
@@ -115,34 +125,39 @@
         }
 
         function moveYellowBlock(e) {
-            if (isGameOver) return; 
+            if (isGameOver) return; // Disable movement when game is over
             const yellowBlockRect = yellowBlock.getBoundingClientRect();
             const gameAreaRect = gameArea.getBoundingClientRect();
-            if (e.key === "a" && yellowBlockRect.left > gameAreaRect.left) {
-                yellowBlock.style.left = (yellowBlock.offsetLeft - 5) + 'px';
+
+            if (e.key === "a" || e.key === "ArrowLeft") { // 'A' or 'Left Arrow'
+                if (yellowBlockRect.left > gameAreaRect.left) {
+                    yellowBlock.style.left = (yellowBlock.offsetLeft - 20) + 'px';
+                }
             }
-            if (e.key === "d" && yellowBlockRect.right < gameAreaRect.right) {
-                yellowBlock.style.left = (yellowBlock.offsetLeft + 5) + 'px';
+
+            if (e.key === "d" || e.key === "ArrowRight") { // 'D' or 'Right Arrow'
+                if (yellowBlockRect.right < gameAreaRect.right) {
+                    yellowBlock.style.left = (yellowBlock.offsetLeft + 20) + 'px';
+                }
             }
         }
 
         function createCoin() {
-            if (isGameOver) return; 
+            if (isGameOver) return; // Prevent coins from spawning if the game is over
+
             const coin = document.createElement('div');
             coin.classList.add('coin');
-            const coinValue = Math.floor(Math.random() * 3) + 1; 
+            const coinValue = Math.floor(Math.random() * 3) + 1; // Random value between 1 and 3
             coin.value = coinValue;
+            coin.style.backgroundColor = coinValue === 3 ? 'green' : (coinValue === 2 ? 'orange' : 'gold');
 
-            let coinColor = coinValue === 3 ? 'green' : (coinValue === 2 ? 'orange' : 'gold');
-            coin.style.backgroundColor = coinColor;
-            coin.style.left = Math.random() * (gameArea.offsetWidth - 40) + 'px';
+            // Random horizontal position for coin
+            const newCoinPos = Math.random() * (gameArea.offsetWidth - 40);
+            coin.style.left = newCoinPos + 'px';
             coin.style.top = '0px';
+
             gameArea.appendChild(coin);
             coins.push(coin);
-
-            // Animate the coin spawning
-            coin.style.transform = 'translateY(100px)'; // Small initial drop animation
-            setTimeout(() => { coin.style.transform = ''; }, 200); 
         }
 
         function fallAndCheckCoins() {
@@ -154,26 +169,23 @@
                     coinRect.top < yellowBlock.getBoundingClientRect().bottom &&
                     coinRect.right > yellowBlock.getBoundingClientRect().left &&
                     coinRect.left < yellowBlock.getBoundingClientRect().right) {
-                    
-                    collectSound.pause(); 
-                    collectSound.currentTime = 0; 
-                    collectSound.play(); 
-
+                    // Coin collected
+                    collectSound.play(); // Play collect sound
                     score += coin.value;
-                    coin.style.backgroundColor = 'blue'; 
-                    coin.style.transform = 'scale(1.5)'; // Add scaling animation when collected
+                    coin.style.transform = 'scale(1.5)'; // Indicate coin collection with scaling
                     setTimeout(() => {
                         gameArea.removeChild(coin);
                         coins.splice(index, 1);
                         updateDisplay();
-                    }, 300);
+                    }, 200);
 
-                    if (score % 10 === 0 && currentCoinSpawnInterval > 300) {
+                    // Increase the difficulty by reducing the spawn interval
+                    if (score % 10 === 0 && currentCoinSpawnInterval > 300) { // Increase difficulty every 10 points
                         currentCoinSpawnInterval -= 100; 
                     }
 
                 } else if (coinRect.top > gameArea.offsetHeight) {
-                    endGame(); 
+                    endGame(); // End game if coin falls below the game area
                 }
             });
         }
@@ -182,10 +194,9 @@
             isGameOver = true;
             gameOverDisplay.style.display = 'block';
             backgroundMusic.pause();
-            backgroundMusic.currentTime = 0; 
             if (score > highScore) {
                 highScore = score;
-                localStorage.setItem('highScore', highScore); 
+                localStorage.setItem('highScore', highScore); // Save high score to local storage
             }
             updateDisplay();
         }
@@ -199,32 +210,34 @@
 
         function restartGame() {
             score = 0;
-            currentCoinSpawnInterval = baseCoinSpawnInterval; 
+            currentCoinSpawnInterval = baseCoinSpawnInterval; // Reset spawn interval
             updateDisplay();
             gameOverDisplay.style.display = 'none';
             isGameOver = false;
-            coins.forEach(coin => gameArea.removeChild(coin)); 
+            coins.forEach(coin => gameArea.removeChild(coin)); // Remove remaining coins
             coins = [];
-            backgroundMusic.currentTime = 0; 
+            backgroundMusic.currentTime = 0; // Reset background music to start
             backgroundMusic.play();
-            startCoinSpawn(); 
-            gameLoop(); 
+            startCoinSpawn(); // Start spawning coins again
+            gameLoop(); // Restart the game loop
         }
 
         function startCoinSpawn() {
             setInterval(createCoin, currentCoinSpawnInterval);
         }
 
+        // Event listener for movement
         document.addEventListener('keydown', (e) => {
             moveYellowBlock(e);
         });
 
+        // Restart button event listener
         restartButton.addEventListener('click', () => {
             restartGame();
         });
 
         startCoinSpawn();
-        updateDisplay(); 
+        updateDisplay(); // Initial display update
         backgroundMusic.play();
         gameLoop();
     </script>
