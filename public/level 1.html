@@ -33,7 +33,7 @@
 <body>
     <div id="level">Level: 1</div>
     <div id="score">Score: 0</div>
-    <div id="timer">Time: 1:00</div> <!-- Timer display -->
+    <div id="timer">Time: 59</div> <!-- Timer display -->
     <canvas id="gameCanvas" width="800" height="600"></canvas>
     <div id="message"></div>
     <button id="restart" onclick="restartGame()">Restart Game</button>
@@ -143,7 +143,7 @@
             coins = [];
             block.x = canvas.width / 2;
             block.y = canvas.height - blockSize;
-            timeRemaining = 1:00; // Reset timer
+            timeRemaining = 59; // Reset timer
             document.getElementById('message').innerText = '';
             document.getElementById('restart').style.display = 'none';
             clearInterval(timer); // Clear previous timer
