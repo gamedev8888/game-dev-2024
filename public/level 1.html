@@ -27,16 +27,6 @@
             background-color: rgba(173, 216, 230, 0.7); /* Light blue with some transparency for better visibility */
         }
 
-        #player {
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 50px;
-            height: 50px;
-            background-color: green;
-            transform: translateX(-50%);
-        }
-
         .coin {
             position: absolute;
             width: 30px;
@@ -58,27 +48,25 @@
 <body>
     <h1>Collect the Coins!</h1>
     <div id="game">
-        <div id="player"></div>
         <div id="yellowBlock"></div>
         <div id="score">Score: 0</div>
     </div>
     <script>
         let gameArea = document.getElementById('game');
-        let player = document.getElementById('player');
         let yellowBlock = document.getElementById('yellowBlock');
         let scoreDisplay = document.getElementById('score');
         let score = 0;
         let coins = [];
-        const coinFallSpeed = 2;
+        const coinFallSpeed = 1; // Slower falling speed
         const coinSpawnInterval = 1000;
-        const yellowBlockSpeed = 2; // Speed of the yellow block
+        const yellowBlockSpeed = 5; // Speed of the yellow block
 
-        function movePlayer(e) {
-            const playerRect = player.getBoundingClientRect();
-            if (e.key === "ArrowLeft" && playerRect.left > 0) {
-                player.style.left = player.offsetLeft - 15 + 'px';
-            } else if (e.key === "ArrowRight" && playerRect.right < gameArea.offsetWidth) {
-                player.style.left = player.offsetLeft + 15 + 'px';
+        function moveYellowBlock(e) {
+            const yellowBlockRect = yellowBlock.getBoundingClientRect();
+            if (e.key === "a" && yellowBlockRect.left > 0) {
+                yellowBlock.style.left = yellowBlock.offsetLeft - yellowBlockSpeed + 'px';
+            } else if (e.key === "d" && yellowBlockRect.right < gameArea.offsetWidth) {
+                yellowBlock.style.left = yellowBlock.offsetLeft + yellowBlockSpeed + 'px';
             }
         }
 
@@ -95,21 +83,11 @@
                 let coinRect = coin.getBoundingClientRect();
                 coin.style.top = (coinRect.top + coinFallSpeed) + 'px';
                 
-                // Check for collision with player
-                if (coinRect.bottom > player.getBoundingClientRect().top &&
-                    coinRect.top < player.getBoundingClientRect().bottom &&
-                    coinRect.right > player.getBoundingClientRect().left &&
-                    coinRect.left < player.getBoundingClientRect().right) {
-                    score++;
-                    scoreDisplay.innerText = "Score: " + score;
-                    gameArea.removeChild(coin);
-                    coins.splice(index, 1);
-                } 
                 // Check for collision with yellow block
-                else if (coinRect.bottom > yellowBlock.getBoundingClientRect().top &&
-                         coinRect.top < yellowBlock.getBoundingClientRect().bottom &&
-                         coinRect.right > yellowBlock.getBoundingClientRect().left &&
-                         coinRect.left < yellowBlock.getBoundingClientRect().right) {
+                if (coinRect.bottom > yellowBlock.getBoundingClientRect().top &&
+                    coinRect.top < yellowBlock.getBoundingClientRect().bottom &&
+                    coinRect.right > yellowBlock.getBoundingClientRect().left &&
+                    coinRect.left < yellowBlock.getBoundingClientRect().right) {
                     score++;
                     scoreDisplay.innerText = "Score: " + score;
                     gameArea.removeChild(coin);
@@ -122,39 +100,13 @@
             });
         }
 
-        function moveYellowBlock() {
-            const yellowBlockRect = yellowBlock.getBoundingClientRect();
-            // Move the yellow block towards the coin
-            let closestCoinIndex = -1;
-            let closestCoinDistance = Infinity;
-
-            coins.forEach((coin, index) => {
-                let coinRect = coin.getBoundingClientRect();
-                let distance = Math.abs((coinRect.left + coinRect.width / 2) - (yellowBlockRect.left + yellowBlockRect.width / 2));
-                if (distance < closestCoinDistance) {
-                    closestCoinDistance = distance;
-                    closestCoinIndex = index;
-                }
-            });
-
-            if (closestCoinIndex !== -1) {
-                let closestCoinRect = coins[closestCoinIndex].getBoundingClientRect();
-                if (closestCoinRect.left < yellowBlockRect.left) {
-                    yellowBlock.style.left = yellowBlock.offsetLeft - yellowBlockSpeed + 'px';
-                } else if (closestCoinRect.right > yellowBlockRect.right) {
-                    yellowBlock.style.left = yellowBlock.offsetLeft + yellowBlockSpeed + 'px';
-                }
-            }
-        }
-
         function gameLoop() {
             fallCoins();
-            moveYellowBlock();
             requestAnimationFrame(gameLoop);
         }
 
-        // Event listener for player movement
-        document.addEventListener('keydown', movePlayer);
+        // Event listener for yellow block movement
+        document.addEventListener('keydown', moveYellowBlock);
 
         // Start spawning coins and the game loop
         setInterval(createCoin, coinSpawnInterval);
