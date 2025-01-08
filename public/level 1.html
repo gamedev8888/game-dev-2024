@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Block Coin Collector Game</title>
+    <title>Collect the coins</title>
     <style>
         body {
             margin: 0;
@@ -17,10 +17,16 @@
             display: block;
             margin: 0 auto;
         }
-        #score, #level {
+        #score, #level, #message {
             text-align: center;
             font-size: 24px;
             margin: 20px 0;
+        }
+        #restart {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 20px;
         }
     </style>
 </head>
@@ -28,6 +34,8 @@
     <div id="level">Level: 1</div>
     <div id="score">Score: 0</div>
     <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <div id="message"></div>
+    <button id="restart" onclick="restartGame()">Restart Game</button>
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
@@ -36,8 +44,7 @@
         let block = { x: canvas.width / 2, y: canvas.height - blockSize, width: blockSize, height: blockSize };
         let coins = [];
         let score = 0;
-        let level = 1;
-
+        
         function createCoin() {
             const x = Math.floor(Math.random() * (canvas.width - coinSize));
             const y = Math.floor(Math.random() * (canvas.height - coinSize));
@@ -60,8 +67,9 @@
             document.getElementById('score').innerText = `Score: ${score}`;
         }
 
-        function updateLevel() {
-            document.getElementById('level').innerText = `Level: ${level}`;
+        function displayGameOver() {
+            document.getElementById('message').innerText = "Game Over! You've reached 100 points!";
+            document.getElementById('restart').style.display = 'block';
         }
 
         function checkCollision() {
@@ -74,14 +82,12 @@
                     coins.splice(index, 1); // Remove the coin
                     score++; // Increase score
 
-                    // Level up logic
-                    if (score % 5 === 0) { // every 5 points, increase level
-                        level++;
-                        updateLevel();
+                    if (score < 100) {
+                        createCoin(); // Create a new coin
+                    } else {
+                        displayGameOver(); // End game
                     }
-
                     updateScore();
-                    createCoin(); // Create a new coin
                 }
             });
         }
@@ -114,7 +120,16 @@
             }
             drawGame();
             updateScore();
-            updateLevel();
+        }
+
+        function restartGame() {
+            score = 0;
+            coins = [];
+            block.x = canvas.width / 2;
+            block.y = canvas.height - blockSize;
+            document.getElementById('message').innerText = '';
+            document.getElementById('restart').style.display = 'none';
+            initializeGame();
         }
 
         document.addEventListener('keydown', moveBlock);
