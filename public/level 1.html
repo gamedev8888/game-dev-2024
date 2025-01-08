@@ -76,7 +76,6 @@
         const collectSound = new Audio('https://www.soundjay.com/button/sounds/button-3.mp3');
         const backgroundMusic = new Audio('https://www.soundjay.com/button/sounds/button-9.mp3');
         backgroundMusic.loop = true;
-        backgroundMusic.play();
 
         let gameArea = document.getElementById('game');
         let yellowBlock = document.getElementById('yellowBlock');
@@ -85,10 +84,11 @@
         let score = 0;
         let coins = [];
         let isGameOver = false;
+        
         const baseCoinSpawnInterval = 1000; // Base coin spawn interval
         const fallSpeed = 1; // Falling speed
-        let coinValue = 1; // Base value for coins
         let spawnInterval = baseCoinSpawnInterval; // Current spawn interval
+        let spawnCoins; // Variable to hold the spawning interval
 
         function moveYellowBlock(e) {
             if (isGameOver) return;
@@ -133,7 +133,7 @@
                     isGameOver = true;
                     gameOverDisplay.style.display = 'block';
                     backgroundMusic.pause();
-                    clearInterval(spawnCoins); // Stop spawning more coins
+                    clearInterval(spawnCoins); // Stop the coin spawning
                 }
             });
         }
@@ -152,16 +152,18 @@
             isGameOver = false;
             coins.forEach(coin => gameArea.removeChild(coin)); // Remove remaining coins
             coins = [];
-            spawnInterval = baseCoinSpawnInterval; // Reset spawn interval
             backgroundMusic.currentTime = 0; // Reset background music to start
             backgroundMusic.play();
-            gameLoop(); // Restart the game loop
             startCoinSpawn(); // Start spawning coins again
+            gameLoop(); // Restart the game loop
         }
 
         function startCoinSpawn() {
-            // Start coin spawn interval
-            return setInterval(() => {
+            // Prevent multiple intervals from running
+            if (spawnCoins) {
+                clearInterval(spawnCoins);
+            }
+            spawnCoins = setInterval(() => {
                 createCoin();
             }, spawnInterval);
         }
@@ -174,7 +176,7 @@
             }
         });
 
-        let spawnCoins = startCoinSpawn();
+        startCoinSpawn();
         gameLoop();
     </script>
 </body>
