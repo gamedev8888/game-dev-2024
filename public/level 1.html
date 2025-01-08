@@ -3,304 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Collect the Coins!</title>
+    <title>Block Coin Collector Game</title>
     <style>
         body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-family: Arial, sans-serif;
             margin: 0;
-            height: 100vh;
-            background-image: url('https://wallpaperaccess.com/full/2016915.jpg');
-            background-size: cover;
-            background-position: center;
-            color: white;
             overflow: hidden;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
         }
-
-        #game {
-            position: relative;
-            width: 90%;
-            max-width: 500px;
-            height: 70%;
-            border: 2px solid black;
-            overflow: hidden;
-            background-color: rgba(173, 216, 230, 0.7);
+        #gameCanvas {
+            background-color: #fff;
+            border: 1px solid #000;
+            display: block;
+            margin: 0 auto;
         }
-
-        .coin {
-            position: absolute;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            transition: background-color 0.3s, transform 0.5s, opacity 0.5s; /* Added opacity transition */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: black;
-            font-weight: bold;
-        }
-
-        #yellowBlock {
-            position: absolute;
-            bottom: 0;
-            background-color: yellow;
-            width: 50px;
-            height: 50px;
-            left: 50%;
-            transform: translateX(-50%);
-            transition: transform 0.1s;
-        }
-
         #score {
-            margin-top: 10px;
-            font-size: 18px;
-        }
-
-        #highScore {
-            font-size: 16px;
-        }
-
-        #gameOver {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: red;
-            font-size: 24px;
-            display: none;
             text-align: center;
-        }
-
-        #restartButton {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: lightblue;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        #restartButton:hover {
-            background-color: deepskyblue;
-        }
-
-        #musicControl {
-            margin-top: 10px;
-            padding: 5px;
-            background-color: lightcoral;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        #musicControl:hover {
-            background-color: crimson;
+            font-size: 24px;
+            margin: 20px 0;
         }
     </style>
 </head>
 <body>
-    <h1>Collect the Coins!</h1>
-    <div id="game">
-        <div id="yellowBlock"></div>
-        <div id="score">Score: 0</div>
-        <div id="highScore">High Score: 0</div>
-        <div id="gameOver">
-            Game Over!<br>
-            <button id="restartButton">Restart</button>
-        </div>
-    </div>
-    <button id="musicControl">Pause Music</button>
-
+    <div id="score">Score: 0</div>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
     <script>
-        const collectSound = new Audio('https://www.soundjay.com/button/sounds/button-3.mp3');
-        const backgroundMusic = new Audio('https://www.soundjay.com/button/sounds/button-9.mp3');
-        backgroundMusic.loop = true;
-
-        let gameArea = document.getElementById('game');
-        let yellowBlock = document.getElementById('yellowBlock');
-        let scoreDisplay = document.getElementById('score');
-        let highScoreDisplay = document.getElementById('highScore');
-        let gameOverDisplay = document.getElementById('gameOver');
-        let restartButton = document.getElementById('restartButton');
-        let musicControl = document.getElementById('musicControl');
-
-        let score = 0;
-        let highScore = localStorage.getItem('highScore') ? parseInt(localStorage.getItem('highScore')) : 0;
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const blockSize = 40;
+        const coinSize = 20;
+        let block = { x: canvas.width / 2, y: canvas.height - blockSize, width: blockSize, height: blockSize };
         let coins = [];
-        let isGameOver = false;
-
-        const baseCoinSpawnInterval = 1000; // Starting coin spawn interval
-        const minCoinSpawnInterval = 300;    // Minimum spawn interval
-        let currentCoinSpawnInterval = baseCoinSpawnInterval; // Current spawn interval
-        const fallSpeed = 1; // Initial falling speed
-        let currentFallSpeed = fallSpeed; // Current fall speed
-        let missedCoins = 0; // Counter for missed coins
-        const maxMissedCoins = 3; // Maximum allowed missed coins
-
-        function updateDisplay() {
-            scoreDisplay.innerText = "Score: " + score;
-            highScoreDisplay.innerText = "High Score: " + highScore;
-        }
-
-        function moveYellowBlock(e) {
-            if (isGameOver) return; // Disable movement when game is over
-            const yellowBlockRect = yellowBlock.getBoundingClientRect();
-            const gameAreaRect = gameArea.getBoundingClientRect();
-
-            if (e.key === "a" || e.key === "ArrowLeft") { // 'A' or 'Left Arrow'
-                if (yellowBlockRect.left > gameAreaRect.left) {
-                    yellowBlock.style.left = (yellowBlock.offsetLeft - 20) + 'px';
-                }
-            }
-
-            if (e.key === "d" || e.key === "ArrowRight") { // 'D' or 'Right Arrow'
-                if (yellowBlockRect.right < gameAreaRect.right) {
-                    yellowBlock.style.left = (yellowBlock.offsetLeft + 20) + 'px';
-                }
-            }
-        }
+        let score = 0;
 
         function createCoin() {
-            if (isGameOver) return; // Prevent coins from spawning if the game is over
-
-            const coin = document.createElement('div');
-            coin.classList.add('coin');
-            const coinValue = Math.floor(Math.random() * 5) + 1; // Random value between 1 and 5
-            coin.value = coinValue; // Store coin value
-            coin.style.backgroundColor = coinValue === 5 ? 'purple' : (coinValue === 4 ? 'green' : (coinValue === 3 ? 'orange' : 'gold'));
-            coin.innerText = coinValue; // Show coin value
-
-            // Random horizontal position for coin
-            const newCoinPos = Math.random() * (gameArea.offsetWidth - 40);
-            coin.style.left = newCoinPos + 'px';
-            coin.style.top = '0px';
-
-            gameArea.appendChild(coin);
-            coins.push(coin);
+            const x = Math.floor(Math.random() * (canvas.width - coinSize));
+            const y = Math.floor(Math.random() * (canvas.height - coinSize));
+            coins.push({ x, y, width: coinSize, height: coinSize });
         }
 
-        function fallAndCheckCoins() {
+        function drawBlock() {
+            ctx.fillStyle = 'blue';
+            ctx.fillRect(block.x, block.y, block.width, block.height);
+        }
+
+        function drawCoins() {
+            ctx.fillStyle = 'gold';
+            coins.forEach(coin => {
+                ctx.fillRect(coin.x, coin.y, coin.width, coin.height);
+            });
+        }
+
+        function updateScore() {
+            document.getElementById('score').innerText = `Score: ${score}`;
+        }
+
+        function checkCollision() {
             coins.forEach((coin, index) => {
-                let coinRect = coin.getBoundingClientRect();
-                coin.style.top = (coinRect.top + currentFallSpeed) + 'px';
-
-                // Coin collision detection
-                if (coinRect.bottom > yellowBlock.getBoundingClientRect().top &&
-                    coinRect.top < yellowBlock.getBoundingClientRect().bottom &&
-                    coinRect.right > yellowBlock.getBoundingClientRect().left &&
-                    coinRect.left < yellowBlock.getBoundingClientRect().right) {
-                    // Coin collected
-                    collectSound.play(); // Play collect sound
-                    score += coin.value; // Update score
-                    coin.style.transform = `scale(1.5) rotate(360deg)`; // Indicate coin collection with scaling and rotation
-                    coin.style.opacity = '0'; // Fade out
-                    setTimeout(() => {
-                        gameArea.removeChild(coin);
-                        coins.splice(index, 1);
-                        updateDisplay();
-                    }, 500); // Keep for a little longer to see the effect
-
-                    // Increase difficulty
-                    if (score % 10 === 0) { // Increase difficulty every 10 points
-                        if (currentCoinSpawnInterval > minCoinSpawnInterval) {
-                            currentCoinSpawnInterval -= 100; // Reduce spawn interval
-                        }
-                        currentFallSpeed += 0.5; // Increase fall speed
-                    }
-                } else if (coinRect.top > gameArea.offsetHeight) {
-                    // Coin missed
-                    missedCoins++;
-                    if (missedCoins >= maxMissedCoins) {
-                        endGame(); // End game if too many coins missed
-                    } else {
-                        gameArea.removeChild(coin); // Just remove the coin
-                        coins.splice(index, 1); // Remove from coins array
-                    }
+                if (block.x < coin.x + coin.width &&
+                    block.x + block.width > coin.x &&
+                    block.y < coin.y + coin.height &&
+                    block.y + block.height > coin.y) {
+                    // Collision detected
+                    coins.splice(index, 1); // Remove the coin
+                    score++; // Increase score
+                    updateScore();
+                    createCoin(); // Create a new coin
                 }
             });
         }
 
-        function endGame() {
-            isGameOver = true;
-            gameOverDisplay.style.display = 'block';
-            backgroundMusic.pause();
-            if (score > highScore) {
-                highScore = score;
-                localStorage.setItem('highScore', highScore); // Save high score to local storage
+        function moveBlock(event) {
+            const speed = 10;
+            switch (event.key) {
+                case 'ArrowUp':
+                    if (block.y > 0) block.y -= speed; break;
+                case 'ArrowDown':
+                    if (block.y < canvas.height - block.height) block.y += speed; break;
+                case 'ArrowLeft':
+                    if (block.x > 0) block.x -= speed; break;
+                case 'ArrowRight':
+                    if (block.x < canvas.width - block.width) block.x += speed; break;
             }
-            updateDisplay();
+            checkCollision();
+            drawGame();
         }
 
-        function gameLoop() {
-            if (!isGameOver) {
-                fallAndCheckCoins();
-                requestAnimationFrame(gameLoop);
-            }
+        function drawGame() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawCoins();
+            drawBlock();
         }
 
-        function restartGame() {
-            score = 0;
-            missedCoins = 0; // Reset missed coin counter
-            currentCoinSpawnInterval = baseCoinSpawnInterval; // Reset spawn interval
-            currentFallSpeed = fallSpeed; // Reset fall speed
-            updateDisplay();
-            gameOverDisplay.style.display = 'none';
-            isGameOver = false;
-            coins.forEach(coin => gameArea.removeChild(coin)); // Remove remaining coins
-            coins = [];
-            backgroundMusic.currentTime = 0; // Reset background music to start
-            backgroundMusic.play();
-            startCoinSpawn(); // Start spawning coins again
-            gameLoop(); // Restart the game loop
+        function initializeGame() {
+            for (let i = 0; i < 5; i++) {
+                createCoin();
+            }
+            drawGame();
+            updateScore();
         }
 
-        function startCoinSpawn() {
-            // Clear existing intervals to prevent multiple calls
-            clearInterval(window.coinInterval);
-            window.coinInterval = setInterval(createCoin, currentCoinSpawnInterval);
-        }
-
-        // Event listener for movement
-        document.addEventListener('keydown', (e) => {
-            moveYellowBlock(e);
-        });
-
-        // Restart button event listener
-        restartButton.addEventListener('click', () => {
-            restartGame();
-        });
-
-        // Music control button event listener
-        musicControl.addEventListener('click', () => {
-            if (backgroundMusic.paused) {
-                backgroundMusic.play();
-                musicControl.innerText = "Pause Music";
-            } else {
-                backgroundMusic.pause();
-                musicControl.innerText = "Play Music";
-            }
-        });
-
-        // Touch controls for mobile devices
-        gameArea.addEventListener('touchstart', (e) => {
-            const touchX = e.touches[0].clientX;
-            const yellowBlockRect = yellowBlock.getBoundingClientRect();
-            if (touchX < yellowBlockRect.left) {
-                yellowBlock.style.left = (yellowBlock.offsetLeft - 20) + 'px';
-            } else if (touchX > yellowBlockRect.right) {
-                yellowBlock.style.left = (yellowBlock.offsetLeft + 20) + 'px';
-            }
-        });
-
-        startCoinSpawn();
-        updateDisplay(); // Initial display update
-        backgroundMusic.play();
-        gameLoop();
+        document.addEventListener('keydown', moveBlock);
+        initializeGame();
     </script>
 </body>
 </html>
