@@ -13,9 +13,9 @@
             margin: 0;
             height: 100vh;
             background-image: url('https://wallpaperaccess.com/full/2016915.jpg');
-            background-size: cover; /* Cover the whole page */
-            background-position: center; /* Center the background */
-            color: white; /* Change text color to white */
+            background-size: cover;
+            background-position: center;
+            color: white;
         }
 
         #game {
@@ -24,7 +24,7 @@
             height: 400px;
             border: 2px solid black;
             overflow: hidden;
-            background-color: rgba(173, 216, 230, 0.7); /* Light blue with some transparency for better visibility */
+            background-color: rgba(173, 216, 230, 0.7);
         }
 
         .coin {
@@ -43,6 +43,11 @@
             left: 50%;
             transform: translateX(-50%);
         }
+
+        #score, #speed {
+            margin-top: 10px;
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
@@ -50,15 +55,18 @@
     <div id="game">
         <div id="yellowBlock"></div>
         <div id="score">Score: 0</div>
+        <div id="speed">Speed Scale: 1</div>
     </div>
     <script>
         let gameArea = document.getElementById('game');
         let yellowBlock = document.getElementById('yellowBlock');
         let scoreDisplay = document.getElementById('score');
+        let speedDisplay = document.getElementById('speed');
         let score = 0;
         let coins = [];
-        const coinFallSpeed = 0.5; // Adjusted slower falling speed
-        const coinSpawnInterval = 1000;
+        const baseCoinFallSpeed = 1; // Base coin falling speed
+        let speedScale = 1; // Multiplier for coin speed
+        const coinSpawnInterval = 1000; // Interval for coin generation
         const yellowBlockSpeed = 5; // Speed of the yellow block
 
         function moveYellowBlock(e) {
@@ -81,7 +89,7 @@
         function fallCoins() {
             coins.forEach((coin, index) => {
                 let coinRect = coin.getBoundingClientRect();
-                coin.style.top = (coinRect.top + coinFallSpeed) + 'px';
+                coin.style.top = (coinRect.top + baseCoinFallSpeed * speedScale) + 'px';
                 
                 // Check for collision with yellow block
                 if (coinRect.bottom > yellowBlock.getBoundingClientRect().top &&
@@ -107,6 +115,17 @@
 
         // Event listener for yellow block movement
         document.addEventListener('keydown', moveYellowBlock);
+
+        // increase/decrease speed
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowUp') {
+                speedScale += 0.1; 
+            }
+            if (e.key === 'ArrowDown') {
+                speedScale = Math.max(0.1, speedScale - 0.1); // Prevent speed scale from going below 0.1
+            }
+            speedDisplay.innerText = "Speed Scale: " + speedScale.toFixed(1);
+        });
 
         // Start spawning coins and the game loop
         setInterval(createCoin, coinSpawnInterval);
