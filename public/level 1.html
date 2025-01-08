@@ -33,7 +33,7 @@
 <body>
     <div id="level">Level: 1</div>
     <div id="score">Score: 0</div>
-    <div id="timer">Time: 59</div> <!-- Timer display -->
+    <div id="timer">Time: 59</div>
     <canvas id="gameCanvas" width="800" height="600"></canvas>
     <div id="message"></div>
     <button id="restart" onclick="restartGame()">Restart Game</button>
@@ -45,8 +45,11 @@
         let block = { x: canvas.width / 2, y: canvas.height - blockSize, width: blockSize, height: blockSize };
         let coins = [];
         let score = 0;
+        let level = 1; // New variable for levels
+        let blockSpeed = 10; // Speed of block movement
         let timer; // Timer variable
-        let timeRemaining = 30; // Time in seconds
+        let timeRemaining = 59; // Time in seconds
+        const winningScore = 20; // Define the winning score
 
         function createCoin() {
             const x = Math.floor(Math.random() * (canvas.width - coinSize));
@@ -74,8 +77,11 @@
             document.getElementById('timer').innerText = `Time: ${timeRemaining}`;
         }
 
-        function displayGameOver() {
-            document.getElementById('message').innerText = "Game Over! You've reached 20 points or time is up!";
+        function displayGameOver(isWin) {
+            const message = isWin 
+                ? "Congratulations! You've collected 20 coins! You win!" 
+                : "Game Over! Time is up!";
+            document.getElementById('message').innerText = message;
             document.getElementById('restart').style.display = 'block';
             clearInterval(timer); // Stop the timer
         }
@@ -90,27 +96,28 @@
                     coins.splice(index, 1); // Remove the coin
                     score++; // Increase score
 
-                    if (score < 20) {
-                        createCoin(); // Create a new coin
+                    // Check if the player has won
+                    if (score === winningScore) {
+                        displayGameOver(true); // Show win message
                     } else {
-                        displayGameOver(); // End game if score is 20
+                        createCoin(); // Create a new coin
                     }
+
                     updateScore();
                 }
             });
         }
 
         function moveBlock(event) {
-            const speed = 10;
             switch (event.key) {
                 case 'ArrowUp':
-                    if (block.y > 0) block.y -= speed; break;
+                    if (block.y > 0) block.y -= blockSpeed; break;
                 case 'ArrowDown':
-                    if (block.y < canvas.height - block.height) block.y += speed; break;
+                    if (block.y < canvas.height - block.height) block.y += blockSpeed; break;
                 case 'ArrowLeft':
-                    if (block.x > 0) block.x -= speed; break;
+                    if (block.x > 0) block.x -= blockSpeed; break;
                 case 'ArrowRight':
-                    if (block.x < canvas.width - block.width) block.x += speed; break;
+                    if (block.x < canvas.width - block.width) block.x += blockSpeed; break;
             }
             checkCollision();
             drawGame();
@@ -123,9 +130,18 @@
         }
 
         function initializeGame() {
+            score = 0; // Reset score
+            level = 1; // Reset level
+            blockSpeed = 10; // Reset block speed
+            timeRemaining = 59; // Reset timer
+            
+            document.getElementById('message').innerText = ''; // Clear any messages
+            document.getElementById('restart').style.display = 'none'; // Hide restart button
+            
             for (let i = 0; i < 5; i++) {
-                createCoin();
+                createCoin(); // Create initial coins
             }
+    
             drawGame();
             updateScore();
             updateTimer();
@@ -133,21 +149,16 @@
                 timeRemaining--;
                 updateTimer();
                 if (timeRemaining <= 0) {
-                    displayGameOver();
+                    displayGameOver(false); // Show lose message
                 }
             }, 1000);
         }
 
         function restartGame() {
-            score = 0;
-            coins = [];
-            block.x = canvas.width / 2;
-            block.y = canvas.height - blockSize;
-            timeRemaining = 59; // Reset timer
-            document.getElementById('message').innerText = '';
-            document.getElementById('restart').style.display = 'none';
-            clearInterval(timer); // Clear previous timer
-            initializeGame();
+            coins = []; // Reset coins
+            block.x = canvas.width / 2; // Reset block position
+            block.y = canvas.height - blockSize; // Reset block position
+            initializeGame(); // Restart the game logic
         }
 
         document.addEventListener('keydown', moveBlock);
