@@ -109,7 +109,7 @@
         let highScore = localStorage.getItem('highScore') ? parseInt(localStorage.getItem('highScore')) : 0;
         let coins = [];
         let isGameOver = false;
-        let spawnCoinsInterval;
+
         const baseCoinSpawnInterval = 1000; // Starting coin spawn interval
         let currentCoinSpawnInterval = baseCoinSpawnInterval; // Current spawn interval
         const fallSpeed = 1; // Falling speed
@@ -147,7 +147,7 @@
             coins.push(coin);
         }
 
-        function fallCoins() {
+        function fallAndCheckCoins() {
             coins.forEach((coin, index) => {
                 let coinRect = coin.getBoundingClientRect();
                 coin.style.top = (coinRect.top + fallSpeed) + 'px';
@@ -168,8 +168,6 @@
                     // Increase the difficulty by reducing the spawn interval as score increases
                     if (score % 5 === 0 && currentCoinSpawnInterval > 200) { // Increase difficulty every 5 points
                         currentCoinSpawnInterval -= 50;
-                        clearInterval(spawnCoinsInterval);
-                        startCoinSpawn();
                     }
                 } else if (coinRect.top > gameArea.offsetHeight) {
                     endGame();
@@ -181,7 +179,6 @@
             isGameOver = true;
             gameOverDisplay.style.display = 'block';
             backgroundMusic.pause();
-            clearInterval(spawnCoinsInterval); // Stop spawning coins
             if (score > highScore) {
                 highScore = score;
                 localStorage.setItem('highScore', highScore); // Save high score to local storage
@@ -191,7 +188,7 @@
 
         function gameLoop() {
             if (!isGameOver) {
-                fallCoins();
+                fallAndCheckCoins();
                 requestAnimationFrame(gameLoop);
             }
         }
@@ -211,7 +208,7 @@
         }
 
         function startCoinSpawn() {
-            // Clear any existing interval before setting a new one
+            // Clear existing coins before starting new intervals
             clearInterval(spawnCoinsInterval);
             spawnCoinsInterval = setInterval(createCoin, currentCoinSpawnInterval);
         }
