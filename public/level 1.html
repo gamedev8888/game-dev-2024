@@ -133,6 +133,7 @@
                     isGameOver = true;
                     gameOverDisplay.style.display = 'block';
                     backgroundMusic.pause();
+                    clearInterval(spawnCoins); // Stop spawning more coins
                 }
             });
         }
@@ -152,8 +153,17 @@
             coins.forEach(coin => gameArea.removeChild(coin)); // Remove remaining coins
             coins = [];
             spawnInterval = baseCoinSpawnInterval; // Reset spawn interval
+            backgroundMusic.currentTime = 0; // Reset background music to start
             backgroundMusic.play();
             gameLoop(); // Restart the game loop
+            startCoinSpawn(); // Start spawning coins again
+        }
+
+        function startCoinSpawn() {
+            // Start coin spawn interval
+            return setInterval(() => {
+                createCoin();
+            }, spawnInterval);
         }
 
         // Event listener for movement
@@ -164,14 +174,7 @@
             }
         });
 
-        // Start coin spawn interval
-        const spawnCoins = setInterval(() => {
-            createCoin();
-            if (spawnInterval > 200) { // Increase difficulty
-                spawnInterval -= 50; // Decrease interval every time
-            }
-        }, spawnInterval);
-        
+        let spawnCoins = startCoinSpawn();
         gameLoop();
     </script>
 </body>
