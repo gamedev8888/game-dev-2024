@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -36,7 +35,12 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            transition: background-color 0.3s, transform 0.5s;
+            transition: background-color 0.3s, transform 0.5s, opacity 0.5s; /* Added opacity transition */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: black;
+            font-weight: bold;
         }
 
         #yellowBlock {
@@ -83,9 +87,22 @@
         #restartButton:hover {
             background-color: deepskyblue;
         }
+
+        #musicControl {
+            margin-top: 10px;
+            padding: 5px;
+            background-color: lightcoral;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #musicControl:hover {
+            background-color: crimson;
+        }
     </style>
 </head>
-
 <body>
     <h1>Collect the Coins!</h1>
     <div id="game">
@@ -97,6 +114,7 @@
             <button id="restartButton">Restart</button>
         </div>
     </div>
+    <button id="musicControl">Pause Music</button>
 
     <script>
         const collectSound = new Audio('https://www.soundjay.com/button/sounds/button-3.mp3');
@@ -109,6 +127,7 @@
         let highScoreDisplay = document.getElementById('highScore');
         let gameOverDisplay = document.getElementById('gameOver');
         let restartButton = document.getElementById('restartButton');
+        let musicControl = document.getElementById('musicControl');
 
         let score = 0;
         let highScore = localStorage.getItem('highScore') ? parseInt(localStorage.getItem('highScore')) : 0;
@@ -116,8 +135,12 @@
         let isGameOver = false;
 
         const baseCoinSpawnInterval = 1000; // Starting coin spawn interval
+        const minCoinSpawnInterval = 300;    // Minimum spawn interval
         let currentCoinSpawnInterval = baseCoinSpawnInterval; // Current spawn interval
-        const fallSpeed = 1; // Falling speed
+        const fallSpeed = 1; // Initial falling speed
+        let currentFallSpeed = fallSpeed; // Current fall speed
+        let missedCoins = 0; // Counter for missed coins
+        const maxMissedCoins = 3; // Maximum allowed missed coins
 
         function updateDisplay() {
             scoreDisplay.innerText = "Score: " + score;
@@ -147,9 +170,10 @@
 
             const coin = document.createElement('div');
             coin.classList.add('coin');
-            const coinValue = Math.floor(Math.random() * 3) + 1; // Random value between 1 and 3
-            coin.value = coinValue;
-            coin.style.backgroundColor = coinValue === 3 ? 'green' : (coinValue === 2 ? 'orange' : 'gold');
+            const coinValue = Math.floor(Math.random() * 5) + 1; // Random value between 1 and 5
+            coin.value = coinValue; // Store coin value
+            coin.style.backgroundColor = coinValue === 5 ? 'purple' : (coinValue === 4 ? 'green' : (coinValue === 3 ? 'orange' : 'gold'));
+            coin.innerText = coinValue; // Show coin value
 
             // Random horizontal position for coin
             const newCoinPos = Math.random() * (gameArea.offsetWidth - 40);
@@ -163,29 +187,40 @@
         function fallAndCheckCoins() {
             coins.forEach((coin, index) => {
                 let coinRect = coin.getBoundingClientRect();
-                coin.style.top = (coinRect.top + fallSpeed) + 'px';
+                coin.style.top = (coinRect.top + currentFallSpeed) + 'px';
 
+                // Coin collision detection
                 if (coinRect.bottom > yellowBlock.getBoundingClientRect().top &&
                     coinRect.top < yellowBlock.getBoundingClientRect().bottom &&
                     coinRect.right > yellowBlock.getBoundingClientRect().left &&
                     coinRect.left < yellowBlock.getBoundingClientRect().right) {
                     // Coin collected
                     collectSound.play(); // Play collect sound
-                    score += coin.value;
-                    coin.style.transform = 'scale(1.5)'; // Indicate coin collection with scaling
+                    score += coin.value; // Update score
+                    coin.style.transform = `scale(1.5) rotate(360deg)`; // Indicate coin collection with scaling and rotation
+                    coin.style.opacity = '0'; // Fade out
                     setTimeout(() => {
                         gameArea.removeChild(coin);
                         coins.splice(index, 1);
                         updateDisplay();
-                    }, 200);
+                    }, 500); // Keep for a little longer to see the effect
 
-                    // Increase the difficulty by reducing the spawn interval
-                    if (score % 10 === 0 && currentCoinSpawnInterval > 300) { // Increase difficulty every 10 points
-                        currentCoinSpawnInterval -= 100; 
+                    // Increase difficulty
+                    if (score % 10 === 0) { // Increase difficulty every 10 points
+                        if (currentCoinSpawnInterval > minCoinSpawnInterval) {
+                            currentCoinSpawnInterval -= 100; // Reduce spawn interval
+                        }
+                        currentFallSpeed += 0.5; // Increase fall speed
                     }
-
                 } else if (coinRect.top > gameArea.offsetHeight) {
-                    endGame(); // End game if coin falls below the game area
+                    // Coin missed
+                    missedCoins++;
+                    if (missedCoins >= maxMissedCoins) {
+                        endGame(); // End game if too many coins missed
+                    } else {
+                        gameArea.removeChild(coin); // Just remove the coin
+                        coins.splice(index, 1); // Remove from coins array
+                    }
                 }
             });
         }
@@ -210,7 +245,9 @@
 
         function restartGame() {
             score = 0;
+            missedCoins = 0; // Reset missed coin counter
             currentCoinSpawnInterval = baseCoinSpawnInterval; // Reset spawn interval
+            currentFallSpeed = fallSpeed; // Reset fall speed
             updateDisplay();
             gameOverDisplay.style.display = 'none';
             isGameOver = false;
@@ -223,7 +260,9 @@
         }
 
         function startCoinSpawn() {
-            setInterval(createCoin, currentCoinSpawnInterval);
+            // Clear existing intervals to prevent multiple calls
+            clearInterval(window.coinInterval);
+            window.coinInterval = setInterval(createCoin, currentCoinSpawnInterval);
         }
 
         // Event listener for movement
@@ -236,11 +275,32 @@
             restartGame();
         });
 
+        // Music control button event listener
+        musicControl.addEventListener('click', () => {
+            if (backgroundMusic.paused) {
+                backgroundMusic.play();
+                musicControl.innerText = "Pause Music";
+            } else {
+                backgroundMusic.pause();
+                musicControl.innerText = "Play Music";
+            }
+        });
+
+        // Touch controls for mobile devices
+        gameArea.addEventListener('touchstart', (e) => {
+            const touchX = e.touches[0].clientX;
+            const yellowBlockRect = yellowBlock.getBoundingClientRect();
+            if (touchX < yellowBlockRect.left) {
+                yellowBlock.style.left = (yellowBlock.offsetLeft - 20) + 'px';
+            } else if (touchX > yellowBlockRect.right) {
+                yellowBlock.style.left = (yellowBlock.offsetLeft + 20) + 'px';
+            }
+        });
+
         startCoinSpawn();
         updateDisplay(); // Initial display update
         backgroundMusic.play();
         gameLoop();
     </script>
 </body>
-
 </html>
