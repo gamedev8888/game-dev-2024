@@ -33,7 +33,6 @@
             position: absolute;
             width: 30px;
             height: 30px;
-            background-color: gold;
             transition: background-color 0.3s;
         }
 
@@ -52,6 +51,10 @@
             font-size: 18px;
         }
 
+        #highScore {
+            font-size: 16px;
+        }
+
         #gameOver {
             position: absolute;
             top: 50%;
@@ -60,6 +63,21 @@
             color: red;
             font-size: 24px;
             display: none;
+            text-align: center;
+        }
+
+        #restartButton {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: lightblue;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #restartButton:hover {
+            background-color: deepskyblue;
         }
     </style>
 </head>
@@ -69,10 +87,13 @@
     <div id="game">
         <div id="yellowBlock"></div>
         <div id="score">Score: 0</div>
-        <div id="gameOver">Game Over! Press R to Restart</div>
+        <div id="highScore">High Score: 0</div>
+        <div id="gameOver">
+            Game Over!<br>
+            <button id="restartButton">Restart</button>
+        </div>
     </div>
     <script>
-        // Sound loading
         const collectSound = new Audio('https://www.soundjay.com/button/sounds/button-3.mp3');
         const backgroundMusic = new Audio('https://www.soundjay.com/button/sounds/button-9.mp3');
         backgroundMusic.loop = true;
@@ -80,15 +101,23 @@
         let gameArea = document.getElementById('game');
         let yellowBlock = document.getElementById('yellowBlock');
         let scoreDisplay = document.getElementById('score');
+        let highScoreDisplay = document.getElementById('highScore');
         let gameOverDisplay = document.getElementById('gameOver');
+        let restartButton = document.getElementById('restartButton');
+
         let score = 0;
+        let highScore = localStorage.getItem('highScore') ? parseInt(localStorage.getItem('highScore')) : 0;
         let coins = [];
         let isGameOver = false;
-        
-        const baseCoinSpawnInterval = 1000; // Base coin spawn interval
+        let spawnCoinsInterval;
+        const baseCoinSpawnInterval = 1000; // Starting coin spawn interval
+        let currentCoinSpawnInterval = baseCoinSpawnInterval; // Current spawn interval
         const fallSpeed = 1; // Falling speed
-        let spawnInterval = baseCoinSpawnInterval; // Current spawn interval
-        let spawnCoins; // Variable to hold the spawning interval
+
+        function updateDisplay() {
+            scoreDisplay.innerText = "Score: " + score;
+            highScoreDisplay.innerText = "High Score: " + highScore;
+        }
 
         function moveYellowBlock(e) {
             if (isGameOver) return;
@@ -122,20 +151,36 @@
                     coinRect.right > yellowBlock.getBoundingClientRect().left &&
                     coinRect.left < yellowBlock.getBoundingClientRect().right) {
                     score += coin.value;
-                    scoreDisplay.innerText = "Score: " + score;
                     collectSound.play();
-                    coin.style.backgroundColor = 'blue'; // Visual feedback on collection
+                    coin.style.backgroundColor = 'blue'; // Indicate coin collection
                     setTimeout(() => {
                         gameArea.removeChild(coin);
                         coins.splice(index, 1);
+                        updateDisplay();
                     }, 300);
+                    
+                    // Increase the difficulty by reducing the spawn interval as score increases
+                    if (score % 5 === 0 && currentCoinSpawnInterval > 200) { // Increase difficulty every 5 points
+                        currentCoinSpawnInterval -= 50;
+                        clearInterval(spawnCoinsInterval);
+                        startCoinSpawn();
+                    }
                 } else if (coinRect.top > gameArea.offsetHeight) {
-                    isGameOver = true;
-                    gameOverDisplay.style.display = 'block';
-                    backgroundMusic.pause();
-                    clearInterval(spawnCoins); // Stop the coin spawning
+                    endGame();
                 }
             });
+        }
+
+        function endGame() {
+            isGameOver = true;
+            gameOverDisplay.style.display = 'block';
+            backgroundMusic.pause();
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem('highScore', highScore); // Save high score to local storage
+            }
+            updateDisplay();
+            clearInterval(spawnCoinsInterval); // Stop the coin spawning
         }
 
         function gameLoop() {
@@ -147,7 +192,8 @@
 
         function restartGame() {
             score = 0;
-            scoreDisplay.innerText = "Score: " + score;
+            currentCoinSpawnInterval = baseCoinSpawnInterval; // Reset spawn interval
+            updateDisplay();
             gameOverDisplay.style.display = 'none';
             isGameOver = false;
             coins.forEach(coin => gameArea.removeChild(coin)); // Remove remaining coins
@@ -159,24 +205,24 @@
         }
 
         function startCoinSpawn() {
-            // Prevent multiple intervals from running
-            if (spawnCoins) {
-                clearInterval(spawnCoins);
-            }
-            spawnCoins = setInterval(() => {
+            spawnCoinsInterval = setInterval(() => {
                 createCoin();
-            }, spawnInterval);
+            }, currentCoinSpawnInterval);
         }
 
         // Event listener for movement
         document.addEventListener('keydown', (e) => {
             moveYellowBlock(e);
-            if (isGameOver && e.key.toLowerCase() === 'r') {
-                restartGame();
-            }
+        });
+
+        // Restart button event listener
+        restartButton.addEventListener('click', () => {
+            restartGame();
         });
 
         startCoinSpawn();
+        updateDisplay(); // Initial display update
+        backgroundMusic.play();
         gameLoop();
     </script>
 </body>
