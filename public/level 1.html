@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,30 +11,33 @@
             background-repeat: no-repeat;
             background-size: cover;
             background-image: url('https://wallpaperaccess.com/full/25573.jpg');
-            position: relative; 
-            height: 100vh; 
-            overflow: hidden; 
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
         }
+
         img {
             position: absolute;
         }
+
         #timer {
             position: absolute;
             top: 20px;
             right: 20px;
             font-size: 24px;
             color: white;
-            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background for readability */
+            background-color: rgba(0, 0, 0, 0.5);
             padding: 10px;
             border-radius: 5px;
         }
+
         #score {
             position: absolute;
             top: 20px;
             left: 20px;
             font-size: 30px;
             color: gold;
-            background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+            background-color: rgba(0, 0, 0, 0.7);
             padding: 10px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
@@ -41,153 +45,137 @@
         }
     </style>
 </head>
+
 <body onkeydown="handleKeyDown(event)">
-<h1 align="center"><font color="Yellow">LEVEL 1 by ayan</font></h1>
+    <h1 align="center"><font color="Yellow">LEVEL 1 by ayan</font></h1>
 
-<div id="score">Score: 10</div>
-<div id="timer">1:00</div>
+    <div id="score">Score: 0</div> <!-- Score starts from 0 -->
+    <div id="timer">1:00</div>
 
-<img id="myImg01" src="player-sheet0.png" width="100" height="80" style="left: 50px; top: 190px;">
+    <img id="myImg01" src="player-sheet0.png" width="100" height="80" style="left: 50px; top: 190px;">
 
-<!-- Multiple Coin Images -->
-<script>
-const coinPositions = [
-    { left: '100px', top: '100px' },
-    { left: '250px', top: '120px' },
-    { left: '400px', top: '80px' },
-    { left: '550px', top: '200px' },
-    { left: '200px', top: '300px' },
-    { left: '700px', top: '150px' },
-    { left: '800px', top: '400px' },
-    { left: '350px', top: '350px' },
-    { left: '600px', top: '300px' },
-    { left: '150px', top: '450px' },
-    { left: '900px', top: '50px' },
-    { left: '50px', top: '400px' },
-    { left: '300px', top: '200px' },
-    { left: '450px', top: '100px' },
-    { left: '50px', top: '250px' },
-    { left: '750px', top: '300px' },
-    { left: '650px', top: '50px' },
-    { left: '400px', top: '450px' },
-    { left: '300px', top: '450px' },
-    { left: '500px', top: '350px' },
-];
+    <!-- Multiple Coin Images -->
+    <script>
+        const coinPositions = [
+            { left: '100px', top: '200px' },
+            { left: '200px', top: '200px' },
+            { left: '300px', top: '200px' },
+            { left: '400px', top: '200px' },
+            { left: '500px', top: '200px' },
+            { left: '600px', top: '200px' },
+            { left: '700px', top: '200px' },
+            { left: '800px', top: '200px' },
+            { left: '900px', top: '200px' },
+        ];
 
-coinPositions.forEach((pos, index) => {
-    const coinImg = document.createElement('img');
-    coinImg.src = "coin1-sheet0.png"; // The source of the coin image
-    coinImg.width = 100; // Set the width
-    coinImg.height = 80; // Set the height
-    coinImg.style.left = pos.left; // Set position
-    coinImg.style.top = pos.top; // Set position
-    coinImg.id = `myImg0${index + 2}`; // Assign unique ID
-    document.body.appendChild(coinImg); // Append the coin image to the body
-});
-</script>
+        const coins = [];
 
-<script>
-    let myGlobalX = 0;
-    let myClock;
-    let myScore = 10; // Initial score
-    let countdown;
+        coinPositions.forEach((pos, index) => {
+            const coinImg = document.createElement('img');
+            coinImg.src = "coin1-sheet0.png"; // The source of the coin image
+            coinImg.width = 100; // Set the width
+            coinImg.height = 80; // Set the height
+            coinImg.style.left = pos.left; // Set position
+            coinImg.style.top = pos.top; // Set position
+            coinImg.id = `coin${index}`; // Assign unique ID
+            document.body.appendChild(coinImg); // Append the coin image to the body
+            coins.push(coinImg); // Add the coin to the coins array
+        });
+    </script>
 
-    // Timer initialization
-    function startTimer(duration) {
-        let timer = duration, minutes, seconds;
-        countdown = setInterval(function () {
-            minutes = parseInt(timer / 60, 10);
-            seconds = parseInt(timer % 60, 10);
+    <script>
+        let myGlobalX = 0;
+        let myClock;
+        let myScore = 0; // Start score at 0
+        let countdown;
 
-            seconds = seconds < 10 ? "0" + seconds : seconds;
+        // Timer initialization
+        function startTimer(duration) {
+            let timer = duration, minutes, seconds;
+            countdown = setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
 
-            document.getElementById('timer').textContent = minutes + ":" + seconds;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
 
-            if (--timer < 0) {
-                clearInterval(countdown);
-                alert('Time is up! You lose.');
-                location.reload(); // Reload the page when time is up
+                document.getElementById('timer').textContent = minutes + ":" + seconds;
+
+                if (--timer < 0) {
+                    clearInterval(countdown);
+                    alert('Time is up! You lose.');
+                    location.reload(); // Reload the page when time is up
+                }
+            }, 1000);
+        }
+
+        function myHitOther(my1, my2) {
+            const rect1 = document.getElementById(my1).getBoundingClientRect();
+            const rect2 = document.getElementById(my2).getBoundingClientRect();
+
+            return !(rect1.right < rect2.left ||
+                rect1.left > rect2.right ||
+                rect1.bottom < rect2.top ||
+                rect1.top > rect2.bottom);
+        }
+
+        function myCheckHit() {
+            for (let i = 0; i < coins.length; i++) { // Check for hits for each coin
+                if (myHitOther('myImg01', coins[i].id)) {
+                    document.body.removeChild(coins[i]); // Remove the coin from the display
+                    coins.splice(i, 1); // Remove the coin from the array
+                    myScore++; // Increase score
+                    document.getElementById('score').innerText = "Score: " + myScore; // Update score display
+                    break; // Exit as we've already hit a coin
+                }
             }
-        }, 1000);
-    }
 
-    function myHitOther(my1, my2) {
-        const rect1 = document.getElementById(my1).getBoundingClientRect();
-        const rect2 = document.getElementById(my2).getBoundingClientRect();
-
-        return !(rect1.right < rect2.left || 
-                 rect1.left > rect2.right || 
-                 rect1.bottom < rect2.top || 
-                 rect1.top > rect2.bottom);
-    }
-
-    function myCheckHit() {
-        document.getElementById('score').innerText = "Score: " + myScore; // Update score display
-
-        for (let i = 2; i < 22; i++) { // Check for hits for each coin
-            if (myHitOther('myImg01', `myImg0${i}`)) {
-                resetImgPosition('myImg01');
-                myScore--;
-                document.getElementById('score').innerText = "Score: " + myScore;
-                break; // Exit as we've already hit a coin
+            if (myScore >= 10) { // Check win condition
+                alert('Congratulations, you win!');
+                clearInterval(countdown); // Clear the timer when score reaches 10
+                location.reload();
             }
         }
 
-        if (myScore <= 0) {
-            alert('Sorry, you lose');
-            clearInterval(countdown); // Clear the timer when score reaches zero
-            location.reload(); 
+        function resetImgPosition(imageId) {
+            document.getElementById(imageId).style.left = '20px';
         }
-    }
 
-    function resetImgPosition(imageId) {
-        document.getElementById(imageId).style.left = '20px';
-    }
-
-    function moveImage(direction) {
-        const img = document.getElementById('myImg01');
-        if (direction === 'right') {
-            img.style.left = parseInt(img.style.left) + 10 + 'px';
-        } else if (direction === 'down') {
-            img.style.top = parseInt(img.style.top) + 10 + 'px';
-        } else if (direction === 'left') {
-            img.style.left = parseInt(img.style.left) - 10 + 'px';
-        } else if (direction === 'up') {
-            img.style.top = parseInt(img.style.top) - 10 + 'px';
+        function moveImage(direction) {
+            const img = document.getElementById('myImg01');
+            if (direction === 'right') {
+                img.style.left = parseInt(img.style.left) + 10 + 'px';
+            } else if (direction === 'down') {
+                img.style.top = parseInt(img.style.top) + 10 + 'px';
+            } else if (direction === 'left') {
+                img.style.left = parseInt(img.style.left) - 10 + 'px';
+            } else if (direction === 'up') {
+                img.style.top = parseInt(img.style.top) - 10 + 'px';
+            }
+            myCheckHit(); // Check for collision
         }
-        myCheckHit(); 
-    }
 
-    function handleKeyDown(event) {
-        switch (event.key) {
-            case 'ArrowRight':
-                moveImage('right');
-                break;
-            case 'ArrowDown':
-                moveImage('down');
-                break;
-            case 'ArrowLeft':
-                moveImage('left');
-                break;
-            case 'ArrowUp':
-                moveImage('up');
-                break;
+        function handleKeyDown(event) {
+            switch (event.key) {
+                case 'ArrowRight':
+                    moveImage('right');
+                    break;
+                case 'ArrowDown':
+                    moveImage('down');
+                    break;
+                case 'ArrowLeft':
+                    moveImage('left');
+                    break;
+                case 'ArrowUp':
+                    moveImage('up');
+                    break;
+            }
         }
-    }
 
-    function startAutoBackgroundLeft() {
-        clearInterval(myClock);
-        myGlobalX = 100; 
-        myClock = setInterval(function () {
-            myGlobalX -= 5;
-            document.body.style.backgroundPosition = myGlobalX + 'px 0px';
-        }, 100);
-    }
-
-    // Start the timer on page load
-    window.onload = function() {
-        startTimer(60); // Start a 60 seconds timer
-    }
-</script>
+        // Start the timer on page load
+        window.onload = function () {
+            startTimer(60); // Start a 60 seconds timer
+        }
+    </script>
 </body>
+
 </html>
