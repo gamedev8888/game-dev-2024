@@ -48,7 +48,43 @@
 <div id="timer">1:00</div>
 
 <img id="myImg01" src="player-sheet0.png" width="100" height="80" style="left: 50px; top: 190px;">
-<img id="myImg02" src="coin1-sheet0.png" width="100" height="80" style="left: 350px; top: 190px;">
+
+<!-- Multiple Coin Images -->
+<script>
+const coinPositions = [
+    { left: '350px', top: '190px' },
+    { left: '500px', top: '100px' },
+    { left: '200px', top: '300px' },
+    { left: '600px', top: '250px' },
+    { left: '450px', top: '350px' },
+    { left: '700px', top: '180px' },
+    { left: '750px', top: '250px' },
+    { left: '320px', top: '400px' },
+    { left: '50px', top: '300px' },
+    { left: '900px', top: '200px' },
+    { left: '280px', top: '100px' },
+    { left: '150px', top: '450px' },
+    { left: '900px', top: '350px' },
+    { left: '380px', top: '450px' },
+    { left: '820px', top: '300px' },
+    { left: '680px', top: '100px' },
+    { left: '540px', top: '380px' },
+    { left: '200px', top: '250px' },
+    { left: '400px', top: '150px' },
+    { left: '720px', top: '350px' },
+];
+
+coinPositions.forEach((pos, index) => {
+    const coinImg = document.createElement('img');
+    coinImg.src = "coin1-sheet0.png"; // The source of the coin image
+    coinImg.width = 100; // Set the width
+    coinImg.height = 80; // Set the height
+    coinImg.style.left = pos.left; // Set position
+    coinImg.style.top = pos.top; // Set position
+    coinImg.id = `myImg0${index + 2}`; // Assign unique ID
+    document.body.appendChild(coinImg); // Append the coin image to the body
+});
+</script>
 
 <script>
     let myGlobalX = 0;
@@ -88,12 +124,15 @@
     function myCheckHit() {
         document.getElementById('score').innerText = "Score: " + myScore; // Update score display
 
-        if (myHitOther('myImg01', 'myImg02')) {
-            resetImgPosition('myImg01');
-            myScore--;
-            document.getElementById('score').innerText = "Score: " + myScore;
+        for (let i = 2; i < 22; i++) { // Check for hits for each coin
+            if (myHitOther('myImg01', `myImg0${i}`)) {
+                resetImgPosition('myImg01');
+                myScore--;
+                document.getElementById('score').innerText = "Score: " + myScore;
+                break; // Exit as we've already hit a coin
+            }
         }
-        
+
         if (myScore <= 0) {
             alert('Sorry, you lose');
             clearInterval(countdown); // Clear the timer when score reaches zero
