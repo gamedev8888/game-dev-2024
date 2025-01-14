@@ -6,16 +6,26 @@
     <title>LEVEL 1</title>
     <style>
         body {
-            margin: 0; /* Remove default margin */
-            background-repeat: no-repeat; /* Prevent repeating the image */
-            background-size: cover; /* Cover the whole page */
+            margin: 0;
+            background-repeat: no-repeat;
+            background-size: cover;
             background-image: url('https://wallpaperaccess.com/full/25573.jpg');
-            position: relative; /* Required for absolute positioning of child elements */
-            height: 100vh; /* Ensure the body takes the full height of the viewport */
-            overflow: hidden; /* Prevent scrolling */
+            position: relative; 
+            height: 100vh; 
+            overflow: hidden; 
         }
         img {
             position: absolute;
+        }
+        #timer {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background for readability */
+            padding: 10px;
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -28,6 +38,8 @@
 <input type="button" value="Right" onclick="moveImage('right');">
 <input type="button" value="Down" onclick="moveImage('down');"><br><br>
 
+<div id="timer">1:00</div>
+
 <img id="myImg01" src="player-sheet0.png" width="100" height="80" style="left: 50px; top: 190px;">
 <img id="myImg02" src="coin1-sheet0.png" width="100" height="80" style="left: 350px; top: 190px;">
 
@@ -35,6 +47,26 @@
     let myGlobalX = 0;
     let myClock;
     let myScore = 10;
+    let countdown;
+
+    // Timer initialization
+    function startTimer(duration) {
+        let timer = duration, minutes, seconds;
+        countdown = setInterval(function () {
+            minutes = parseInt(timer / 60, 10);
+            seconds = parseInt(timer % 60, 10);
+
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            document.getElementById('timer').textContent = minutes + ":" + seconds;
+
+            if (--timer < 0) {
+                clearInterval(countdown);
+                alert('Time is up! You lose.');
+                location.reload(); // Reload the page when time is up
+            }
+        }, 1000);
+    }
 
     function myHitOther(my1, my2) {
         const rect1 = document.getElementById(my1).getBoundingClientRect();
@@ -45,10 +77,10 @@
                  rect1.bottom < rect2.top || 
                  rect1.top > rect2.bottom);
     }
-    
+
     function myCheckHit() {
         document.getElementById('myText01').value = myScore;
-    
+
         if (myHitOther('myImg01', 'myImg02')) {
             resetImgPosition('myImg01');
             myScore--;
@@ -57,14 +89,15 @@
         
         if (myScore <= 0) {
             alert('Sorry, you lose');
-            location.reload(); // Reload the page if score is zero
+            clearInterval(countdown); // Clear the timer when score reaches zero
+            location.reload(); 
         }
     }
-    
+
     function resetImgPosition(imageId) {
         document.getElementById(imageId).style.left = '20px';
     }
-    
+
     function moveImage(direction) {
         const img = document.getElementById('myImg01');
         if (direction === 'right') {
@@ -72,9 +105,9 @@
         } else if (direction === 'down') {
             img.style.top = parseInt(img.style.top) + 10 + 'px';
         }
-        myCheckHit(); // Check for collisions after moving
+        myCheckHit(); 
     }
-    
+
     function handleKeyDown(event) {
         if (event.key === 'd') {
             moveImage('right');
@@ -83,14 +116,19 @@
             moveImage('down');
         }
     }
-    
+
     function startAutoBackgroundLeft() {
         clearInterval(myClock);
-        myGlobalX = 100; // Reset to an initial value for clarity
+        myGlobalX = 100; 
         myClock = setInterval(function () {
             myGlobalX -= 5;
             document.body.style.backgroundPosition = myGlobalX + 'px 0px';
         }, 100);
+    }
+
+    // Start the timer on page load
+    window.onload = function() {
+        startTimer(60); // Start a 60 seconds timer
     }
 </script>
 </body>
