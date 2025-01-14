@@ -34,10 +34,6 @@
 
 <input id="myText01" type="text" value="" size="50" placeholder="Feedback here" readonly><br>
 
-<input type="button" value="Auto Background Left" onclick="startAutoBackgroundLeft()">
-<input type="button" value="Right" onclick="moveImage('right');">
-<input type="button" value="Down" onclick="moveImage('down');"><br><br>
-
 <div id="timer">1:00</div>
 
 <img id="myImg01" src="player-sheet0.png" width="100" height="80" style="left: 50px; top: 190px;">
@@ -104,16 +100,28 @@
             img.style.left = parseInt(img.style.left) + 10 + 'px';
         } else if (direction === 'down') {
             img.style.top = parseInt(img.style.top) + 10 + 'px';
+        } else if (direction === 'left') {
+            img.style.left = parseInt(img.style.left) - 10 + 'px';
+        } else if (direction === 'up') {
+            img.style.top = parseInt(img.style.top) - 10 + 'px';
         }
         myCheckHit(); 
     }
 
     function handleKeyDown(event) {
-        if (event.key === 'd') {
-            moveImage('right');
-        }
-        if (event.key === 's') {
-            moveImage('down');
+        switch (event.key) {
+            case 'ArrowRight':
+                moveImage('right');
+                break;
+            case 'ArrowDown':
+                moveImage('down');
+                break;
+            case 'ArrowLeft':
+                moveImage('left');
+                break;
+            case 'ArrowUp':
+                moveImage('up');
+                break;
         }
     }
 
