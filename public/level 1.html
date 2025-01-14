@@ -54,20 +54,20 @@
 
     <img id="myImg01" src="player-sheet0.png" width="100" height="80" style="left: 50px; top: 190px;">
 
-    <!-- Multiple Coin Images -->
     <script>
         const coinPositions = [];
+        const coinsCount = 20; // Total number of coins
+        const coinWidth = 100; // Coin image width
+        const coinHeight = 80; // Coin image height
 
-        // Generate coin positions from left to right
-        const coinsInRow = 20; // Total number of coins
-        const coinSpacing = 100; // Spacing between coins
-        const startX = 100; // Starting X position
-        const startY = 200; // Y position
+        // Generate scattered positions for coins
+        for (let i = 0; i < coinsCount; i++) {
+            const left = Math.floor(Math.random() * (window.innerWidth - coinWidth));
+            const top = Math.floor(Math.random() * (window.innerHeight - coinHeight - 100)) + 200; // Leave some space from the top
 
-        for (let i = 0; i < coinsInRow; i++) {
             coinPositions.push({
-                left: `${startX + i * coinSpacing}px`,
-                top: `${startY}px`
+                left: `${left}px`,
+                top: `${top}px`
             });
         }
 
@@ -76,11 +76,12 @@
         coinPositions.forEach((pos, index) => {
             const coinImg = document.createElement('img');
             coinImg.src = "coin1-sheet0.png"; // The source of the coin image
-            coinImg.width = 100; // Set the width
-            coinImg.height = 80; // Set the height
+            coinImg.width = coinWidth; // Set the width
+            coinImg.height = coinHeight; // Set the height
             coinImg.style.left = pos.left; // Set position
             coinImg.style.top = pos.top; // Set position
             coinImg.id = `coin${index}`; // Assign unique ID
+            coinImg.style.position = 'absolute'; // Ensure the coin is positioned absolutely
             document.body.appendChild(coinImg); // Append the coin image to the body
             coins.push(coinImg); // Add the coin to the coins array
         });
@@ -132,7 +133,7 @@
                 }
             }
 
-            if (myScore >= coinsInRow) { // Check win condition
+            if (myScore >= coinsCount) { // Check win condition
                 alert('Congratulations, you win!');
                 clearInterval(countdown); // Clear the timer when score reaches the number of coins
                 location.reload();
