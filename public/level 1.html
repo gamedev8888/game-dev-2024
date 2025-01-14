@@ -56,17 +56,20 @@
 
     <!-- Multiple Coin Images -->
     <script>
-        const coinPositions = [
-            { left: '100px', top: '200px' },
-            { left: '200px', top: '200px' },
-            { left: '300px', top: '200px' },
-            { left: '400px', top: '200px' },
-            { left: '500px', top: '200px' },
-            { left: '600px', top: '200px' },
-            { left: '700px', top: '200px' },
-            { left: '800px', top: '200px' },
-            { left: '900px', top: '200px' },
-        ];
+        const coinPositions = [];
+
+        // Generate coin positions from left to right
+        const coinsInRow = 20; // Total number of coins
+        const coinSpacing = 100; // Spacing between coins
+        const startX = 100; // Starting X position
+        const startY = 200; // Y position
+
+        for (let i = 0; i < coinsInRow; i++) {
+            coinPositions.push({
+                left: `${startX + i * coinSpacing}px`,
+                top: `${startY}px`
+            });
+        }
 
         const coins = [];
 
@@ -129,9 +132,9 @@
                 }
             }
 
-            if (myScore >= 10) { // Check win condition
+            if (myScore >= coinsInRow) { // Check win condition
                 alert('Congratulations, you win!');
-                clearInterval(countdown); // Clear the timer when score reaches 10
+                clearInterval(countdown); // Clear the timer when score reaches the number of coins
                 location.reload();
             }
         }
