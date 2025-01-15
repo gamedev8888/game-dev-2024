@@ -16,6 +16,14 @@
       overflow: hidden;
     }
 
+    #gameArea {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border: 5px solid yellow; /* Border for the game area */
+      box-sizing: border-box; /* Include border in element's total width and height */
+    }
+
     img {
       position: absolute;
     }
@@ -43,164 +51,142 @@
       box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
       font-family: 'Arial', sans-serif;
     }
-
-    #coins {
-      border: 2px solid yellow;
-      padding: 2px;
-    }
   </style>
 </head>
 
 <body onkeydown="handleKeyDown(event)">
   <h1 align="center"><font color="Yellow">LEVEL 1 by ayan</font></h1>
 
-  <div id="score">Score: 0</div> <!-- Score starts from 0 -->
-  <div id="timer">1:00</div>
+  <div id="gameArea">
+    <div id="score">Score: 0</div> <!-- Score starts from 0 -->
+    <div id="timer">1:00</div>
 
-  <img id="myImg01" src="player-sheet0.png" width="100" height="80" style="left: 50px; top: 190px;">
+    <img id="myImg01" src="player-sheet0.png" width="100" height="80" style="left: 50px; top: 190px;">
 
-  <script>
-    const coinPositions = [];
-    const coinsCount = 20; // Total number of coins
-    const coinWidth = 100; // Coin image width
-    const coinHeight = 80; // Coin image height
+    <script>
+      const coinPositions = [];
+      const coinsCount = 20; // Total number of coins
+      const coinWidth = 100; // Coin image width
+      const coinHeight = 80; // Coin image height
 
-    // Generate scattered positions for coins
-    for (let i = 0; i < coinsCount; i++) {
-      const left = Math.floor(Math.random() * (window.innerWidth - coinWidth));
-      const top = Math.floor(Math.random() * (window.innerHeight - coinHeight - 100)) + 200; // Leave some space from the top
+      // Generate scattered positions for coins
+      for (let i = 0; i < coinsCount; i++) {
+        const left = Math.floor(Math.random() * (window.innerWidth - coinWidth - 10)); // Account for padding
+        const top = Math.floor(Math.random() * (window.innerHeight - coinHeight - 100)); // Leave some space from the top
 
-      coinPositions.push({
-        left: `${left}px`,
-        top: `${top}px`
+        coinPositions.push({
+          left: `${left}px`,
+          top: `${top}px`
+        });
+      }
+
+      const coins = [];
+
+      coinPositions.forEach((pos, index) => {
+        const coinImg = document.createElement('img');
+        coinImg.src = "coin1-sheet0.png"; // The source of the coin image
+        coinImg.width = coinWidth; // Set the width
+        coinImg.height = coinHeight; // Set the height
+        coinImg.style.left = pos.left; // Set position
+        coinImg.style.top = pos.top; // Set position
+        coinImg.id = `coin${index}`; // Assign unique ID
+        coinImg.style.position = 'absolute'; // Ensure the coin is positioned absolutely
+        document.getElementById('gameArea').appendChild(coinImg); // Append the coin image to the game area
+        coins.push(coinImg); // Add the coin to the coins array
       });
-    }
+    </script>
 
-    const coins = [];
+    <script>
+      let myScore = 0; // Start score at 0
+      let countdown;
 
-    coinPositions.forEach((pos, index) => {
-      const coinDiv = document.createElement('div');
-      const coinImg = document.createElement('img');
-      coinDiv.style.position = 'absolute';
-      coinDiv.style.borderRadius = '50%';
-      coinDiv.id = `coinDiv${index}`;
-      coinDiv.style.background = "yellow";
-      coinDiv.style.border = "2px solid yellow";
-      coinImg.src = "coin1-sheet0.png"; // The source of the coin image
-      coinImg.width = coinWidth; // Set the width
-      coinImg.height = coinHeight; // Set the height
-      coinImg.style.left = pos.left; // Set position
-      coinImg.style.top = pos.top; // Set position
-      document.body.appendChild(coinDiv);
-      document.body.appendChild(coinImg); // Append the coin to the body
-      coins.push({div: coinDiv, img: coinImg}); // Add the coin to the coins array
-    });
-  </script>
+      // Timer initialization
+      function startTimer(duration) {
+        let timer = duration, minutes, seconds;
+        countdown = setInterval(function () {
+          minutes = parseInt(timer / 60, 10);
+          seconds = parseInt(timer % 60, 10);
 
-  <script>
-    let myGlobalX = 0;
-    let myClock;
-    let myScore = 0; // Start score at 0
-    let countdown;
+          seconds = seconds < 10 ? "0" + seconds : seconds;
 
-    // Timer initialization
-    function startTimer(duration) {
-      let timer = duration, minutes, seconds;
-      countdown = setInterval(function () {
-        minutes = parseInt(timer / 60, 10);
-        seconds = parseInt(timer % 60, 10);
+          document.getElementById('timer').textContent = minutes + ":" + seconds;
 
-        seconds = seconds < 10 ? "0" + seconds : seconds;
+          if (--timer < 0) {
+            clearInterval(countdown);
+            alert('Time is up! You lose.');
+            location.reload(); // Reload the page when time is up
+          }
+        }, 1000);
+      }
 
-        document.getElementById('timer').textContent = minutes + ":" + seconds;
+      function myHitOther(my1, my2) {
+        const rect1 = document.getElementById(my1).getBoundingClientRect();
+        const rect2 = document.getElementById(my2).getBoundingClientRect();
 
-        if (--timer < 0) {
-          clearInterval(countdown);
-          alert('Time is up! You lose.');
-          location.reload(); // Reload the page when time is up
+        return !(rect1.right < rect2.left ||
+          rect1.left > rect2.right ||
+          rect1.bottom < rect2.top ||
+          rect1.top > rect2.bottom);
+      }
+
+      function myCheckHit() {
+        for (let i = 0; i < coins.length; i++) { // Check for hits for each coin
+          if (myHitOther('myImg01', coins[i].id)) {
+            document.getElementById('gameArea').removeChild(coins[i]); // Remove the coin from the display
+            coins.splice(i, 1); // Remove the coin from the array
+            myScore++; // Increase score
+            document.getElementById('score').innerText = "Score: " + myScore; // Update score display
+            break; // Exit as we've already hit a coin
+          }
         }
-      }, 1000);
-    }
 
-    function myHitOther(my1, my2) {
-      const rect1 = document.getElementById(my1).getBoundingClientRect();
-      const rect2 = document.getElementById(my2).getBoundingClientRect();
-
-      return !(rect1.right < rect2.left ||
-        rect1.left > rect2.right ||
-        rect1.bottom < rect2.top ||
-        rect1.top > rect2.bottom);
-    }
-
-    function myCheckHit() {
-      for (let i = 0; i < coins.length; i++) { // Check for hits for each coin
-        if (myHitOther('myImg01', `coinDiv${i}`)) {
-          document.body.removeChild(coins[i].div);
-          document.body.removeChild(coins[i].img); // Remove the coin from the display
-          coins.splice(i, 1); // Remove the coin from the array
-          myScore++; // Increase score
-          document.getElementById('score').innerText = "Score: " + myScore; // Update score display
-          break; // Exit as we've already hit a coin
+        if (myScore >= coinsCount) { // Check win condition
+          alert('Congratulations, you win!');
+          clearInterval(countdown); // Clear the timer when score reaches the number of coins
+          location.reload();
         }
       }
 
-      if (myScore >= coinsCount) { // Check win condition
-        alert('Congratulations, you win!');
-        clearInterval(countdown); // Clear the timer when score reaches the number of coins
-        location.reload();
+      function moveImage(direction) {
+        const img = document.getElementById('myImg01');
+        const gameArea = document.getElementById('gameArea');
+        const gameAreaRect = gameArea.getBoundingClientRect(); // Get the game area dimensions
+
+        if (direction === 'right' && img.getBoundingClientRect().right < gameAreaRect.right) {
+          img.style.left = parseInt(img.style.left) + 10 + 'px';
+        } else if (direction === 'down' && img.getBoundingClientRect().bottom < gameAreaRect.bottom) {
+          img.style.top = parseInt(img.style.top) + 10 + 'px';
+        } else if (direction === 'left' && img.getBoundingClientRect().left > gameAreaRect.left) {
+          img.style.left = parseInt(img.style.left) - 10 + 'px';
+        } else if (direction === 'up' && img.getBoundingClientRect().top > gameAreaRect.top) {
+          img.style.top = parseInt(img.style.top) - 10 + 'px';
+        }
+        myCheckHit(); // Check for collision
       }
-    }
 
-    function resetImgPosition(imageId) {
-      document.getElementById(imageId).style.left = '20px';
-    }
-
-    function moveImage(direction) {
-      const img = document.getElementById('myImg01');
-      if (direction === 'right') {
-        img.style.left = parseInt(img.style.left) + 10 + 'px';
-      } else if (direction === 'down') {
-        img.style.top = parseInt(img.style.top) + 10 + 'px';
-      } else if (direction === 'left') {
-        img.style.left = parseInt(img.style.left) - 10 + 'px';
-      } else if (direction === 'up') {
-        img.style.top = parseInt(img.style.top) - 10 + 'px';
+      function handleKeyDown(event) {
+        switch (event.key) {
+          case 'ArrowRight':
+            moveImage('right');
+            break;
+          case 'ArrowDown':
+            moveImage('down');
+            break;
+          case 'ArrowLeft':
+            moveImage('left');
+            break;
+          case 'ArrowUp':
+            moveImage('up');
+            break;
+        }
       }
-      myCheckHit(); // Check for collision
-    }
 
-    function handleKeyDown(event) {
-      switch (event.key) {
-        case 'ArrowRight':
-          moveImage('right');
-          break;
-        case 'ArrowDown':
-          moveImage('down');
-          break;
-        case 'ArrowLeft':
-          moveImage('left');
-          break;
-        case 'ArrowUp':
-          moveImage('up');
-          break;
+      // Start the timer on page load
+      window.onload = function () {
+        startTimer(60); // Start a 60 seconds timer
       }
-    }
-
-    // Start the timer on page load
-    window.onload = function () {
-      startTimer(60); // Start a 60 seconds timer
-      const coins = document.querySelectorAll('div[id^="coinDiv"]');
-      coins.forEach((coin) => {
-        coin.style.width = '100px';
-        coin.style.height = '80px';
-      });
-      const coinImgs = document.querySelectorAll('img[id^="coin"]');
-      coinImgs.forEach((coinImg) => {
-        coinImg.style.width = '100px';
-        coinImg.style.height = '80px';
-      });
-    }
-  </script>
+    </script>
+  </div>
 </body>
 
 </html>
