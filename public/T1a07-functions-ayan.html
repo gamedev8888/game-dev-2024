@@ -1,64 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>T1a07-functions-ayan</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-image: url('https://1.bp.blogspot.com/-fip0yy6o2Y0/XuXCbLMULmI/AAAAAAAAwZE/-mgeDNU4aq8k-VLPTFB0in_pfzwLicWwQCLcBGAsYHQ/s2560/2020-deadpool-artwork-4k-o4-3840x2160.jpg');
-            background-size: cover;
-            background-position: center;
-            color: #fff;  /* Change default text color to white for better readability */
-            text-align: center;
-            padding: 20px;
-        }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>T1a07-functions-ayan</title>
+<style>
+    /* Cover the entire page with background image */
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-image: url('https://1.bp.blogspot.com/-fip0yy6o2Y0/XuXCbLMULmI/AAAAAAAAwZE/-mgeDNU4aq8k-VLPTFB0in_pfzwLicWwQCLcBGAsYHQ/s2560/2020-deadpool-artwork-4k-o4-3840x2160.jpg');
+        background-size: cover;
+        background-position: center;
+        min-height: 100vh;
+        /* Optional: add a dark overlay for better text contrast */
+        position: relative;
+    }
 
-        h1, h2 {
-            color: #ffcc00; /* Bright gold for headings */
-        }
+    /* Overlay for dimming the background for readability */
+    body::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.4); /* semi-transparent black overlay */
+        z-index: -1;
+    }
 
-        input[type="text"] {
-            padding: 10px;
-            margin: 10px 0;
-            width: 200px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: rgba(0, 0, 0, 0.7); /* Dark background for input fields */
-            color: #fff; /* White text in input */
-        }
+    /* Content styling */
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 20px;
+    box-sizing: border-box;
+    color: #fff; /* default text color */
+    width: 100%;
+}
 
-        input[type="button"] {
-            padding: 10px 15px;
-            background-color: #ff9900; /* Orange button color */
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+/* Main heading styles */
+h1, h2 {
+    color: #ffcc00; /* Bright gold */
+    margin-top: 20px;
+}
 
-        input[type="button"]:hover {
-            background-color: #e68a00; /* Darker orange on hover */
-        }
+/* Input field styling */
+input[type="text"] {
+    padding: 10px;
+    margin: 10px 0;
+    width: 200px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+}
 
-        #myDiv01, #guessResult, #hangmanResult {
-            margin-top: 20px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent background for results */
-            color: #ffcc00; /* Gold color for background text */
-            display: inline-block;
-        }
+/* Button styling */
+input[type="button"] {
+    padding: 10px 15px;
+    background-color: #ff9900;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+}
 
-        .news-link {
-            margin-top: 20px;
-            font-size: 16px;
-            color: #ffcc00; /* Gold color for news link */
-            text-decoration: underline;
-        }
-    </style>
+input[type="button"]:hover {
+    background-color: #e68a00;
+}
+
+/* Result/result display containers */
+#myDiv01, #guessResult, #hangmanResult {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #ffcc00;
+    display: inline-block;
+    max-width: 90%;
+    word-wrap: break-word;
+}
+
+/* News link styling */
+.news-link {
+    margin-top: 20px;
+    font-size: 16px;
+    color: #ffcc00;
+    text-decoration: underline;
+}
+
+/* Additional styling for labels */
+label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+</style>
 </head>
 <body>
 
@@ -74,7 +116,6 @@ function myVar(myIn) {
 let randomNumber = Math.floor(Math.random() * 100) + 1;
 let attempts = 0;
 
-// Function to handle the guessing game
 function guessNumber() {
     const userGuess = parseInt(myVar('guessInput').value);
     attempts++;
@@ -89,11 +130,9 @@ function guessNumber() {
     } else {
         message = `Congratulations! You've guessed the number ${randomNumber} in ${attempts} attempts!`;
     }
-    
     myVar('guessResult').innerHTML = message;
 }
 
-// Function to restart the guessing game
 function restartGame() {
     randomNumber = Math.floor(Math.random() * 100) + 1;
     attempts = 0;
@@ -131,7 +170,7 @@ function guessLetter() {
     }
 
     guessedLetters.push(letter);
-    
+
     if (selectedWord.includes(letter)) {
         let displayWord = selectedWord.split('').map(l => (guessedLetters.includes(l) ? l : "_")).join(" ");
         myVar('hangmanResult').innerHTML = `Word: ${displayWord}`;
@@ -149,15 +188,13 @@ function guessLetter() {
         }
     }
 }
-
 </script>
 
-<!-- Input fields for name -->
-Input: <input type="text" id="myFirstName" value="Ayan">
+<!-- Input for name -->
+Input: <input type="text" id="myFirstName" value="Ayan" />
 <input type="button" value="Show on page" onclick="{
     myVar('myDiv01').innerHTML = 'Your name is ' + myVar('myFirstName').value;
 }">
-
 <div id="myDiv01">...</div>
 
 <!-- News Link -->
@@ -180,8 +217,8 @@ Input: <input type="text" id="myFirstName" value="Ayan">
     <option value="hard">Hard</option>
 </select>
 <input type="button" value="Start Game" onclick="startHangman()">
-<input type="text" id="hangmanInput" placeholder="Enter a letter">
-<input type="button" value="Guess" onclick="guessLetter()">
+<input type="text" id="hangmanInput" placeholder="Enter a letter" />
+<input type="button" value="Guess" onclick="guessLetter()" />
 <div id="hangmanResult"></div>
 <div id="hangmanMessage">Press "Start Game" to begin!</div>
 
